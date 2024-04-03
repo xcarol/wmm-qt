@@ -25,11 +25,13 @@ bool CsvFile::isValidCsvFile(QString filename)
 
 void CsvFile::parseRows()
 {
-    foreach (QString row, csvRows) {
+    foreach (QString row, csvRows)
+    {
         QStringList fields = row.split(",");
         QStringList parsedFields;
 
-        foreach (QString rowField, fields) {
+        foreach (QString rowField, fields)
+        {
             parsedFields.append(rowField.replace(QRegularExpression("^\"|\"$|\\n$"), ""));
         }
         csvFields.append(parsedFields);
@@ -43,7 +45,8 @@ bool CsvFile::read(QString filename)
 
     QFile file = QFile(filename);
 
-    if (isValidCsvFile(filename) == false) {
+    if (isValidCsvFile(filename) == false)
+    {
         return false;
     }
 
@@ -62,4 +65,14 @@ bool CsvFile::read(QString filename)
     }
 
     return false;
+}
+
+QStringList CsvFile::getRows(int count)
+{
+    QStringList rows;
+
+    for (int n = 0; n < count; n++)
+    {
+        rows.append(csvFields.at(n));
+    }
 }
