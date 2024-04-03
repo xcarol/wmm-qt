@@ -19,6 +19,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::updatePreview()
 {
+    QStringList headers = csvFile.getRows(1);
 }
 
 void MainWindow::on_openFileButton_clicked()
@@ -27,8 +28,6 @@ void MainWindow::on_openFileButton_clicked()
                                                     tr("Open File"), ".", tr("Csv Files (*.csv)"));
 
     ui->fileNameEdit->setText(fileName);
-
-    CsvFile csvFile = CsvFile();
 
     if (CsvFile::isValidCsvFile(fileName) && csvFile.read(fileName))
     {

@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "csvfile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -22,6 +23,9 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    CsvFile csvFile = CsvFile();
+
     void updatePreview();
 };
 #endif // MAINWINDOW_H

@@ -75,4 +75,6 @@ QStringList CsvFile::getRows(int count)
     {
         rows.append(csvFields.at(n));
     }
+
+    return rows;
 }
