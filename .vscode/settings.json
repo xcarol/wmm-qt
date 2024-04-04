@@ -1,0 +1,17 @@
+{
+  "cmake.configureOnOpen": true,
+  "cmake.configureSettings": {
+    "CMAKE_EXPORT_COMPILE_COMMANDS": true,
+    "CMAKE_BUILD_TYPE": "${buildType}",
+    "CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE": "${workspaceFolder}/.",
+    "CMAKE_PREFIX_PATH": "${workspaceFolder}/build"
+  },
+  "C_Cpp.default.includePath": [
+    "/home/xcarol/Qt/6.6.3/gcc_64/include",
+    "/home/xcarol/Qt/6.6.3/gcc_64/include/QtWidgets",
+    "/home/xcarol/Qt/6.6.3/gcc_64/include/QtCore",
+    "/home/xcarol/Qt/6.6.3/gcc_64/include/QtSql",
+    "${workspaceFolder}/."
+  ],
+  "C_Cpp.autocompleteAddParentheses": true,
+}
