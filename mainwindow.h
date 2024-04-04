@@ -21,6 +21,16 @@ public:
 private slots:
     void on_openFileButton_clicked();
 
+    void on_firstRowCheckBox_stateChanged(int arg1);
+
+    void on_dateColumnComboBox_currentIndexChanged(int index);
+
+    void on_conceptColumnComboBox_currentIndexChanged(int index);
+
+    void on_amountColumnComboBox_currentIndexChanged(int index);
+
+    void on_ImportButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 
