@@ -67,14 +67,7 @@ bool CsvFile::read(QString filename)
     return false;
 }
 
-QStringList CsvFile::getRows(int count)
+QList<QStringList> CsvFile::getRows(int count)
 {
-    QStringList rows;
-
-    for (int n = 0; n < count; n++)
-    {
-        rows.append(csvFields.at(n));
-    }
-
-    return rows;
+    return csvFields.mid(0, count);
 }

@@ -15,7 +15,7 @@ public:
 
 public:
     bool read(QString filename);
-    QStringList getRows(int);
+    QList<QStringList> getRows(int);
 };
 
 #endif // CSVFILE_H
