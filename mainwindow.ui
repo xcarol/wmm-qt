@@ -143,8 +143,20 @@
      <height>37</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSettings">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionDatabase"/>
+   </widget>
+   <addaction name="menuSettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionDatabase">
+   <property name="text">
+    <string>Database...</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

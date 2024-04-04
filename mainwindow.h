@@ -31,6 +31,8 @@ private slots:
 
     void on_ImportButton_clicked();
 
+    void on_actionDatabase_triggered();
+
 private:
     Ui::MainWindow *ui;
 
