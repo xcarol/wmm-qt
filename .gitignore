@@ -76,3 +76,4 @@ CMakeLists.txt.user*
 # Custom
 # ------
 .cache
+mysql/
