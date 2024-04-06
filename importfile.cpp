@@ -4,6 +4,7 @@
 #include "ui_importfile.h"
 
 #include <QFileDialog>
+#include <QList>
 #include <QMessageBox>
 
 ImportFile::ImportFile(QWidget *parent)
@@ -15,7 +16,7 @@ ImportFile::ImportFile(QWidget *parent)
 ImportFile::~ImportFile() { delete ui; }
 
 void ImportFile::updatePreview() {
-  ui->conceptColumnComboBox->clear();
+  ui->descriptionColumnComboBox->clear();
   ui->amountColumnComboBox->clear();
   ui->dateColumnComboBox->clear();
   ui->filePreviewTable->clear();
@@ -26,23 +27,22 @@ void ImportFile::updatePreview() {
   }
 
   int rowsCount = 5;
-  int headerRows = ui->firstRowCheckBox->isChecked();
   QList<QStringList> rows = csvFile.getRows(rowsCount);
   int columnsCount = rows.at(0).length();
 
-  ui->conceptColumnComboBox->addItem(QString(" "));
+  ui->descriptionColumnComboBox->addItem(QString(" "));
   ui->amountColumnComboBox->addItem(QString(" "));
   ui->dateColumnComboBox->addItem(QString(" "));
 
   if (headerRows) {
     foreach (QString field, rows.at(0)) {
-      ui->conceptColumnComboBox->addItem(field);
+      ui->descriptionColumnComboBox->addItem(field);
       ui->amountColumnComboBox->addItem(field);
       ui->dateColumnComboBox->addItem(field);
     }
   } else {
     for (int n = 0; n < columnsCount; n++) {
-      ui->conceptColumnComboBox->addItem(QString::number(n));
+      ui->descriptionColumnComboBox->addItem(QString::number(n));
       ui->amountColumnComboBox->addItem(QString::number(n));
       ui->dateColumnComboBox->addItem(QString::number(n));
     }
@@ -81,29 +81,45 @@ void ImportFile::on_openFileButton_clicked() {
 }
 
 void ImportFile::updateImportButtonState() {
-  ui->ImportButton->setEnabled(ui->dateColumnComboBox->currentIndex() > 0 &&
-                               ui->conceptColumnComboBox->currentIndex() > 0 &&
-                               ui->amountColumnComboBox->currentIndex() > 0);
+  ui->ImportButton->setEnabled(dateColumn > 0 && descriptionColumn > 0 &&
+                               amountColumn > 0);
 }
 
 void ImportFile::on_firstRowCheckBox_stateChanged(int arg1) {
+  headerRows = arg1;
   updatePreview();
   ui->ImportButton->setEnabled(false);
 }
 
 void ImportFile::on_dateColumnComboBox_currentIndexChanged(int index) {
+  dateColumn = index;
   updateImportButtonState();
 }
 
-void ImportFile::on_conceptColumnComboBox_currentIndexChanged(int index) {
+void ImportFile::on_descriptionColumnComboBox_currentIndexChanged(int index) {
+  descriptionColumn = index;
   updateImportButtonState();
 }
 
 void ImportFile::on_amountColumnComboBox_currentIndexChanged(int index) {
+  amountColumn = index;
   updateImportButtonState();
 }
 
 void ImportFile::on_ImportButton_clicked() {
+  QList<QStringList> rows = csvFile.getRows();
+  QList<QStringList> databaseRows;
+
+  for (int n = 0; n < rows.length() - headerRows; n++) {
+    QStringList databaseRow;
+    databaseRow.append(bankName);
+    databaseRow.append(rows.at(n).at(dateColumn));
+    databaseRow.append(rows.at(n).at(descriptionColumn));
+    databaseRow.append(rows.at(n).at(amountColumn));
+
+    databaseRows.append(databaseRow);
+  }
+
   Database database = Database();
 
   bool databaseOpen = database.open();
@@ -112,29 +128,15 @@ void ImportFile::on_ImportButton_clicked() {
     QMessageBox box =
         QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
                     QString(database.getLastErrorText()));
+    box.exec();
+  }
+
+  ulong storedRows = database.storeRows(databaseRows);
+  if (storedRows != databaseRows.length()) {
+
   }
 
   database.close();
-  //     QList<QList<QString>> fileBody;
-
-  //     bool firstLineHeaders = true;
-  //     bool firstLineSeen = false;
-  //         QSqlQuery query;
-  //         query.prepare("INSERT INTO appointments (date, concept, amount) "
-  //                       "VALUES (:date, :concept, :amount)");
-  //         qDebug() << sline.at(0);
-  //         qDebug() << sline.at(1);
-  //         qDebug() << sline.at(5);
-  //         query.bindValue(":date", sline.at(0));
-  //         query.bindValue(":concept", sline.at(1));
-  //         query.bindValue(":amount", sline.at(5).toDouble());
-  //         qDebug() << query.boundValues();
-  //         if (!query.exec()) {
-  //             qDebug() << "Error al afegir la fila: " << query.lastError();
-  //             db.close();
-  //             return;
-  //         }
-  //     } while (true);
-  //     // Tancar la connexió
-  // }
 }
+
+void ImportFile::on_banksComboBox_editTextChanged(const QString &arg1) {}

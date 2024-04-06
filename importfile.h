@@ -23,13 +23,21 @@ private slots:
 
     void on_dateColumnComboBox_currentIndexChanged(int index);
 
-    void on_conceptColumnComboBox_currentIndexChanged(int index);
+    void on_descriptionColumnComboBox_currentIndexChanged(int index);
 
     void on_amountColumnComboBox_currentIndexChanged(int index);
 
     void on_ImportButton_clicked();
 
+    void on_banksComboBox_editTextChanged(const QString &arg1);
+
 private:
+    int headerRows = 0;
+    int dateColumn = 0;
+    int descriptionColumn = 0;
+    int amountColumn = 0;
+    QString bankName = "";
+
     Ui::ImportFile *ui;
 
     CsvFile csvFile = CsvFile();

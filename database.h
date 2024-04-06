@@ -38,6 +38,7 @@ public:
 
   bool open();
   void close();
+  ulong storeRows(QList<QStringList>);
 
   QString getLastErrorText();
 };

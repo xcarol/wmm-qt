@@ -68,7 +68,7 @@
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QComboBox" name="conceptColumnComboBox"/>
+         <widget class="QComboBox" name="descriptionColumnComboBox"/>
         </item>
         <item row="1" column="2">
          <spacer name="horizontalSpacer_2">
@@ -86,7 +86,7 @@
         <item row="1" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Select the concept column</string>
+           <string>Select the description column</string>
           </property>
          </widget>
         </item>

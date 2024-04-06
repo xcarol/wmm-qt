@@ -45,7 +45,7 @@
       <item row="2" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
         <item row="1" column="1">
-         <widget class="QComboBox" name="conceptColumnComboBox"/>
+         <widget class="QComboBox" name="descriptionColumnComboBox"/>
         </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label">
