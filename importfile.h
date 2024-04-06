@@ -35,6 +35,7 @@ private:
     CsvFile csvFile = CsvFile();
 
     void updatePreview();
+    void updateImportButtonState();
 };
 
 #endif // IMPORTFILE_H

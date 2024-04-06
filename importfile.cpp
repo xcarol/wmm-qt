@@ -1,5 +1,6 @@
 #include "importfile.h"
 #include "csvfile.h"
+#include "database.h"
 #include "ui_importfile.h"
 
 #include <QFileDialog>
@@ -18,11 +19,12 @@ void ImportFile::updatePreview() {
   ui->amountColumnComboBox->clear();
   ui->dateColumnComboBox->clear();
   ui->filePreviewTable->clear();
+  ui->ImportButton->setEnabled(false);
 
   if (csvFile.isEmpty()) {
     return;
   }
-  
+
   int rowsCount = 5;
   int headerRows = ui->firstRowCheckBox->isChecked();
   QList<QStringList> rows = csvFile.getRows(rowsCount);
@@ -72,22 +74,48 @@ void ImportFile::on_openFileButton_clicked() {
 
   ui->fileNameEdit->setText(fileName);
 
-  if (CsvFile::isValidCsvFile(fileName) && csvFile.read(fileName)) {
+  if (CsvFile::isValidCsvFile(fileName) == true) {
+    csvFile.read(fileName);
     updatePreview();
   }
+}
 
+void ImportFile::updateImportButtonState() {
+  ui->ImportButton->setEnabled(ui->dateColumnComboBox->currentIndex() > 0 &&
+                               ui->conceptColumnComboBox->currentIndex() > 0 &&
+                               ui->amountColumnComboBox->currentIndex() > 0);
+}
+
+void ImportFile::on_firstRowCheckBox_stateChanged(int arg1) {
+  updatePreview();
+  ui->ImportButton->setEnabled(false);
+}
+
+void ImportFile::on_dateColumnComboBox_currentIndexChanged(int index) {
+  updateImportButtonState();
+}
+
+void ImportFile::on_conceptColumnComboBox_currentIndexChanged(int index) {
+  updateImportButtonState();
+}
+
+void ImportFile::on_amountColumnComboBox_currentIndexChanged(int index) {
+  updateImportButtonState();
+}
+
+void ImportFile::on_ImportButton_clicked() {
+  Database database = Database();
+
+  bool databaseOpen = database.open();
+
+  if (databaseOpen == false) {
+    QMessageBox box =
+        QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                    QString(database.getLastErrorText()));
+  }
+
+  database.close();
   //     QList<QList<QString>> fileBody;
-
-  //     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL");
-  //     db.setHostName("127.0.0.1");
-  //     db.setDatabaseName("wmm");
-  //     db.setUserName("root");
-  //     db.setPassword("secret");
-
-  //     if (!db.open()) {
-  //         qDebug() << "Error al conectar a la base de dades: " <<
-  //         db.lastError(); return;
-  //     }
 
   //     bool firstLineHeaders = true;
   //     bool firstLineSeen = false;
@@ -106,42 +134,7 @@ void ImportFile::on_openFileButton_clicked() {
   //             db.close();
   //             return;
   //         }
-  ui->ImportButton->setEnabled(false);
-
   //     } while (true);
-  ui->ImportButton->setEnabled(false);
   //     // Tancar la connexió
-  //     db.close();
   // }
-}
-
-void ImportFile::on_firstRowCheckBox_stateChanged(int arg1) {
-  updatePreview();
-  ui->ImportButton->setEnabled(false);
-}
-
-void ImportFile::on_dateColumnComboBox_currentIndexChanged(int index) {
-  ui->ImportButton->setEnabled(ui->dateColumnComboBox->currentIndex() > 0 &&
-                               ui->conceptColumnComboBox->currentIndex() > 0 &&
-                               ui->amountColumnComboBox->currentIndex() > 0);
-  ui->ImportButton->setEnabled(false);
-}
-
-void ImportFile::on_conceptColumnComboBox_currentIndexChanged(int index) {
-  ui->ImportButton->setEnabled(ui->dateColumnComboBox->currentIndex() > 0 &&
-                               ui->conceptColumnComboBox->currentIndex() > 0 &&
-                               ui->amountColumnComboBox->currentIndex() > 0);
-  ui->ImportButton->setEnabled(false);
-}
-
-void ImportFile::on_amountColumnComboBox_currentIndexChanged(int index) {
-  ui->ImportButton->setEnabled(ui->dateColumnComboBox->currentIndex() > 0 &&
-                               ui->conceptColumnComboBox->currentIndex() > 0 &&
-                               ui->amountColumnComboBox->currentIndex() > 0);
-}
-
-void ImportFile::on_ImportButton_clicked() {
-  QMessageBox box = QMessageBox(QMessageBox::Icon::Information,
-                                QString("tachiiin"), QString("tachaaan"));
-  box.exec();
 }

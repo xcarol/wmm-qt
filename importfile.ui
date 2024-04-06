@@ -17,13 +17,6 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <widget class="QCheckBox" name="firstRowCheckBox">
-        <property name="text">
-         <string>First row is the header</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
@@ -42,17 +35,17 @@
         </item>
        </layout>
       </item>
-      <item row="2" column="0">
+      <item row="4" column="0">
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="1" column="1">
-         <widget class="QComboBox" name="conceptColumnComboBox"/>
-        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
            <string>Select the date column</string>
           </property>
          </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="amountColumnComboBox"/>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_3">
@@ -61,8 +54,21 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QComboBox" name="amountColumnComboBox"/>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="dateColumnComboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editable">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QComboBox" name="conceptColumnComboBox"/>
         </item>
         <item row="1" column="2">
          <spacer name="horizontalSpacer_2">
@@ -84,16 +90,40 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="dateColumnComboBox">
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QCheckBox" name="firstRowCheckBox">
+          <property name="text">
+           <string>First row is the header</string>
+          </property>
+         </widget>
+        </item>
+        <item alignment="Qt::AlignRight">
+         <widget class="QLabel" name="label_4">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Bank</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="banksComboBox">
           <property name="editable">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
          </widget>
         </item>
