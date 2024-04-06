@@ -69,5 +69,8 @@ bool CsvFile::read(QString filename)
 
 QList<QStringList> CsvFile::getRows(int count)
 {
+    if (count == 0) {
+        count = csvFields.length();
+    }
     return csvFields.mid(0, count);
 }
