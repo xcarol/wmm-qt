@@ -12,11 +12,13 @@ USE `wmm`;
 
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
+  `bank` varchar(200) NOT NULL,
   `date` datetime NOT NULL,
   `description` varchar(200) NOT NULL,
   `category` varchar(200) DEFAULT NULL,
   `amount` double NOT NULL,
   PRIMARY KEY (`date`),
+  KEY `bank` (`bank`),
   KEY `description` (`description`),
   KEY `category` (`category`),
   KEY `amount` (`amount`)
