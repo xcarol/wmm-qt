@@ -4,13 +4,33 @@
 #include <qsqlerror.h>
 
 Database::Database(QObject *parent) : QObject{parent} {
-  hostname = settings.value("hostname").toString();
-  database = settings.value("database").toString();
-  username = settings.value("username").toString();
-  userpass = settings.value("userpass").toString();
+  hostname = settings.value(HOSTNAME).toString();
+  database = settings.value(DATABASE).toString();
+  username = settings.value(USERNAME).toString();
+  userpass = settings.value(USERPASS).toString();
 }
 
 Database::~Database() { sqlDatabase.close(); }
+
+void Database::setHostname(QString name) {
+  settings.setValue(HOSTNAME, name);
+  hostname = name;
+}
+
+void Database::setDatabase(QString name) {
+  settings.setValue(DATABASE, name);
+  database = name;
+}
+
+void Database::setUsername(QString name) {
+  settings.setValue(USERNAME, name);
+  username = name;
+}
+
+void Database::setUserpass(QString pass) {
+  settings.setValue(USERPASS, pass);
+  userpass = pass;
+}
 
 bool Database::open() {
   sqlDatabase.setHostName(hostname);

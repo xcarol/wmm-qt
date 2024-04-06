@@ -5,6 +5,11 @@
 #include <QSettings>
 #include <QSqlDatabase>
 
+#define HOSTNAME "hostname"
+#define DATABASE "database"
+#define USERNAME "username"
+#define USERPASS "userpass"
+
 class Database : public QObject {
   Q_OBJECT
 
@@ -26,10 +31,10 @@ public:
   QString getUsername() { return username; }
   QString getUserpass() { return userpass; }
 
-  void setHostname(QString name) { hostname = name; }
-  void setDatabase(QString name) { database = name; }
-  void setUsername(QString name) { username = name; }
-  void setUserpass(QString pass) { userpass = pass; }
+  void setHostname(QString name);
+  void setDatabase(QString name);
+  void setUsername(QString name);
+  void setUserpass(QString pass);
 
   bool open();
   void close();
