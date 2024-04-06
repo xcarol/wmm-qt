@@ -14,6 +14,7 @@ public:
     static bool isValidCsvFile(QString filename);
 
 public:
+    bool isEmpty() { return csvRows.isEmpty(); }
     bool read(QString filename);
     QList<QStringList> getRows(int);
 };
