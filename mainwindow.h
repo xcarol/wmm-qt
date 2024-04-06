@@ -2,8 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSettings>
-#include <qsettings.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,6 +22,5 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QSettings settings = QSettings("com.xicra", "wmm");
 };
 #endif // MAINWINDOW_H
