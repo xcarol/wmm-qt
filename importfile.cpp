@@ -14,14 +14,19 @@ ImportFile::ImportFile(QWidget *parent)
 ImportFile::~ImportFile() { delete ui; }
 
 void ImportFile::updatePreview() {
+  ui->conceptColumnComboBox->clear();
+  ui->amountColumnComboBox->clear();
+  ui->dateColumnComboBox->clear();
+  ui->filePreviewTable->clear();
+
+  if (csvFile.isEmpty()) {
+    return;
+  }
+  
   int rowsCount = 5;
   int headerRows = ui->firstRowCheckBox->isChecked();
   QList<QStringList> rows = csvFile.getRows(rowsCount);
   int columnsCount = rows.at(0).length();
-
-  ui->conceptColumnComboBox->clear();
-  ui->amountColumnComboBox->clear();
-  ui->dateColumnComboBox->clear();
 
   ui->conceptColumnComboBox->addItem(QString(" "));
   ui->amountColumnComboBox->addItem(QString(" "));
@@ -41,7 +46,6 @@ void ImportFile::updatePreview() {
     }
   }
 
-  ui->filePreviewTable->clear();
   ui->filePreviewTable->setRowCount(rowsCount - headerRows);
   ui->filePreviewTable->setColumnCount(columnsCount);
 
