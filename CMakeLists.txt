@@ -40,6 +40,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         dialogs/DatabaseSettings.ui
         helpers/Database.h
         helpers/Database.cpp
+        views/CategorizeView.h
+        views/CategorizeView.cpp
+        views/CategorizeView.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
