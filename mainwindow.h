@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "csvfile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -10,32 +9,20 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QMainWindow {
+  Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+  MainWindow(QWidget *parent = nullptr);
+  ~MainWindow();
 
 private slots:
-    void on_openFileButton_clicked();
+  void on_actionDatabase_triggered();
 
-    void on_firstRowCheckBox_stateChanged(int arg1);
-
-    void on_dateColumnComboBox_currentIndexChanged(int index);
-
-    void on_conceptColumnComboBox_currentIndexChanged(int index);
-
-    void on_amountColumnComboBox_currentIndexChanged(int index);
-
-    void on_ImportButton_clicked();
+signals:
+  void statusBarUpdated(const QString &message);
 
 private:
-    Ui::MainWindow *ui;
-
-    CsvFile csvFile = CsvFile();
-
-    void updatePreview();
+  Ui::MainWindow *ui;
 };
 #endif // MAINWINDOW_H
