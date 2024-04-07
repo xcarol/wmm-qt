@@ -1,19 +1,19 @@
-#include "mainwindow.h"
-#include "./build/wmm_autogen/include/ui_mainwindow.h"
-#include "../dialogs/databasesettingsdialog.h"
-#include "./importfile.h"
-#include "../helpers/database.h"
+#include "MainWindow.h"
+#include "ui_MainWindow.h"
+#include "../dialogs/DatabaseSettings.h"
+#include "ImportFileView.h"
+#include "../helpers/Database.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
-  setCentralWidget(new ImportFile());
+  setCentralWidget(new ImportFileView());
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_actionDatabase_triggered() {
-  DatabaseSettingsDialog dialog = DatabaseSettingsDialog();
+  DatabaseSettings dialog = DatabaseSettings();
   Database database = Database();
 
   dialog.init(database.getHostname(),

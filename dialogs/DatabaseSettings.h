@@ -1,19 +1,19 @@
-#ifndef DATABASESETTINGSDIALOG_H
-#define DATABASESETTINGSDIALOG_H
+#ifndef DATABASESETTINGS_H
+#define DATABASESETTINGS_H
 
 #include <QDialog>
 
 namespace Ui {
-class DatabaseSettingsDialog;
+class DatabaseSettings;
 }
 
-class DatabaseSettingsDialog : public QDialog
+class DatabaseSettings : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit DatabaseSettingsDialog(QWidget *parent = nullptr);
-    ~DatabaseSettingsDialog();
+    explicit DatabaseSettings(QWidget *parent = nullptr);
+    ~DatabaseSettings();
 
     void init(QString hostname, QString database, QString username, QString userpass);
 
@@ -27,7 +27,7 @@ private slots:
     void on_buttonBox_accepted();
 
 private:
-    Ui::DatabaseSettingsDialog *ui;
+    Ui::DatabaseSettings *ui;
 };
 
-#endif // DATABASESETTINGSDIALOG_H
+#endif // DATABASESETTINGS_H

@@ -2,19 +2,19 @@
 #define IMPORTFILE_H
 
 #include <QMainWindow>
-#include "../helpers/csvfile.h"
+#include "../helpers/CsvFile.h"
 
 namespace Ui {
-class ImportFile;
+class ImportFileView;
 }
 
-class ImportFile : public QMainWindow
+class ImportFileView : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit ImportFile(QWidget *parent = nullptr);
-    ~ImportFile();
+    explicit ImportFileView(QWidget *parent = nullptr);
+    ~ImportFileView();
 
 private slots:
     void on_openFileButton_clicked();
@@ -43,7 +43,7 @@ private:
     int amountColumn = 0;
     QString bankName = "";
 
-    Ui::ImportFile *ui;
+    Ui::ImportFileView *ui;
 
     CsvFile csvFile = CsvFile();
 

@@ -1,22 +1,22 @@
-#include "importfile.h"
-#include "../helpers/csvfile.h"
-#include "../helpers/database.h"
-#include "ui_importfile.h"
+#include "ImportFileView.h"
+#include "../helpers/CsvFile.h"
+#include "../helpers/Database.h"
+#include "ui_ImportFileView.h"
 
 #include <QFileDialog>
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
 
-ImportFile::ImportFile(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::ImportFile) {
+ImportFileView::ImportFileView(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::ImportFileView) {
   ui->setupUi(this);
   ui->ImportButton->setEnabled(false);
 }
 
-ImportFile::~ImportFile() { delete ui; }
+ImportFileView::~ImportFileView() { delete ui; }
 
-void ImportFile::updatePreview() {
+void ImportFileView::updatePreview() {
   ui->descriptionColumnComboBox->clear();
   ui->amountColumnComboBox->clear();
   ui->dateColumnComboBox->clear();
@@ -69,7 +69,7 @@ void ImportFile::updatePreview() {
   }
 }
 
-void ImportFile::on_openFileButton_clicked() {
+void ImportFileView::on_openFileButton_clicked() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
                                                   tr("Csv Files (*.csv)"));
 
@@ -81,33 +81,33 @@ void ImportFile::on_openFileButton_clicked() {
   }
 }
 
-void ImportFile::updateImportButtonState() {
+void ImportFileView::updateImportButtonState() {
   ui->ImportButton->setEnabled(dateColumn > 0 && descriptionColumn > 0 &&
                                amountColumn > 0 && bankName.isEmpty() == false);
 }
 
-void ImportFile::on_firstRowCheckBox_stateChanged(int arg1) {
+void ImportFileView::on_firstRowCheckBox_stateChanged(int arg1) {
   headerRows = arg1 ? 1 : 0;
   updatePreview();
   ui->ImportButton->setEnabled(false);
 }
 
-void ImportFile::on_dateColumnComboBox_currentIndexChanged(int index) {
+void ImportFileView::on_dateColumnComboBox_currentIndexChanged(int index) {
   dateColumn = index;
   updateImportButtonState();
 }
 
-void ImportFile::on_descriptionColumnComboBox_currentIndexChanged(int index) {
+void ImportFileView::on_descriptionColumnComboBox_currentIndexChanged(int index) {
   descriptionColumn = index;
   updateImportButtonState();
 }
 
-void ImportFile::on_amountColumnComboBox_currentIndexChanged(int index) {
+void ImportFileView::on_amountColumnComboBox_currentIndexChanged(int index) {
   amountColumn = index;
   updateImportButtonState();
 }
 
-void ImportFile::on_ImportButton_clicked() {
+void ImportFileView::on_ImportButton_clicked() {
   QList<QStringList> rows = csvFile.getRows();
   QList<QStringList> databaseRows;
 
@@ -152,19 +152,19 @@ void ImportFile::on_ImportButton_clicked() {
   database.close();
 }
 
-void ImportFile::on_banksComboBox_editTextChanged(const QString &arg1) {
+void ImportFileView::on_banksComboBox_editTextChanged(const QString &arg1) {
   bankName = arg1;
   qDebug() << "on_banksComboBox_editTextChanged - arg1:" << arg1;
   updateImportButtonState();
 }
 
-void ImportFile::on_banksComboBox_currentIndexChanged(int index) {
+void ImportFileView::on_banksComboBox_currentIndexChanged(int index) {
   bankName = ui->banksComboBox->itemText(index);
   qDebug() << "on_banksComboBox_currentIndexChanged - index:" << index;
   updateImportButtonState();
 }
 
-void ImportFile::on_banksComboBox_currentTextChanged(const QString &arg1) {
+void ImportFileView::on_banksComboBox_currentTextChanged(const QString &arg1) {
   bankName = arg1;
   qDebug() << "on_banksComboBox_currentTextChanged - arg1:" << arg1;
   updateImportButtonState();

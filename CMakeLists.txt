@@ -20,9 +20,9 @@ set(TS_FILES lang/wmm_ca_ES.ts)
 
 set(PROJECT_SOURCES
         main/main.cpp
-        views/mainwindow.cpp
-        views/mainwindow.h
-        views/mainwindow.ui
+        views/MainWindow.cpp
+        views/MainWindow.h
+        views/MainWindow.ui
         ${TS_FILES}
 )
 
@@ -30,16 +30,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(wmm
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        helpers/csvfile.h
-        helpers/csvfile.cpp
-        views/importfile.h
-        views/importfile.cpp
-        views/importfile.ui
-        dialogs/databasesettingsdialog.h
-        dialogs/databasesettingsdialog.cpp
-        dialogs/databasesettingsdialog.ui
-        helpers/database.h
-        helpers/database.cpp
+        helpers/CsvFile.h
+        helpers/CsvFile.cpp
+        views/ImportFileView.h
+        views/ImportFileView.cpp
+        views/ImportFileView.ui
+        dialogs/DatabaseSettings.h
+        dialogs/DatabaseSettings.cpp
+        dialogs/DatabaseSettings.ui
+        helpers/Database.h
+        helpers/Database.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
