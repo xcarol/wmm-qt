@@ -150,7 +150,7 @@ void ImportFile::on_ImportButton_clicked() {
         .exec();
   } else {
     QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("%1 rows imported").arg(storedRows))
+                QString("A total of %1 rows imported").arg(storedRows))
         .exec();
   }
 
