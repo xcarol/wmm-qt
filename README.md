@@ -1,5 +1,7 @@
 # Where's My Money
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/760583c367544b849f72fe691a311737)](https://app.codacy.com/gh/xcarol/wmm?utm_source=github.com&utm_medium=referral&utm_content=xcarol/wmm&utm_campaign=Badge_Grade)
+
 A Personal 'Fintech' Application
 
 ## Vs Code
