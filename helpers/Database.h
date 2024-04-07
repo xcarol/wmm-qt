@@ -24,6 +24,9 @@ private:
   QSqlDatabase sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
   QSettings settings = QSettings("com.xicra", "wmm");
 
+  bool open();
+  void close();
+
 public:
   explicit Database(QObject *parent = nullptr);
   ~Database();
@@ -40,9 +43,8 @@ public:
   void setUsername(QString name);
   void setUserpass(QString pass);
 
-  bool open();
-  void close();
   ulong storeRows(QList<QStringList>, QProgressDialog *);
+  QStringList getBankNames();
 };
 
 #endif // DATABASE_H
