@@ -31,7 +31,12 @@ private slots:
 
     void on_banksComboBox_editTextChanged(const QString &arg1);
 
+    void on_banksComboBox_currentIndexChanged(int index);
+
+    void on_banksComboBox_currentTextChanged(const QString &arg1);
+
 private:
+    int indexOffset = 1;
     int headerRows = 0;
     int dateColumn = 0;
     int descriptionColumn = 0;

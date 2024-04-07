@@ -2,6 +2,7 @@
 #define DATABASE_H
 
 #include <QObject>
+#include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
 
@@ -14,6 +15,7 @@ class Database : public QObject {
   Q_OBJECT
 
 private:
+  QString lastError;
   QString hostname;
   QString database;
   QString username;
@@ -24,7 +26,9 @@ private:
 
 public:
   explicit Database(QObject *parent = nullptr);
-    ~Database();
+  ~Database();
+
+  QString getLastErrorText() { return lastError; };
 
   QString getHostname() { return hostname; }
   QString getDatabase() { return database; }
@@ -38,9 +42,7 @@ public:
 
   bool open();
   void close();
-  ulong storeRows(QList<QStringList>);
-
-  QString getLastErrorText();
+  ulong storeRows(QList<QStringList>, QProgressDialog *);
 };
 
 #endif // DATABASE_H

@@ -6,6 +6,12 @@
 #include <QFileDialog>
 #include <QList>
 #include <QMessageBox>
+#include <QProgressDialog>
+#include <qcontainerfwd.h>
+#include <qlogging.h>
+#include <qprogressdialog.h>
+#include <qtextcursor.h>
+#include <qtextformat.h>
 
 ImportFile::ImportFile(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFile) {
@@ -82,11 +88,11 @@ void ImportFile::on_openFileButton_clicked() {
 
 void ImportFile::updateImportButtonState() {
   ui->ImportButton->setEnabled(dateColumn > 0 && descriptionColumn > 0 &&
-                               amountColumn > 0);
+                               amountColumn > 0 && bankName.isEmpty() == false);
 }
 
 void ImportFile::on_firstRowCheckBox_stateChanged(int arg1) {
-  headerRows = arg1;
+  headerRows = arg1 ? 1 : 0;
   updatePreview();
   ui->ImportButton->setEnabled(false);
 }
@@ -113,9 +119,9 @@ void ImportFile::on_ImportButton_clicked() {
   for (int n = 0; n < rows.length() - headerRows; n++) {
     QStringList databaseRow;
     databaseRow.append(bankName);
-    databaseRow.append(rows.at(n).at(dateColumn));
-    databaseRow.append(rows.at(n).at(descriptionColumn));
-    databaseRow.append(rows.at(n).at(amountColumn));
+    databaseRow.append(rows.at(n + headerRows).at(dateColumn - indexOffset));
+    databaseRow.append(rows.at(n + headerRows).at(descriptionColumn - indexOffset));
+    databaseRow.append(rows.at(n + headerRows).at(amountColumn - indexOffset));
 
     databaseRows.append(databaseRow);
   }
@@ -131,12 +137,40 @@ void ImportFile::on_ImportButton_clicked() {
     box.exec();
   }
 
-  ulong storedRows = database.storeRows(databaseRows);
-  if (storedRows != databaseRows.length()) {
+  QProgressDialog progress =
+      QProgressDialog("Import progress", "Cancel", 0, databaseRows.length());
 
+  ulong storedRows = database.storeRows(databaseRows, &progress);
+
+  progress.close();
+
+  if (storedRows != databaseRows.length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
+                QString("%1 rows imported").arg(storedRows))
+        .exec();
   }
 
   database.close();
 }
 
-void ImportFile::on_banksComboBox_editTextChanged(const QString &arg1) {}
+void ImportFile::on_banksComboBox_editTextChanged(const QString &arg1) {
+  bankName = arg1;
+  qDebug() << "on_banksComboBox_editTextChanged - arg1:" << arg1;
+  updateImportButtonState();
+}
+
+void ImportFile::on_banksComboBox_currentIndexChanged(int index) {
+  bankName = ui->banksComboBox->itemText(index);
+  qDebug() << "on_banksComboBox_currentIndexChanged - index:" << index;
+  updateImportButtonState();
+}
+
+void ImportFile::on_banksComboBox_currentTextChanged(const QString &arg1) {
+  bankName = arg1;
+  qDebug() << "on_banksComboBox_currentTextChanged - arg1:" << arg1;
+  updateImportButtonState();
+}
