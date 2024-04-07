@@ -4,7 +4,6 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlResult>
-#include <qdebug.h>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME).toString();
@@ -90,7 +89,6 @@ QStringList Database::getBankNames() {
       }
     } else {
       lastError = query.lastError().databaseText();
-      qDebug() << lastError;
     }
 
     close();

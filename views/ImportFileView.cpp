@@ -145,18 +145,15 @@ void ImportFileView::on_ImportButton_clicked() {
 
 void ImportFileView::on_banksComboBox_editTextChanged(const QString &arg1) {
   bankName = arg1;
-  qDebug() << "on_banksComboBox_editTextChanged - arg1:" << arg1;
   updateImportButtonState();
 }
 
 void ImportFileView::on_banksComboBox_currentIndexChanged(int index) {
   bankName = ui->banksComboBox->itemText(index);
-  qDebug() << "on_banksComboBox_currentIndexChanged - index:" << index;
   updateImportButtonState();
 }
 
 void ImportFileView::on_banksComboBox_currentTextChanged(const QString &arg1) {
   bankName = arg1;
-  qDebug() << "on_banksComboBox_currentTextChanged - arg1:" << arg1;
   updateImportButtonState();
 }
