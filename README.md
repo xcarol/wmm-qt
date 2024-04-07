@@ -1,6 +1,8 @@
 # Where's My Money
 
-A Personal 'Fintech' Application
+A Personal 'Fintech' Application  
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f5be67cc1a014fcab81676691fcbd100)](https://app.codacy.com/gh/xcarol/wmm/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)  
 
 ## Vs Code
 
