@@ -22,11 +22,14 @@ void ImportFileView::updatePreview() {
   ui->amountColumnComboBox->clear();
   ui->dateColumnComboBox->clear();
   ui->filePreviewTable->clear();
+  ui->banksComboBox->clear();
   ui->ImportButton->setEnabled(false);
 
   if (csvFile.isEmpty()) {
     return;
   }
+
+  ui->banksComboBox->addItems(Database().getBankNames());
 
   int rowsCount = 5;
   QList<QStringList> rows = csvFile.getRows(rowsCount);
@@ -124,21 +127,10 @@ void ImportFileView::on_ImportButton_clicked() {
 
   Database database = Database();
 
-  bool databaseOpen = database.open();
-
-  if (databaseOpen == false) {
-    QMessageBox box =
-        QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
-                    QString(database.getLastErrorText()));
-    box.exec();
-  }
-
   QProgressDialog progress =
       QProgressDialog("Import progress", "Cancel", 0, databaseRows.length());
 
   ulong storedRows = database.storeRows(databaseRows, &progress);
-
-  progress.close();
 
   if (storedRows != databaseRows.length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
@@ -149,8 +141,6 @@ void ImportFileView::on_ImportButton_clicked() {
                 QString("A total of %1 rows imported").arg(storedRows))
         .exec();
   }
-
-  database.close();
 }
 
 void ImportFileView::on_banksComboBox_editTextChanged(const QString &arg1) {
