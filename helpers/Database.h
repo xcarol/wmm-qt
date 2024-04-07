@@ -24,8 +24,8 @@ private:
   QSqlDatabase sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
   QSettings settings = QSettings("com.xicra", "wmm");
 
-  bool open();
-  void close();
+  bool openDatabase();
+  void closeDatabase();
 
 public:
   explicit Database(QObject *parent = nullptr);

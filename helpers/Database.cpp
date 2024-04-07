@@ -34,7 +34,7 @@ void Database::setUserpass(QString pass) {
   userpass = pass;
 }
 
-bool Database::open() {
+bool Database::openDatabase() {
   sqlDatabase.setHostName(hostname);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
@@ -48,12 +48,12 @@ bool Database::open() {
   return true;
 }
 
-void Database::close() { sqlDatabase.close(); }
+void Database::closeDatabase() { sqlDatabase.close(); }
 
 ulong Database::storeRows(QList<QStringList> rows, QProgressDialog *progress) {
   ulong rowCount = 0;
 
-  if (open()) {
+  if (openDatabase()) {
     for (; rowCount < rows.length(); rowCount++) {
       QSqlQuery query = QSqlQuery(sqlDatabase);
       query.prepare(
@@ -72,7 +72,7 @@ ulong Database::storeRows(QList<QStringList> rows, QProgressDialog *progress) {
       progress->setValue(rowCount);
     }
 
-    close();
+    closeDatabase();
   }
 
   return rowCount;
@@ -82,7 +82,7 @@ QStringList Database::getBankNames() {
   QStringList bankNames;
   QSqlQuery query = QSqlQuery(sqlDatabase);
 
-  if (open()) {
+  if (openDatabase()) {
     if (query.exec("SELECT DISTINCT bank FROM transactions")) {
       while (query.next()) {
         bankNames.append(query.value("bank").toString());
@@ -91,7 +91,7 @@ QStringList Database::getBankNames() {
       lastError = query.lastError().databaseText();
     }
 
-    close();
+    closeDatabase();
   }
 
   return bankNames;
