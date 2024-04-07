@@ -1,17 +1,12 @@
 #include "importfile.h"
-#include "csvfile.h"
-#include "database.h"
+#include "../helpers/csvfile.h"
+#include "../helpers/database.h"
 #include "ui_importfile.h"
 
 #include <QFileDialog>
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <qcontainerfwd.h>
-#include <qlogging.h>
-#include <qprogressdialog.h>
-#include <qtextcursor.h>
-#include <qtextformat.h>
 
 ImportFile::ImportFile(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFile) {

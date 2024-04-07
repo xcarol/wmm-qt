@@ -16,13 +16,13 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
 find_package(Qt6 REQUIRED COMPONENTS Sql)
 
-set(TS_FILES wmm_ca_ES.ts)
+set(TS_FILES lang/wmm_ca_ES.ts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        mainwindow.ui
+        main/main.cpp
+        views/mainwindow.cpp
+        views/mainwindow.h
+        views/mainwindow.ui
         ${TS_FILES}
 )
 
@@ -30,13 +30,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(wmm
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        csvfile.h
-        csvfile.cpp
-        importfile.h
-        importfile.cpp
-        importfile.ui
-        databasesettingsdialog.h databasesettingsdialog.cpp databasesettingsdialog.ui
-        database.h database.cpp
+        helpers/csvfile.h
+        helpers/csvfile.cpp
+        views/importfile.h
+        views/importfile.cpp
+        views/importfile.ui
+        dialogs/databasesettingsdialog.h
+        dialogs/databasesettingsdialog.cpp
+        dialogs/databasesettingsdialog.ui
+        helpers/database.h
+        helpers/database.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

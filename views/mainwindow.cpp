@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "./build/wmm_autogen/include/ui_mainwindow.h"
-#include "databasesettingsdialog.h"
-#include "importfile.h"
-#include "database.h"
+#include "../dialogs/databasesettingsdialog.h"
+#include "./importfile.h"
+#include "../helpers/database.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {

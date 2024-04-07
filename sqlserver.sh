@@ -19,19 +19,19 @@ function ajuda() {
 function iniciar() {
   echo "Iniciant docker-compose..."
   mkdir -p ./mysql
-  docker-compose up -d
+  docker-compose -f ./database/docker-compose.yml up -d
   echo "Docker-compose iniciat correctament."
 }
 
 function aturar() {
   echo "Aturant docker-compose..."
-  docker-compose down
+  docker-compose -f ./database/docker-compose.yml down
   echo "Docker-compose aturat correctament."
 }
 
 function estat() {
   echo "Mostrant l'estat del docker-compose..."
-  docker-compose ps
+  docker-compose -f ./database/docker-compose.yml ps
 }
 
 # Validació arguments
