@@ -15,6 +15,9 @@ public:
     explicit CategorizeView(QWidget *parent = nullptr);
     ~CategorizeView();
 
+private slots:
+    void on_searchButton_clicked();
+
 private:
     Ui::CategorizeView *ui;
 };
