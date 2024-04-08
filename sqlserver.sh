@@ -6,31 +6,38 @@ function ajuda() {
   echo "**Comandes disponibles:**"
   echo ""
   echo "-h | --help: Mostra aquesta ajuda."
-  echo "-u | --up: Inicia el docker-compose."
-  echo "-d | --down: Aturar el docker-compose."
-  echo "-s | --status: Mostra l'estat del docker-compose."
+  echo "-u | --up: Inicia el servei."
+  echo "-d | --down: Aturar el servei."
+  echo "-r | --restart: Reinicia el servei."
+  echo "-s | --status: Mostra l'estat del servei."
   echo ""
   echo "**Exemple d'ús:**"
   echo "$0 -u"
   echo "$0 -d"
+  echo "$0 -r"
   echo "$0 -s"
 }
 
 function iniciar() {
-  echo "Iniciant docker-compose..."
+  echo "Iniciant servei..."
   mkdir -p ./mysql
   docker-compose -f ./database/docker-compose.yml up -d
-  echo "Docker-compose iniciat correctament."
+  echo "Servei iniciat correctament."
 }
 
 function aturar() {
-  echo "Aturant docker-compose..."
+  echo "Aturant servei..."
   docker-compose -f ./database/docker-compose.yml down
-  echo "Docker-compose aturat correctament."
+  echo "Servei aturat correctament."
+}
+
+function reiniciar() {
+  aturar
+  iniciar
 }
 
 function estat() {
-  echo "Mostrant l'estat del docker-compose..."
+  echo "Mostrant l'estat del servei..."
   docker-compose -f ./database/docker-compose.yml ps
 }
 
@@ -49,6 +56,9 @@ case "$1" in
     ;;
   "-d" | "--down")
     aturar
+    ;;
+  "-r" | "--restart")
+    reiniciar
     ;;
   "-s" | "--status")
     estat
