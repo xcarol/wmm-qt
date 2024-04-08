@@ -101,12 +101,17 @@ QStringList Database::getBankNames() {
   return bankNames;
 }
 
-QList<QStringList> Database::getUncategorizedRows() {
+QList<QStringList> Database::getUncategorizedRows(QString filter) {
   QList<QStringList> rows;
   QSqlQuery query = QSqlQuery(sqlDatabase);
+  QString queryString = "SELECT * FROM transactions WHERE category IS NULL";
 
   if (openDatabase()) {
-    if (query.exec("SELECT * FROM transactions WHERE category IS NULL")) {
+    if (!filter.isEmpty()) {
+      queryString.append(QString(" AND description REGEXP '%1'").arg(filter));
+    }
+
+    if (query.exec(queryString)) {
       while (query.next()) {
 
         QSqlRecord rec = query.record();

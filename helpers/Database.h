@@ -45,7 +45,7 @@ public:
 
   ulong storeRows(QList<QStringList>, QProgressDialog *);
   QStringList getBankNames();
-  QList<QStringList> getUncategorizedRows();
+  QList<QStringList> getUncategorizedRows(QString filter = QString());
   QStringList getColumnNames();
 };
 

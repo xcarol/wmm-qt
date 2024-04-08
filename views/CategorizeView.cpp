@@ -16,10 +16,10 @@ CategorizeView::~CategorizeView() { delete ui; }
 void CategorizeView::on_searchButton_clicked() {
   Database database = Database();
 
-  QList<QStringList> rows = database.getUncategorizedRows();
   QStringList labels = database.getColumnNames();
+  QList<QStringList> uncategorizedRow = database.getUncategorizedRows(ui->filterEdit->text());
 
-  if (labels.length() == 0 || rows.length() == 0) {
+  if (labels.length() == 0 || uncategorizedRow.length() == 0) {
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
       QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
@@ -29,8 +29,8 @@ void CategorizeView::on_searchButton_clicked() {
     return;
   }
 
-  int rowsCount = rows.count();
-  int columnsCount = rows.at(0).count();
+  int rowsCount = uncategorizedRow.count();
+  int columnsCount = uncategorizedRow.at(0).count();
 
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setRowCount(rowsCount);
@@ -45,7 +45,7 @@ void CategorizeView::on_searchButton_clicked() {
   for (int column = 0; column < columnsCount; column++) {
     for (int row = 0; row < rowsCount; row++) {
       ui->searchResultsTable->setCellWidget(
-          row, column, new QLabel(rows.at(row).at(column)));
+          row, column, new QLabel(uncategorizedRow.at(row).at(column)));
     }
   }
 }
