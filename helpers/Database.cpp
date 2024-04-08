@@ -104,7 +104,7 @@ QStringList Database::getBankNames() {
 QList<QStringList> Database::getUncategorizedRows(QString filter) {
   QList<QStringList> rows;
   QSqlQuery query = QSqlQuery(sqlDatabase);
-  QString queryString = "SELECT * FROM transactions WHERE category IS NULL";
+  QString queryString = "SELECT * FROM transactions WHERE TRIM(category) = ''";
 
   if (openDatabase()) {
     if (!filter.isEmpty()) {
@@ -116,13 +116,11 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
 
         QSqlRecord rec = query.record();
         QStringList fields;
-        
+
         for (int n = 0; n < rec.count(); n++) {
-          QSqlField f = rec.field(n);
-          qDebug() << f.value();
-          fields.append(f.value().toString());
+          fields.append(rec.field(n).value().toString());
         }
-        
+
         rows.append(fields);
       }
     } else {
@@ -147,7 +145,6 @@ QStringList Database::getColumnNames() {
         for (int n = 0; n < rec.count(); n++) {
           names.append(rec.fieldName(n));
         }
-
       }
     } else {
       lastError = query.lastError().databaseText();
@@ -157,4 +154,26 @@ QStringList Database::getColumnNames() {
   }
 
   return names;
+}
+
+ulong Database::updateRowsCategory(QString regexp, QString category) {
+  ulong updatedRows;
+  QSqlQuery query = QSqlQuery(sqlDatabase);
+  QString queryString =
+      QString("UPDATE transactions SET category = '%2' WHERE description "
+              "REGEXP '%1' AND TRIM(category) = ''")
+          .arg(regexp.length() ? regexp : ".*")
+          .arg(category);
+
+  if (openDatabase()) {
+    if (query.exec(queryString)) {
+      updatedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return updatedRows;
 }

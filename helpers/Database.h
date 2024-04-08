@@ -44,6 +44,7 @@ public:
   void setUserpass(QString pass);
 
   ulong storeRows(QList<QStringList>, QProgressDialog *);
+  ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
   QList<QStringList> getUncategorizedRows(QString filter = QString());
   QStringList getColumnNames();
