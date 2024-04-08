@@ -149,12 +149,30 @@
     </property>
     <addaction name="actionDatabase"/>
    </widget>
+   <widget class="QMenu" name="menuViews">
+    <property name="title">
+     <string>Views</string>
+    </property>
+    <addaction name="actionImport"/>
+    <addaction name="actionCategorize"/>
+   </widget>
    <addaction name="menuSettings"/>
+   <addaction name="menuViews"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionDatabase">
    <property name="text">
     <string>Database...</string>
+   </property>
+  </action>
+  <action name="actionImport">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionCategorize">
+   <property name="text">
+    <string>Categorize</string>
    </property>
   </action>
  </widget>
