@@ -1,8 +1,11 @@
 #include "Database.h"
 
+#include <QList>
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QSqlField>
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlResult>
 
 Database::Database(QObject *parent) : QObject{parent} {
@@ -35,6 +38,7 @@ void Database::setUserpass(QString pass) {
 }
 
 bool Database::openDatabase() {
+  lastError.clear();
   sqlDatabase.setHostName(hostname);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
@@ -95,4 +99,57 @@ QStringList Database::getBankNames() {
   }
 
   return bankNames;
+}
+
+QList<QStringList> Database::getUncategorizedRows() {
+  QList<QStringList> rows;
+  QSqlQuery query = QSqlQuery(sqlDatabase);
+
+  if (openDatabase()) {
+    if (query.exec("SELECT * FROM transactions WHERE category IS NULL")) {
+      while (query.next()) {
+
+        QSqlRecord rec = query.record();
+        QStringList fields;
+        
+        for (int n = 0; n < rec.count(); n++) {
+          QSqlField f = rec.field(n);
+          qDebug() << f.value();
+          fields.append(f.value().toString());
+        }
+        
+        rows.append(fields);
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return rows;
+}
+
+QStringList Database::getColumnNames() {
+  QStringList names;
+  QSqlQuery query = QSqlQuery(sqlDatabase);
+
+  if (openDatabase()) {
+    if (query.exec("SELECT * FROM transactions LIMIT 1")) {
+      while (query.next()) {
+
+        QSqlRecord rec = query.record();
+        for (int n = 0; n < rec.count(); n++) {
+          names.append(rec.fieldName(n));
+        }
+
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return names;
 }
