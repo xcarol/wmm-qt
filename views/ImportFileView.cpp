@@ -132,6 +132,8 @@ void ImportFileView::on_ImportButton_clicked() {
 
   ulong storedRows = database.storeRows(databaseRows, &progress);
 
+  progress.cancel();
+
   if (storedRows != databaseRows.length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
                 QString(database.getLastErrorText()))
