@@ -123,7 +123,7 @@ QStringList Database::getCategoryNames() {
 QList<QStringList> Database::getUncategorizedRows(QString filter) {
   QList<QStringList> rows;
   QSqlQuery query = QSqlQuery(sqlDatabase);
-  QString queryString = "SELECT * FROM transactions WHERE TRIM(category) = ''";
+  QString queryString = "SELECT * FROM transactions WHERE (TRIM(category) = '' OR category IS NULL)";
 
   if (openDatabase()) {
     if (!filter.isEmpty()) {
