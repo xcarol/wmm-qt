@@ -18,10 +18,12 @@ CategorizeView::~CategorizeView() { delete ui; }
 void CategorizeView::on_searchButton_clicked() {
   Database database = Database();
 
+  ui->categoryComboBox->clear();
+  ui->categoryComboBox->addItems(database.getCategoryNames());
+
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setRowCount(0);
   ui->searchResultsTable->setColumnCount(0);
-  ui->categoryComboBox->addItems(database.getCategoryNames());
 
   QStringList labels = database.getColumnNames();
   uncategorizedRows = database.getUncategorizedRows(appliedFilter);
