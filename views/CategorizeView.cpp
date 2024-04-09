@@ -4,6 +4,7 @@
 #include <QLabel>
 #include <QList>
 #include <QMessageBox>
+#include <QDate>
 
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
@@ -35,11 +36,11 @@ void CategorizeView::on_searchButton_clicked() {
     return;
   }
 
-  int rowsCount = uncategorizedRows.count();
-  int columnsCount = uncategorizedRows.at(0).count();
+  int numberOfRows = uncategorizedRows.count();
+  int numberOfColumns = uncategorizedRows.at(0).count();
 
-  ui->searchResultsTable->setRowCount(rowsCount);
-  ui->searchResultsTable->setColumnCount(columnsCount);
+  ui->searchResultsTable->setRowCount(numberOfRows);
+  ui->searchResultsTable->setColumnCount(numberOfColumns);
   ui->searchResultsTable->verticalHeader()->setVisible(false);
 
   for (int n = 0; n < labels.length(); n++) {
@@ -47,10 +48,32 @@ void CategorizeView::on_searchButton_clicked() {
         n, new QTableWidgetItem(QString(labels.at(n).toUpper())));
   }
 
-  for (int column = 0; column < columnsCount; column++) {
-    for (int row = 0; row < rowsCount; row++) {
-      ui->searchResultsTable->setCellWidget(
-          row, column, new QLabel(uncategorizedRows.at(row).at(column)));
+  QLocale locale;
+  QString dateFormat = locale.dateFormat(QLocale::ShortFormat);
+
+  for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
+    for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
+
+      QStringList row = uncategorizedRows.at(rowCount);
+      QString value = row.at(columnCount);
+
+      QLabel *label;
+      switch (columnCount) {
+      case DATE_COLUMN:
+        label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
+                               .toString(dateFormat));
+        label->setAlignment(Qt::AlignCenter);
+        break;
+
+      case AMOUNT_COLUMN:
+        label = new QLabel(QString::number(value.toDouble(), 'g', 2));
+        label->setAlignment(Qt::AlignRight);
+        break;
+
+      default:
+        label = new QLabel(value);
+      }
+      ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
     }
   }
 
@@ -70,8 +93,8 @@ void CategorizeView::on_updateButton_clicked() {
 
   Database database = Database();
 
-  QProgressDialog progress =
-      QProgressDialog("Update progress", "Cancel", 0, uncategorizedRows.length());
+  QProgressDialog progress = QProgressDialog("Update progress", "Cancel", 0,
+                                             uncategorizedRows.length());
 
   ulong updatedRows = database.updateRowsCategory(appliedFilter, categoryName);
 
@@ -94,11 +117,10 @@ void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
 }
 
 void CategorizeView::updateUpdateButtonState() {
-  ui->updateButton->setEnabled(uncategorizedRows.length() > 0 && categoryName.length() > 0);
+  ui->updateButton->setEnabled(uncategorizedRows.length() > 0 &&
+                               categoryName.length() > 0);
 }
 
-void CategorizeView::on_filterEdit_textChanged(const QString &arg1)
-{
+void CategorizeView::on_filterEdit_textChanged(const QString &arg1) {
   appliedFilter = arg1;
 }
-

@@ -3,6 +3,13 @@
 
 #include <QMainWindow>
 
+#define IDX_COLUMN          0
+#define BANK_COLUMN         1
+#define DATE_COLUMN         2
+#define DESCRIPTION_COLUMN  3
+#define CATEGORY_COLUMN     4
+#define AMOUNT_COLUMN       5
+
 namespace Ui {
 class CategorizeView;
 }
