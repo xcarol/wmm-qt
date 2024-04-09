@@ -46,6 +46,7 @@ public:
   ulong storeRows(QList<QStringList>, QProgressDialog *);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
+  QStringList getCategoryNames();
   QList<QStringList> getUncategorizedRows(QString filter = QString());
   QStringList getColumnNames();
 };

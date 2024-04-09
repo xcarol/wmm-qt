@@ -1,5 +1,5 @@
 #include "CategorizeView.h"
-#include "../helpers/Database.h"
+#include "../lib/Database.h"
 #include "ui_CategorizeView.h"
 #include <QLabel>
 #include <QList>

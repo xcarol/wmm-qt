@@ -1,7 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "../dialogs/DatabaseSettings.h"
-#include "../helpers/Database.h"
+#include "../lib/Database.h"
 #include "CategorizeView.h"
 #include "ImportFileView.h"
 #include <QSettings>

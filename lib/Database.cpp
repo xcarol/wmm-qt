@@ -101,6 +101,25 @@ QStringList Database::getBankNames() {
   return bankNames;
 }
 
+QStringList Database::getCategoryNames() {
+  QStringList categoryNames;
+  QSqlQuery query = QSqlQuery(sqlDatabase);
+
+  if (openDatabase()) {
+    if (query.exec("SELECT DISTINCT category FROM transactions")) {
+      while (query.next()) {
+        categoryNames.append(query.value("category").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return categoryNames;
+}
+
 QList<QStringList> Database::getUncategorizedRows(QString filter) {
   QList<QStringList> rows;
   QSqlQuery query = QSqlQuery(sqlDatabase);

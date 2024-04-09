@@ -1,6 +1,6 @@
 #include "ImportFileView.h"
-#include "../helpers/CsvFile.h"
-#include "../helpers/Database.h"
+#include "../lib/CsvFile.h"
+#include "../lib/Database.h"
 #include "ui_ImportFileView.h"
 
 #include <QFileDialog>

@@ -2,7 +2,7 @@
 #define IMPORTFILE_H
 
 #include <QMainWindow>
-#include "../helpers/CsvFile.h"
+#include "../lib/CsvFile.h"
 
 namespace Ui {
 class ImportFileView;
