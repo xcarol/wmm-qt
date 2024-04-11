@@ -17,6 +17,22 @@ For Ubuntu 23.10, install:
 Download and install Qt from [https://www.qt.io/download-open-source](https://www.qt.io/download-open-source)  
 Install Qt at _/home/xcarol/Qt_ and check the path declared at _CMakeLists.txt_ when setting _CMAKE_PREFIX_PATH_ to be correct.
 
+### MySql Driver for Qt
+
+At first run of the application the following error can raise up in the console and the application cannot connect to the MySql Server.  
+
+``` Log
+QMYSQL driver not loaded
+QSqlDatabase: available drivers: QMIMER QODBC QPSQL QSQLITE QMARIADB QMYSQL
+```
+
+The problem is that Qt cannot find its own MySql server Driver although it has been installed correctly.  
+I tried to find an easy solution and ended bored.  
+
+So, the easy way to work around this issue is to install MySql Workbench from: [https://dev.mysql.com/downloads/workbench/](https://dev.mysql.com/downloads/workbench/)
+
+(if it doesn't run after the installation run this command: `sudo apt install -f`)
+
 ## Vs Code
 
 Install the following extensions
