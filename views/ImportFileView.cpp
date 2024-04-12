@@ -118,7 +118,7 @@ void ImportFileView::importSelectedFile() {
   for (; storedRows < rowsToStore; storedRows++) {
     QStringList row = csvFile.getRows(storedRows + headerRows).at(0);
 
-    if (row.length() == 0) {
+    if (row.length() == 0 || row.length() < csvFile.columnsCount()) {
       break;
     }
 
@@ -130,6 +130,7 @@ void ImportFileView::importSelectedFile() {
       break;
     }
 
+    progress.setLabelText(QString("%1 of %2 rows stored...").arg(storedRows).arg(rowsToStore));
     progress.setValue(storedRows);
     if (progress.wasCanceled()) {
       break;

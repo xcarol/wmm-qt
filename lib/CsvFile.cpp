@@ -79,6 +79,7 @@ bool CsvFile::open(QString filename) {
 
     parseRows();
     rowsInFile = count;
+    columnsInFile = csvFields.first().length();
   }
 
   return false;
@@ -87,6 +88,7 @@ bool CsvFile::open(QString filename) {
 void CsvFile::close() { file->close(); }
 
 ulong CsvFile::rowsCount() { return rowsInFile; }
+ulong CsvFile::columnsCount() { return columnsInFile; }
 
 QList<QStringList> CsvFile::getRows(int index, int count) {
   readRows(index, count);

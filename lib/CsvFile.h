@@ -11,6 +11,7 @@ class CsvFile {
 private:
   QFile *file = NULL;
   ulong rowsInFile = 0;
+  ulong columnsInFile = 0;
   QList<QString> csvRows;
   QList<QStringList> csvFields;
 
@@ -26,6 +27,7 @@ public:
   bool open(QString filename);
   void close();
   ulong rowsCount();
+  ulong columnsCount();
   QList<QStringList> getRows(int index = 0, int count = 1);
 };
 
