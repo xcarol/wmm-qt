@@ -34,6 +34,7 @@ void CsvFile::readRows(int index, int count) {
   csvRows.clear();
   csvFields.clear();
 
+  file->seek(0);
   for (int n = 0; n < index + count; n++) {
     QByteArray line = file->readLine();
     if (line.length() == 0)
