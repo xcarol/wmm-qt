@@ -54,17 +54,17 @@ bool Database::openDatabase() {
 
 void Database::closeDatabase() { sqlDatabase.close(); }
 
-bool Database::storeRow(QStringList row) {
+bool Database::storeRow(QString bank, QString date, QString description, double amount) {
   if (openDatabase()) {
     bool success = true;
 
     QSqlQuery query = QSqlQuery(sqlDatabase);
     query.prepare("INSERT INTO transactions (bank, date, description, amount) "
                   "VALUES (:bank, :date, :description, :amount)");
-    query.bindValue(":bank", row.at(0));
-    query.bindValue(":date", row.at(1));
-    query.bindValue(":description", row.at(2));
-    query.bindValue(":amount", row.at(3));
+    query.bindValue(":bank", bank);
+    query.bindValue(":date", date);
+    query.bindValue(":description", description);
+    query.bindValue(":amount", amount);
 
     if (!query.exec()) {
       lastError = query.lastError().databaseText();

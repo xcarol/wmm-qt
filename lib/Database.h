@@ -43,7 +43,7 @@ public:
   void setUsername(QString name);
   void setUserpass(QString pass);
 
-  bool storeRow(QStringList);
+  bool storeRow(QString bank, QString date, QString description, double amount);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
   QStringList getCategoryNames();
