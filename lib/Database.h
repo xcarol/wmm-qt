@@ -43,7 +43,7 @@ public:
   void setUsername(QString name);
   void setUserpass(QString pass);
 
-  ulong storeRows(QList<QStringList>, QProgressDialog *);
+  bool storeRow(QStringList);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
   QStringList getCategoryNames();

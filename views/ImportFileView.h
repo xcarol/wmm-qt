@@ -17,23 +17,23 @@ public:
     ~ImportFileView();
 
 private slots:
-    void on_openFileButton_clicked();
+  void on_openFileButton_clicked();
 
-    void on_firstRowCheckBox_stateChanged(int arg1);
+  void on_firstRowCheckBox_stateChanged(int arg1);
 
-    void on_dateColumnComboBox_currentIndexChanged(int index);
+  void on_dateColumnComboBox_currentIndexChanged(int index);
 
-    void on_descriptionColumnComboBox_currentIndexChanged(int index);
+  void on_descriptionColumnComboBox_currentIndexChanged(int index);
 
-    void on_amountColumnComboBox_currentIndexChanged(int index);
+  void on_amountColumnComboBox_currentIndexChanged(int index);
 
-    void on_ImportButton_clicked();
+  void on_ImportButton_clicked();
 
-    void on_banksComboBox_editTextChanged(const QString &arg1);
+  void on_banksComboBox_editTextChanged(const QString &arg1);
 
-    void on_banksComboBox_currentIndexChanged(int index);
+  void on_banksComboBox_currentIndexChanged(int index);
 
-    void on_banksComboBox_currentTextChanged(const QString &arg1);
+  void on_banksComboBox_currentTextChanged(const QString &arg1);
 
 private:
     int indexOffset = 1;
@@ -47,8 +47,15 @@ private:
 
     CsvFile csvFile = CsvFile();
 
+    void fillHeaders(QList<QStringList> rows);
+    void fillRows(QList<QStringList> rows);
+    void formatPreview(QList<QStringList> rows);
+    void resetView();
     void updatePreview();
     void updateImportButtonState();
+
+    void selectImportFile();
+    void importSelectedFile();
 };
 
 #endif // IMPORTFILE_H

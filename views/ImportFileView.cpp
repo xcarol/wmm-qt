@@ -17,22 +17,16 @@ ImportFileView::ImportFileView(QWidget *parent)
 
 ImportFileView::~ImportFileView() { delete ui; }
 
-void ImportFileView::updatePreview() {
+void ImportFileView::resetView() {
   ui->descriptionColumnComboBox->clear();
   ui->amountColumnComboBox->clear();
   ui->dateColumnComboBox->clear();
   ui->filePreviewTable->clear();
   ui->banksComboBox->clear();
   ui->ImportButton->setEnabled(false);
+}
 
-  if (csvFile.isEmpty()) {
-    return;
-  }
-
-  ui->banksComboBox->addItems(Database().getBankNames());
-
-  int rowsCount = 5;
-  QList<QStringList> rows = csvFile.getRows(rowsCount);
+void ImportFileView::fillHeaders(QList<QStringList> rows) {
   int columnsCount = rows.at(0).length();
 
   ui->descriptionColumnComboBox->addItem(QString(" "));
@@ -52,6 +46,24 @@ void ImportFileView::updatePreview() {
       ui->dateColumnComboBox->addItem(QString::number(n));
     }
   }
+}
+
+void ImportFileView::fillRows(QList<QStringList> rows) {
+  int rowsCount = rows.length();
+  int columnsCount = rows.at(0).length();
+
+  for (int column = 0; column < columnsCount; column++) {
+    ui->ImportButton->setEnabled(false);
+    for (int row = 0; row < rowsCount - headerRows; row++) {
+      ui->filePreviewTable->setCellWidget(
+          row, column, new QLabel(rows.at(row + headerRows).at(column)));
+    }
+  }
+}
+
+void ImportFileView::formatPreview(QList<QStringList> rows) {
+  int rowsCount = rows.length();
+  int columnsCount = rows.at(0).length();
 
   ui->filePreviewTable->setRowCount(rowsCount - headerRows);
   ui->filePreviewTable->setColumnCount(columnsCount);
@@ -63,27 +75,76 @@ void ImportFileView::updatePreview() {
           n, new QTableWidgetItem(QString(headers.at(n))));
     }
   }
-
-  for (int column = 0; column < columnsCount; column++) {
-    ui->ImportButton->setEnabled(false);
-    for (int row = 0; row < rowsCount - headerRows; row++) {
-      ui->filePreviewTable->setCellWidget(
-          row, column, new QLabel(rows.at(row + headerRows).at(column)));
-    }
-  }
 }
 
-void ImportFileView::on_openFileButton_clicked() {
+void ImportFileView::updatePreview() {
+  resetView();
+
+  if (csvFile.isEmpty()) {
+    return;
+  }
+
+  ui->banksComboBox->addItems(Database().getBankNames());
+
+  QList<QStringList> rows = csvFile.getRows(10);
+
+  formatPreview(rows);
+  fillHeaders(rows);
+  fillRows(rows);
+}
+
+void ImportFileView::selectImportFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
                                                   tr("Csv Files (*.csv)"));
 
   ui->fileNameEdit->setText(fileName);
 
   if (CsvFile::isValidCsvFile(fileName) == true) {
-    csvFile.read(fileName);
+    csvFile.open(fileName);
     updatePreview();
   }
 }
+
+void ImportFileView::importSelectedFile() {
+  Database database = Database();
+
+  QProgressDialog progress =
+      QProgressDialog("Import progress", "Cancel", 0, csvFile.rowsCount());
+
+  progress.show();
+
+  int storedRows = 0;
+  for (; storedRows < csvFile.rowsCount() - headerRows; storedRows++) {
+    QList<QStringList> rows = csvFile.getRows(storedRows);
+
+    QStringList databaseRow;
+    databaseRow.append(bankName);
+    databaseRow.append(rows.at(storedRows + headerRows).at(dateColumn - indexOffset));
+    databaseRow.append(
+        rows.at(storedRows + headerRows).at(descriptionColumn - indexOffset));
+    databaseRow.append(rows.at(storedRows + headerRows).at(amountColumn - indexOffset));
+
+    if(database.storeRow(databaseRow) == false) {
+      break;
+    }
+
+    progress.setValue(storedRows);
+  }
+
+  progress.cancel();
+
+  if (storedRows != csvFile.rowsCount()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
+                QString("A total of %1 rows imported").arg(storedRows))
+        .exec();
+  }
+}
+
+void ImportFileView::on_openFileButton_clicked() { selectImportFile(); }
 
 void ImportFileView::updateImportButtonState() {
   ui->ImportButton->setEnabled(dateColumn > 0 && descriptionColumn > 0 &&
@@ -101,7 +162,8 @@ void ImportFileView::on_dateColumnComboBox_currentIndexChanged(int index) {
   updateImportButtonState();
 }
 
-void ImportFileView::on_descriptionColumnComboBox_currentIndexChanged(int index) {
+void ImportFileView::on_descriptionColumnComboBox_currentIndexChanged(
+    int index) {
   descriptionColumn = index;
   updateImportButtonState();
 }
@@ -111,39 +173,7 @@ void ImportFileView::on_amountColumnComboBox_currentIndexChanged(int index) {
   updateImportButtonState();
 }
 
-void ImportFileView::on_ImportButton_clicked() {
-  QList<QStringList> rows = csvFile.getRows();
-  QList<QStringList> databaseRows;
-
-  for (int n = 0; n < rows.length() - headerRows; n++) {
-    QStringList databaseRow;
-    databaseRow.append(bankName);
-    databaseRow.append(rows.at(n + headerRows).at(dateColumn - indexOffset));
-    databaseRow.append(rows.at(n + headerRows).at(descriptionColumn - indexOffset));
-    databaseRow.append(rows.at(n + headerRows).at(amountColumn - indexOffset));
-
-    databaseRows.append(databaseRow);
-  }
-
-  Database database = Database();
-
-  QProgressDialog progress =
-      QProgressDialog("Import progress", "Cancel", 0, databaseRows.length());
-
-  ulong storedRows = database.storeRows(databaseRows, &progress);
-
-  progress.cancel();
-
-  if (storedRows != databaseRows.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("A total of %1 rows imported").arg(storedRows))
-        .exec();
-  }
-}
+void ImportFileView::on_ImportButton_clicked() { importSelectedFile(); }
 
 void ImportFileView::on_banksComboBox_editTextChanged(const QString &arg1) {
   bankName = arg1;

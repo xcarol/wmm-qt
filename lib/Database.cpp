@@ -54,32 +54,28 @@ bool Database::openDatabase() {
 
 void Database::closeDatabase() { sqlDatabase.close(); }
 
-ulong Database::storeRows(QList<QStringList> rows, QProgressDialog *progress) {
-  ulong rowCount = 0;
-
+bool Database::storeRow(QStringList row) {
   if (openDatabase()) {
-    for (; rowCount < rows.length(); rowCount++) {
-      QSqlQuery query = QSqlQuery(sqlDatabase);
-      query.prepare(
-          "INSERT INTO transactions (bank, date, description, amount) "
-          "VALUES (:bank, :date, :description, :amount)");
-      query.bindValue(":bank", rows.at(rowCount).at(0));
-      query.bindValue(":date", rows.at(rowCount).at(1));
-      query.bindValue(":description", rows.at(rowCount).at(2));
-      query.bindValue(":amount", rows.at(rowCount).at(3));
+    bool success = true;
 
-      if (!query.exec()) {
-        lastError = query.lastError().databaseText();
-        break;
-      }
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    query.prepare("INSERT INTO transactions (bank, date, description, amount) "
+                  "VALUES (:bank, :date, :description, :amount)");
+    query.bindValue(":bank", row.at(0));
+    query.bindValue(":date", row.at(1));
+    query.bindValue(":description", row.at(2));
+    query.bindValue(":amount", row.at(3));
 
-      progress->setValue(rowCount);
+    if (!query.exec()) {
+      lastError = query.lastError().databaseText();
+      success = false;
     }
 
     closeDatabase();
+    return success;
   }
 
-  return rowCount;
+  return false;
 }
 
 QStringList Database::getBankNames() {
