@@ -14,7 +14,7 @@ bool CsvFile::isValidCsvFile(QString filename) {
   QFile file = QFile(filename);
 
   if (file.open(QIODevice::ReadOnly)) {
-    QByteArray bytes = file.read(10);
+    QByteArray bytes = file.readLine();
 
     for (int n = 0; n < bytes.length(); n++) {
       if (QChar::isPrint(bytes.at(n)) == false) {
