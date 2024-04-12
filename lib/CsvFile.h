@@ -2,21 +2,31 @@
 #define CSVFILE_H
 
 #include <QList>
+#include <QFile>
+#include <qtypes.h>
+
+#define MAX_ROWS 10
 
 class CsvFile {
 private:
-    QList<QString> csvRows;
-    QList<QStringList> csvFields;
+  QFile *file = NULL;
+  ulong rowsInFile = 0;
+  QList<QString> csvRows;
+  QList<QStringList> csvFields;
 
-    void parseRows();
+  void readRows(int index = 0, int count = 0);
+  void parseRows();
 
 public:
-    static bool isValidCsvFile(QString filename);
+  static bool isValidCsvFile(QString filename);
 
 public:
-    bool isEmpty() { return csvRows.isEmpty(); }
-    bool read(QString filename);
-    QList<QStringList> getRows(int count = 0);
+  ~CsvFile();
+  bool isEmpty() { return csvRows.isEmpty(); }
+  bool open(QString filename);
+  void close();
+  ulong rowsCount();
+  QList<QStringList> getRows(int index = 0, int count = 1);
 };
 
 #endif // CSVFILE_H
