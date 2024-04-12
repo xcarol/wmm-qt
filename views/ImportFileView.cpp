@@ -86,7 +86,7 @@ void ImportFileView::updatePreview() {
 
   ui->banksComboBox->addItems(Database().getBankNames());
 
-  QList<QStringList> rows = csvFile.getRows(10);
+  QList<QStringList> rows = csvFile.getRows(0, 10);
 
   formatPreview(rows);
   fillHeaders(rows);
@@ -111,35 +111,40 @@ void ImportFileView::importSelectedFile() {
   QProgressDialog progress =
       QProgressDialog("Import progress", "Cancel", 0, csvFile.rowsCount());
 
-  progress.show();
+  progress.setWindowModality(Qt::WindowModal);
 
   int storedRows = 0;
-  for (; storedRows < csvFile.rowsCount() - headerRows; storedRows++) {
-    QList<QStringList> rows = csvFile.getRows(storedRows);
+  int rowsToStore = csvFile.rowsCount() - headerRows;
+  for (; storedRows < rowsToStore; storedRows++) {
+    QStringList row = csvFile.getRows(storedRows + headerRows).at(0);
 
-    QStringList databaseRow;
-    databaseRow.append(bankName);
-    databaseRow.append(rows.at(storedRows + headerRows).at(dateColumn - indexOffset));
-    databaseRow.append(
-        rows.at(storedRows + headerRows).at(descriptionColumn - indexOffset));
-    databaseRow.append(rows.at(storedRows + headerRows).at(amountColumn - indexOffset));
+    if (row.length() == 0) {
+      break;
+    }
 
-    if(database.storeRow(databaseRow) == false) {
+    QString date = row.at(dateColumn - INDEX_OFFSET);
+    QString description = row.at(descriptionColumn - INDEX_OFFSET);
+    double amount = row.at(amountColumn - INDEX_OFFSET).toDouble();
+
+    if (database.storeRow(bankName, date, description, amount) == false) {
       break;
     }
 
     progress.setValue(storedRows);
+    if (progress.wasCanceled()) {
+      break;
+    }
   }
 
   progress.cancel();
 
-  if (storedRows != csvFile.rowsCount()) {
+  if (database.getLastErrorText().length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
                 QString(database.getLastErrorText()))
         .exec();
   } else {
     QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("A total of %1 rows imported").arg(storedRows))
+                QString("A total of %1 from %2 rows imported").arg(storedRows).arg(rowsToStore))
         .exec();
   }
 }
