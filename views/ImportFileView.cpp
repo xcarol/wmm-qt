@@ -7,6 +7,8 @@
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
+#include <QThread>
+#include <chrono>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -101,7 +103,11 @@ void ImportFileView::selectImportFile() {
 
   if (CsvFile::isValidCsvFile(fileName) == true) {
     csvFile.open(fileName);
-    updatePreview();
+    if (checkSelectedFile()) {
+      updatePreview();
+    } else {
+      csvFile.close();
+    }
   }
 }
 
@@ -113,6 +119,7 @@ void ImportFileView::importSelectedFile() {
 
   progress.setWindowModality(Qt::WindowModal);
 
+  bool isCancelled = true;
   int storedRows = 0;
   int rowsToStore = csvFile.rowsCount() - headerRows;
   for (; storedRows < rowsToStore; storedRows++) {
@@ -130,23 +137,86 @@ void ImportFileView::importSelectedFile() {
       break;
     }
 
-    progress.setLabelText(QString("%1 of %2 rows stored...").arg(storedRows).arg(rowsToStore));
+    progress.setLabelText(
+        QString("%1 of %2 rows stored...").arg(storedRows).arg(rowsToStore));
     progress.setValue(storedRows);
     if (progress.wasCanceled()) {
+      isCancelled = true;
       break;
     }
   }
 
   progress.cancel();
 
-  if (database.getLastErrorText().length()) {
+  if (isCancelled) {
+    QMessageBox(QMessageBox::Icon::Information, QString("Import cancelled"),
+                QString("A total of %1 from %2 rows imported")
+                    .arg(storedRows)
+                    .arg(rowsToStore))
+        .exec();
+  } else if (database.getLastErrorText().length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
                 QString(database.getLastErrorText()))
         .exec();
   } else {
     QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("A total of %1 from %2 rows imported").arg(storedRows).arg(rowsToStore))
+                QString("A total of %1 from %2 rows imported")
+                    .arg(storedRows)
+                    .arg(rowsToStore))
         .exec();
+  }
+}
+
+bool ImportFileView::checkSelectedFile() {
+  QProgressDialog progress =
+      QProgressDialog("Check progress", "Cancel", 0, csvFile.rowsCount());
+
+  progress.setWindowModality(Qt::WindowModal);
+
+  bool isCancelled = false;
+  int checkedRows = 0;
+  int rowsToCheck = csvFile.rowsCount() - headerRows;
+  QStringList row;
+
+  for (; checkedRows < rowsToCheck; checkedRows++) {
+    row = csvFile.getRows(checkedRows + headerRows).at(0);
+
+    if (row.length() == 0 || row.length() != csvFile.columnsCount()) {
+      break;
+    }
+
+    // Give time for the dialog to show
+    QThread::sleep(std::chrono::microseconds{10});
+
+    progress.setValue(checkedRows);
+    if (progress.wasCanceled()) {
+      isCancelled = true;
+      break;
+    }
+  }
+
+  progress.cancel();
+
+  if (isCancelled) {
+    QMessageBox(
+        QMessageBox::Icon::Information, QString("Check file cancelled"),
+        QString("Check process cancelled at line %1.").arg(checkedRows + 1))
+        .exec();
+    return false;
+  } else if (checkedRows != rowsToCheck) {
+    QMessageBox(QMessageBox::Icon::Critical, QString("Check file error"),
+                QString("Something's wrong at line %1. Row: %2")
+                    .arg(checkedRows + 1)
+                    .arg(row.length()))
+        .exec();
+    return false;
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString("Check success"),
+                QString("A total of %1 from %2 rows checked successfully")
+                    .arg(checkedRows)
+                    .arg(rowsToCheck))
+        .exec();
+    return true;
   }
 }
 

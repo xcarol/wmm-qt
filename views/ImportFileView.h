@@ -36,7 +36,7 @@ private slots:
 
   void on_banksComboBox_currentTextChanged(const QString &arg1);
 
-private:
+  private:
     int headerRows = 0;
     int dateColumn = 0;
     int descriptionColumn = 0;
@@ -56,6 +56,7 @@ private:
 
     void selectImportFile();
     void importSelectedFile();
+    bool checkSelectedFile();
 };
 
 #endif // IMPORTFILE_H
