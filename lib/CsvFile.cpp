@@ -17,7 +17,7 @@ bool CsvFile::isValidCsvFile(QString filename) {
     QByteArray bytes = file.readLine();
 
     for (int n = 0; n < bytes.length(); n++) {
-      if (QChar::isPrint(bytes.at(n)) == false) {
+      if (QChar::isNonCharacter(bytes.at(n))) {
         return false;
       }
     }
@@ -47,7 +47,7 @@ void CsvFile::readRows(int index, int count) {
 
 void CsvFile::parseRows() {
   foreach (QString row, csvRows) {
-    QStringList fields = row.split(",");
+    QStringList fields = row.split("\",\"");
     QStringList parsedFields;
 
     foreach (QString rowField, fields) {
@@ -60,6 +60,11 @@ void CsvFile::parseRows() {
 
 bool CsvFile::open(QString filename) {
   file = new QFile(filename);
+
+  rowsInFile = 0;
+  columnsInFile = 0;
+  csvRows.clear();
+  csvFields.clear();
 
   if (isValidCsvFile(filename) == false) {
     return false;
