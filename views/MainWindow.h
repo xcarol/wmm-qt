@@ -9,6 +9,10 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+#define CURRENT_VIEW    "CurrentView"
+#define IMPORT_VIEW     "ImportFileView"
+#define CATEGORIZE_VIEW "CategorizeView"
+
 class MainWindow : public QMainWindow {
   Q_OBJECT
 
@@ -18,6 +22,10 @@ public:
 
 private slots:
   void on_actionDatabase_triggered();
+
+  void on_actionImport_triggered();
+
+  void on_actionCategorize_triggered();
 
 signals:
   void statusBarUpdated(const QString &message);

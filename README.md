@@ -4,6 +4,35 @@ A Personal 'Fintech' Application
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/f5be67cc1a014fcab81676691fcbd100)](https://app.codacy.com/gh/xcarol/wmm/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)  
 
+## Development environment
+
+For Ubuntu 23.10, install:
+
+- build-essential
+- cmake
+- docker
+- docker-compose
+- freeglut3-dev
+
+Download and install Qt from [https://www.qt.io/download-open-source](https://www.qt.io/download-open-source)  
+Install Qt at _/home/xcarol/Qt_ and check the path declared at _CMakeLists.txt_ when setting _CMAKE_PREFIX_PATH_ to be correct.
+
+### MySql Driver for Qt
+
+At first run of the application the following error can raise up in the console and the application cannot connect to the MySql Server.  
+
+``` Log
+QMYSQL driver not loaded
+QSqlDatabase: available drivers: QMIMER QODBC QPSQL QSQLITE QMARIADB QMYSQL
+```
+
+The problem is that Qt cannot find its own MySql server Driver although it has been installed correctly.  
+I tried to find an easy solution and ended bored.  
+
+So, the easy way to work around this issue is to install MySql Workbench from: [https://dev.mysql.com/downloads/workbench/](https://dev.mysql.com/downloads/workbench/)
+
+(if it doesn't run after the installation run this command: `sudo apt install -f`)
+
 ## Vs Code
 
 Install the following extensions
@@ -20,7 +49,7 @@ I olny used it to create de project and to edit the *.ui files with Qt Designer
 
 ## MySql Server
 
-There _docker-compose.yml_ file to create a local mysql database.  
-A _mysqlserver.sh_ script to manage it.  
+There is a _docker-compose.yml_ file to create a local mysql database.  
+And a _mysqlserver.sh_ script to manage it.  
 
 Acces database through [http://localhost:8080](http://localhost:8080)  

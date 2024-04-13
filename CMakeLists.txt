@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_PREFIX_PATH "/home/xcarol/Qt/6.6.3/gcc_64/")
+set(CMAKE_PREFIX_PATH "/home/xcarol/Qt/6.7.0/gcc_64/")
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
@@ -30,16 +30,19 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(wmm
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        helpers/CsvFile.h
-        helpers/CsvFile.cpp
+        lib/CsvFile.h
+        lib/CsvFile.cpp
         views/ImportFileView.h
         views/ImportFileView.cpp
         views/ImportFileView.ui
         dialogs/DatabaseSettings.h
         dialogs/DatabaseSettings.cpp
         dialogs/DatabaseSettings.ui
-        helpers/Database.h
-        helpers/Database.cpp
+        lib/Database.h
+        lib/Database.cpp
+        views/CategorizeView.h
+        views/CategorizeView.cpp
+        views/CategorizeView.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
