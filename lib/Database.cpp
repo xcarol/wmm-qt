@@ -54,7 +54,17 @@ bool Database::openDatabase() {
 
 void Database::closeDatabase() { sqlDatabase.close(); }
 
-bool Database::storeRow(QString bank, QString date, QString description, double amount) {
+bool Database::checkConnection() {
+  if (openDatabase()) {
+    closeDatabase();
+    return true;
+  }
+
+  return false;
+}
+
+bool Database::storeRow(QString bank, QString date, QString description,
+                        double amount) {
   if (openDatabase()) {
     bool success = true;
 

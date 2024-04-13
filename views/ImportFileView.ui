@@ -70,6 +70,13 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="descriptionColumnComboBox"/>
         </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Select the description column</string>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="2">
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
@@ -83,10 +90,22 @@
           </property>
          </spacer>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_2">
+        <item row="0" column="2">
+         <widget class="QLabel" name="rowsCountLabel">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>Select the description column</string>
+           <string>Rows to import: 0</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -138,6 +157,13 @@
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="databaseStatusButton">
+          <property name="text">
+           <string>Check Database Status</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <spacer name="horizontalSpacer">
           <property name="orientation">
