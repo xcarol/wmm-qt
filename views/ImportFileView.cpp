@@ -99,6 +99,10 @@ void ImportFileView::selectImportFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
                                                   tr("Csv Files (*.csv)"));
 
+  if (fileName.isEmpty()) {
+    return;
+  }
+  
   ui->fileNameEdit->setText(fileName);
 
   if (CsvFile::isValidCsvFile(fileName) == true) {
@@ -115,9 +119,10 @@ void ImportFileView::importSelectedFile() {
   Database database = Database();
 
   QProgressDialog progress =
-      QProgressDialog("Import progress", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle("Import progress...");
 
   bool isCancelled = true;
   int storedRows = 0;
@@ -169,9 +174,10 @@ void ImportFileView::importSelectedFile() {
 
 bool ImportFileView::checkSelectedFile() {
   QProgressDialog progress =
-      QProgressDialog("Check progress", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle("Check progress...");
 
   bool isCancelled = false;
   int checkedRows = 0;
@@ -186,7 +192,7 @@ bool ImportFileView::checkSelectedFile() {
     }
 
     // Give time for the dialog to show
-    QThread::sleep(std::chrono::microseconds{10});
+    QThread::sleep(std::chrono::milliseconds{1});
 
     progress.setValue(checkedRows);
     if (progress.wasCanceled()) {
