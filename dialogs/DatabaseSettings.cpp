@@ -1,5 +1,5 @@
 #include "DatabaseSettings.h"
-#include "./build/wmm_autogen/include/ui_DatabaseSettings.h"
+#include "ui_DatabaseSettings.h"
 
 DatabaseSettings::DatabaseSettings(QWidget *parent)
     : QDialog(parent)
