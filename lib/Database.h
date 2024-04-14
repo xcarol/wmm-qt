@@ -21,7 +21,7 @@ private:
   QString username;
   QString userpass;
 
-  QSqlDatabase sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  QSqlDatabase sqlDatabase;
   QSettings settings = QSettings("com.xicra", "wmm");
 
   bool openDatabase();
