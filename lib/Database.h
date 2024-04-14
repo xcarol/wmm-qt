@@ -11,6 +11,11 @@
 #define USERNAME "username"
 #define USERPASS "userpass"
 
+// These sizes are defined in the file: ../database/database.sql
+#define BANK_LENGTH         200
+#define DESCRIPTION_LENGTH  200
+#define CATEGORY_LENGHT     200
+
 class Database : public QObject {
   Q_OBJECT
 
@@ -45,6 +50,7 @@ public:
 
   bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
+  QString unifyDateToStore(QString);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
   QStringList getCategoryNames();
