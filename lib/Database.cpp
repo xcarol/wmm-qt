@@ -1,6 +1,8 @@
 #include "Database.h"
 
+#include <QDate>
 #include <QList>
+#include <QRegularExpression>
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlField>
@@ -40,7 +42,7 @@ void Database::setUserpass(QString pass) {
 bool Database::openDatabase() {
   lastError.clear();
   sqlDatabase = QSqlDatabase::database();
-  
+
   if (sqlDatabase.isValid() == false) {
     sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
   }
@@ -80,13 +82,16 @@ bool Database::storeRow(QString bank, QString date, QString description,
     QSqlQuery query = QSqlQuery(sqlDatabase);
     query.prepare("INSERT INTO transactions (bank, date, description, amount) "
                   "VALUES (:bank, :date, :description, :amount)");
-    query.bindValue(":bank", bank);
-    query.bindValue(":date", date);
-    query.bindValue(":description", description);
+    query.bindValue(":bank", bank.left(BANK_LENGTH));
+    query.bindValue(":date", unifyDateToStore(date));
+    query.bindValue(":description", description.left(DESCRIPTION_LENGTH));
     query.bindValue(":amount", amount);
 
     if (!query.exec()) {
       lastError = query.lastError().databaseText();
+      const QSqlResult *r = query.result();
+      qDebug() << r;
+      qDebug() << query.lastError();
       success = false;
     }
 
@@ -95,6 +100,26 @@ bool Database::storeRow(QString bank, QString date, QString description,
   }
 
   return false;
+}
+
+QString Database::unifyDateToStore(QString date) {
+  QDate ymd = QDate::fromString(
+      QString(date).replace(QRegularExpression("/"), "-"),
+      "yyyy-MM-dd");
+
+  QDate dmy = QDate::fromString(
+      QString(date).replace(QRegularExpression("/"), "-"),
+      "dd-MM-yyyy");
+
+    if (ymd.isValid()) {
+      return ymd.toString(Qt::DateFormat::ISODate);
+    }
+
+    if (dmy.isValid()) {
+    return dmy.toString(Qt::DateFormat::ISODate);
+    }
+
+    return QString("%1 invalid date").arg(date);
 }
 
 QStringList Database::getBankNames() {
@@ -138,7 +163,8 @@ QStringList Database::getCategoryNames() {
   return categoryNames;
 }
 
-QList<QStringList> Database::getUncategorizedRows(QString filter, QProgressDialog *dialog) {
+QList<QStringList> Database::getUncategorizedRows(QString filter,
+                                                  QProgressDialog *dialog) {
   QList<QStringList> rows;
 
   if (openDatabase()) {
@@ -215,7 +241,7 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
         QString("UPDATE transactions SET category = '%2' WHERE description "
                 "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)")
             .arg(regexp.length() ? regexp : ".*")
-            .arg(category);
+            .arg(category.left(CATEGORY_LENGHT));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
