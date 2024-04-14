@@ -27,10 +27,6 @@ bool CsvFile::isValidCsvFile(QString filename) {
 }
 
 void CsvFile::readRows(int index, int count) {
-  if (index < 0 || index + count > rowsInFile) {
-    return;
-  }
-
   csvRows.clear();
   csvFields.clear();
 

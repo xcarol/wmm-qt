@@ -26,12 +26,8 @@ QMYSQL driver not loaded
 QSqlDatabase: available drivers: QMIMER QODBC QPSQL QSQLITE QMARIADB QMYSQL
 ```
 
-The problem is that Qt cannot find its own MySql server Driver although it has been installed correctly.  
-I tried to find an easy solution and ended bored.  
-
-So, the easy way to work around this issue is to install MySql Workbench from: [https://dev.mysql.com/downloads/workbench/](https://dev.mysql.com/downloads/workbench/)
-
-(if it doesn't run after the installation run this command: `sudo apt install -f`)
+The problem is that _Qt_ cannot find _libmysqlclient*_ library.  
+To know the needed version by the driver go to _Qt_ installation directory where drivers are located (p.e. ~/Qt/6.7.0/gcc_64/plugins/sqldrivers) and run the following command: `ldd libqsqlmysql.so` look at the _libmysqlclient_ version `libmysqlclient.so.21` in this case 21. If it says `libmysqlclient.so.21 => Not found` then run: `sudo apt install libmysqlclient21`. If doesn't says `Not found` go to pray because I have no idea.
 
 ## Vs Code
 

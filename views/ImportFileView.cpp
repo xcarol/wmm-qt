@@ -8,7 +8,6 @@
 #include <QMessageBox>
 #include <QProgressDialog>
 #include <QThread>
-#include <chrono>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -99,10 +98,16 @@ void ImportFileView::selectImportFile() {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
                                                   tr("Csv Files (*.csv)"));
 
+  if (fileName.isEmpty()) {
+    return;
+  }
+
   ui->fileNameEdit->setText(fileName);
 
   if (CsvFile::isValidCsvFile(fileName) == true) {
     csvFile.open(fileName);
+    ui->rowsCountLabel->setText(
+        QString("Rows to import: %1").arg(csvFile.rowsCount()));
     if (checkSelectedFile()) {
       updatePreview();
     } else {
@@ -114,12 +119,17 @@ void ImportFileView::selectImportFile() {
 void ImportFileView::importSelectedFile() {
   Database database = Database();
 
+  if (checkDatabaseConnection() == false) {
+    return;
+  }
+
   QProgressDialog progress =
-      QProgressDialog("Import progress", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle("Import progress...");
 
-  bool isCancelled = true;
+  bool isCancelled = false;
   int storedRows = 0;
   int rowsToStore = csvFile.rowsCount() - headerRows;
   for (; storedRows < rowsToStore; storedRows++) {
@@ -169,9 +179,10 @@ void ImportFileView::importSelectedFile() {
 
 bool ImportFileView::checkSelectedFile() {
   QProgressDialog progress =
-      QProgressDialog("Check progress", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle("Check progress...");
 
   bool isCancelled = false;
   int checkedRows = 0;
@@ -186,7 +197,7 @@ bool ImportFileView::checkSelectedFile() {
     }
 
     // Give time for the dialog to show
-    QThread::sleep(std::chrono::microseconds{10});
+    QThread::sleep(std::chrono::milliseconds{1});
 
     progress.setValue(checkedRows);
     if (progress.wasCanceled()) {
@@ -218,6 +229,21 @@ bool ImportFileView::checkSelectedFile() {
         .exec();
     return true;
   }
+}
+
+bool ImportFileView::checkDatabaseConnection() {
+  Database database = Database();
+
+  if (database.checkConnection() == false) {
+    QMessageBox(
+        QMessageBox::Icon::Warning, QString("Database connection problem"),
+        QString("Error %1 accessing database").arg(database.getLastErrorText()))
+        .exec();
+
+    return false;
+  }
+
+  return true;
 }
 
 void ImportFileView::on_openFileButton_clicked() { selectImportFile(); }
@@ -264,4 +290,12 @@ void ImportFileView::on_banksComboBox_currentIndexChanged(int index) {
 void ImportFileView::on_banksComboBox_currentTextChanged(const QString &arg1) {
   bankName = arg1;
   updateImportButtonState();
+}
+
+void ImportFileView::on_databaseStatusButton_clicked() {
+  if (checkDatabaseConnection()) {
+    QMessageBox(QMessageBox::Icon::Information, QString("Database connection"),
+                "Connected successfully to de database.")
+        .exec();
+  }
 }

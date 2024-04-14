@@ -39,6 +39,8 @@ void Database::setUserpass(QString pass) {
 
 bool Database::openDatabase() {
   lastError.clear();
+  sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+
   sqlDatabase.setHostName(hostname);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
@@ -52,9 +54,22 @@ bool Database::openDatabase() {
   return true;
 }
 
-void Database::closeDatabase() { sqlDatabase.close(); }
+void Database::closeDatabase() {
+  sqlDatabase.close();
+  sqlDatabase = QSqlDatabase();
+}
 
-bool Database::storeRow(QString bank, QString date, QString description, double amount) {
+bool Database::checkConnection() {
+  if (openDatabase()) {
+    closeDatabase();
+    return true;
+  }
+
+  return false;
+}
+
+bool Database::storeRow(QString bank, QString date, QString description,
+                        double amount) {
   if (openDatabase()) {
     bool success = true;
 
@@ -80,9 +95,10 @@ bool Database::storeRow(QString bank, QString date, QString description, double 
 
 QStringList Database::getBankNames() {
   QStringList bankNames;
-  QSqlQuery query = QSqlQuery(sqlDatabase);
 
   if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
     if (query.exec("SELECT DISTINCT bank FROM transactions")) {
       while (query.next()) {
         bankNames.append(query.value("bank").toString());
@@ -99,9 +115,10 @@ QStringList Database::getBankNames() {
 
 QStringList Database::getCategoryNames() {
   QStringList categoryNames;
-  QSqlQuery query = QSqlQuery(sqlDatabase);
 
   if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
     if (query.exec("SELECT DISTINCT category FROM transactions WHERE category "
                    "IS NOT NULL AND TRIM(category) <> ''")) {
       while (query.next()) {
@@ -119,11 +136,13 @@ QStringList Database::getCategoryNames() {
 
 QList<QStringList> Database::getUncategorizedRows(QString filter) {
   QList<QStringList> rows;
-  QSqlQuery query = QSqlQuery(sqlDatabase);
-  QString queryString = "SELECT * FROM transactions WHERE (TRIM(category) = '' "
-                        "OR category IS NULL)";
 
   if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        "SELECT * FROM transactions WHERE (TRIM(category) = '' "
+        "OR category IS NULL)";
+
     if (!filter.isEmpty()) {
       queryString.append(QString(" AND description REGEXP '%1'").arg(filter));
     }
@@ -152,9 +171,10 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
 
 QStringList Database::getColumnNames() {
   QStringList names;
-  QSqlQuery query = QSqlQuery(sqlDatabase);
 
   if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
     if (query.exec("SELECT * FROM transactions LIMIT 1")) {
       while (query.next()) {
 
@@ -175,14 +195,15 @@ QStringList Database::getColumnNames() {
 
 ulong Database::updateRowsCategory(QString regexp, QString category) {
   ulong updatedRows;
-  QSqlQuery query = QSqlQuery(sqlDatabase);
-  QString queryString =
-      QString("UPDATE transactions SET category = '%2' WHERE description "
-              "REGEXP '%1' AND TRIM(category) = ''")
-          .arg(regexp.length() ? regexp : ".*")
-          .arg(category);
 
   if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString("UPDATE transactions SET category = '%2' WHERE description "
+                "REGEXP '%1' AND TRIM(category) = ''")
+            .arg(regexp.length() ? regexp : ".*")
+            .arg(category);
+
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
     } else {

@@ -36,6 +36,8 @@ private slots:
 
   void on_banksComboBox_currentTextChanged(const QString &arg1);
 
+  void on_databaseStatusButton_clicked();
+
   private:
     int headerRows = 0;
     int dateColumn = 0;
@@ -57,6 +59,7 @@ private slots:
     void selectImportFile();
     void importSelectedFile();
     bool checkSelectedFile();
+    bool checkDatabaseConnection();
 };
 
 #endif // IMPORTFILE_H

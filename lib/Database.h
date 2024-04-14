@@ -21,7 +21,7 @@ private:
   QString username;
   QString userpass;
 
-  QSqlDatabase sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  QSqlDatabase sqlDatabase;
   QSettings settings = QSettings("com.xicra", "wmm");
 
   bool openDatabase();
@@ -43,6 +43,7 @@ public:
   void setUsername(QString name);
   void setUserpass(QString pass);
 
+  bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
