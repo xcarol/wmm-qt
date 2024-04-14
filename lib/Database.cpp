@@ -138,7 +138,7 @@ QStringList Database::getCategoryNames() {
   return categoryNames;
 }
 
-QList<QStringList> Database::getUncategorizedRows(QString filter) {
+QList<QStringList> Database::getUncategorizedRows(QString filter, QProgressDialog *dialog) {
   QList<QStringList> rows;
 
   if (openDatabase()) {
@@ -152,6 +152,10 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
     }
 
     if (query.exec(queryString)) {
+
+      int count = 0;
+      dialog->setMaximum(query.numRowsAffected());
+
       while (query.next()) {
 
         QSqlRecord rec = query.record();
@@ -162,6 +166,11 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
         }
 
         rows.append(fields);
+        dialog->setValue(++count);
+
+        if (dialog->wasCanceled()) {
+          break;
+        }
       }
     } else {
       lastError = query.lastError().databaseText();
