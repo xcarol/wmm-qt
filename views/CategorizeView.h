@@ -28,7 +28,9 @@ private slots:
 
   void on_categoryComboBox_editTextChanged(const QString &arg1);
 
-  void on_filterEdit_textChanged(const QString &arg1);
+  void on_filterEdit_currentIndexChanged(int index);
+
+  void on_filterEdit_editTextChanged(const QString &arg1);
 
   private:
   Ui::CategorizeView *ui;
@@ -38,6 +40,7 @@ private slots:
   QString appliedFilter;
 
   void updateUpdateButtonState();
+  void setFilter(QString filter);
 };
 
 #endif // CATEGORIZEVIEW_H

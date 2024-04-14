@@ -11,6 +11,10 @@ CategorizeView::CategorizeView(QWidget *parent)
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
+
+  QSettings settings = QSettings("com.xicra", "wmm");
+  QStringList filters = settings.value("filters").toStringList();
+  ui->filterEdit->addItems(filters);
 }
 
 CategorizeView::~CategorizeView() { delete ui; }
@@ -24,6 +28,8 @@ void CategorizeView::on_searchButton_clicked() {
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setRowCount(0);
   ui->searchResultsTable->setColumnCount(0);
+
+  setFilter(appliedFilter);
 
   QStringList labels = database.getColumnNames();
   uncategorizedRows = database.getUncategorizedRows(appliedFilter);
@@ -95,12 +101,7 @@ void CategorizeView::on_updateButton_clicked() {
 
   Database database = Database();
 
-  QProgressDialog progress = QProgressDialog("Update progress", "Cancel", 0,
-                                             uncategorizedRows.length());
-
   ulong updatedRows = database.updateRowsCategory(appliedFilter, categoryName);
-
-  progress.cancel();
 
   if (updatedRows != uncategorizedRows.length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
@@ -118,11 +119,29 @@ void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
   updateUpdateButtonState();
 }
 
+void CategorizeView::on_filterEdit_currentIndexChanged(int index)
+{
+  appliedFilter = ui->filterEdit->itemText(index);
+}
+
+
+void CategorizeView::on_filterEdit_editTextChanged(const QString &arg1)
+{
+  appliedFilter = arg1;
+}
+
 void CategorizeView::updateUpdateButtonState() {
   ui->updateButton->setEnabled(uncategorizedRows.length() > 0 &&
                                categoryName.length() > 0);
 }
 
-void CategorizeView::on_filterEdit_textChanged(const QString &arg1) {
-  appliedFilter = arg1;
+void CategorizeView::setFilter(QString filter) 
+{
+  QSettings settings = QSettings("com.xicra", "wmm");
+  QStringList filters = settings.value("filters").toStringList();
+  if (filters.contains(appliedFilter) == false) {
+    filters.append(appliedFilter);
+    settings.setValue("filters", filters);
+    ui->filterEdit->addItem(appliedFilter);
+  }
 }
