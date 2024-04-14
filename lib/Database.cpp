@@ -200,7 +200,7 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
     QString queryString =
         QString("UPDATE transactions SET category = '%2' WHERE description "
-                "REGEXP '%1' AND TRIM(category) = ''")
+                "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)")
             .arg(regexp.length() ? regexp : ".*")
             .arg(category);
 
