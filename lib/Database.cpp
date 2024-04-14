@@ -39,7 +39,11 @@ void Database::setUserpass(QString pass) {
 
 bool Database::openDatabase() {
   lastError.clear();
-  sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  sqlDatabase = QSqlDatabase::database();
+  
+  if (sqlDatabase.isValid() == false) {
+    sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  }
 
   sqlDatabase.setHostName(hostname);
   sqlDatabase.setDatabaseName(database);
@@ -134,7 +138,7 @@ QStringList Database::getCategoryNames() {
   return categoryNames;
 }
 
-QList<QStringList> Database::getUncategorizedRows(QString filter) {
+QList<QStringList> Database::getUncategorizedRows(QString filter, QProgressDialog *dialog) {
   QList<QStringList> rows;
 
   if (openDatabase()) {
@@ -148,6 +152,10 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
     }
 
     if (query.exec(queryString)) {
+
+      int count = 0;
+      dialog->setMaximum(query.numRowsAffected());
+
       while (query.next()) {
 
         QSqlRecord rec = query.record();
@@ -158,6 +166,11 @@ QList<QStringList> Database::getUncategorizedRows(QString filter) {
         }
 
         rows.append(fields);
+        dialog->setValue(++count);
+
+        if (dialog->wasCanceled()) {
+          break;
+        }
       }
     } else {
       lastError = query.lastError().databaseText();
@@ -200,7 +213,7 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
     QString queryString =
         QString("UPDATE transactions SET category = '%2' WHERE description "
-                "REGEXP '%1' AND TRIM(category) = ''")
+                "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)")
             .arg(regexp.length() ? regexp : ".*")
             .arg(category);
 

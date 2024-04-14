@@ -1,16 +1,21 @@
 #include "CategorizeView.h"
 #include "../lib/Database.h"
 #include "ui_CategorizeView.h"
+#include <QDate>
 #include <QLabel>
 #include <QList>
 #include <QMessageBox>
-#include <QDate>
+#include <QThread>
 
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
+
+  QSettings settings = QSettings("com.xicra", "wmm");
+  QStringList filters = settings.value("filters").toStringList();
+  ui->filterEdit->addItems(filters);
 }
 
 CategorizeView::~CategorizeView() { delete ui; }
@@ -25,10 +30,20 @@ void CategorizeView::on_searchButton_clicked() {
   ui->searchResultsTable->setRowCount(0);
   ui->searchResultsTable->setColumnCount(0);
 
+  setFilter(appliedFilter);
+
   QStringList labels = database.getColumnNames();
-  uncategorizedRows = database.getUncategorizedRows(appliedFilter);
+
+  QProgressDialog progress = QProgressDialog(
+      QString("Searching for rows with filter %1").arg(appliedFilter), "Cancel",
+      0, 0);
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle("Search...");
+
+  uncategorizedRows = database.getUncategorizedRows(appliedFilter, &progress);
 
   if (labels.length() == 0 || uncategorizedRows.length() == 0) {
+    progress.cancel();
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
       QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
@@ -53,9 +68,16 @@ void CategorizeView::on_searchButton_clicked() {
   QLocale locale;
   QString dateFormat = locale.dateFormat(QLocale::ShortFormat);
 
-  for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
-    for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
+  progress.reset();
+  progress.setMaximum(numberOfRows);
 
+  for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
+
+    progress.setLabelText(QString("Processing %1 of %2 rows found.")
+                              .arg(rowCount)
+                              .arg(numberOfRows));
+
+    for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
       QStringList row = uncategorizedRows.at(rowCount);
       QString value = row.at(columnCount);
 
@@ -68,7 +90,7 @@ void CategorizeView::on_searchButton_clicked() {
         break;
 
       case AMOUNT_COLUMN:
-        label = new QLabel(QString::number(value.toDouble(), 'g', 2));
+        label = new QLabel(QString::number(value.toDouble()));
         label->setAlignment(Qt::AlignRight);
         break;
 
@@ -77,6 +99,13 @@ void CategorizeView::on_searchButton_clicked() {
       }
       ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
     }
+
+    // Give time for the dialog to show
+    QThread::sleep(std::chrono::milliseconds{1});
+    progress.setValue(rowCount);
+    if (progress.wasCanceled()) {
+      break;
+    }
   }
 
   updateUpdateButtonState();
@@ -84,7 +113,7 @@ void CategorizeView::on_searchButton_clicked() {
 
 void CategorizeView::on_updateButton_clicked() {
   QMessageBox::StandardButton res =
-      QMessageBox::question(this, QString("Update"),
+      QMessageBox::question(QApplication::topLevelWidgets().first(), QString("Update"),
                             QString("You're about to update %1 records "
                                     "with the category: %2\nAre you sure?")
                                 .arg(uncategorizedRows.length())
@@ -95,12 +124,7 @@ void CategorizeView::on_updateButton_clicked() {
 
   Database database = Database();
 
-  QProgressDialog progress = QProgressDialog("Update progress", "Cancel", 0,
-                                             uncategorizedRows.length());
-
   ulong updatedRows = database.updateRowsCategory(appliedFilter, categoryName);
-
-  progress.cancel();
 
   if (updatedRows != uncategorizedRows.length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
@@ -118,11 +142,25 @@ void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
   updateUpdateButtonState();
 }
 
+void CategorizeView::on_filterEdit_currentIndexChanged(int index) {
+  appliedFilter = ui->filterEdit->itemText(index);
+}
+
+void CategorizeView::on_filterEdit_editTextChanged(const QString &arg1) {
+  appliedFilter = arg1;
+}
+
 void CategorizeView::updateUpdateButtonState() {
   ui->updateButton->setEnabled(uncategorizedRows.length() > 0 &&
                                categoryName.length() > 0);
 }
 
-void CategorizeView::on_filterEdit_textChanged(const QString &arg1) {
-  appliedFilter = arg1;
+void CategorizeView::setFilter(QString filter) {
+  QSettings settings = QSettings("com.xicra", "wmm");
+  QStringList filters = settings.value("filters").toStringList();
+  if (filters.contains(appliedFilter) == false) {
+    filters.append(appliedFilter);
+    settings.setValue("filters", filters);
+    ui->filterEdit->addItem(appliedFilter);
+  }
 }
