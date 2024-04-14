@@ -39,7 +39,11 @@ void Database::setUserpass(QString pass) {
 
 bool Database::openDatabase() {
   lastError.clear();
-  sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  sqlDatabase = QSqlDatabase::database();
+  
+  if (sqlDatabase.isValid() == false) {
+    sqlDatabase = QSqlDatabase::addDatabase("QMYSQL");
+  }
 
   sqlDatabase.setHostName(hostname);
   sqlDatabase.setDatabaseName(database);
