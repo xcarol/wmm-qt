@@ -12,6 +12,7 @@ BrowseDataView::BrowseDataView(QWidget *parent)
 BrowseDataView::~BrowseDataView() { delete ui; }
 
 void BrowseDataView::updateBankBalanceTable() {
+  int totalAmount = 0;
   Database database = Database();
 
   QList<QStringList> balances = database.getBanksBalance();
@@ -27,13 +28,26 @@ void BrowseDataView::updateBankBalanceTable() {
   ui->balanceTable->setRowCount(balances.length());
   ui->balanceTable->setHorizontalHeaderLabels({"Bank", "Balance"});
 
-  for (int rowcount; rowcount < balances.length(); rowcount++) {
+  int rowcount = 0;
+  for (; rowcount < balances.length(); rowcount++) {
     QLabel *labelBank = new QLabel(balances.at(rowcount).at(0));
     labelBank->setAlignment(Qt::AlignLeft);
     ui->balanceTable->setCellWidget(rowcount, 0, labelBank);
 
-    QLabel *labelAmount = new QLabel(QString::number(balances.at(rowcount).at(1).toDouble()));
+    int amount = balances.at(rowcount).at(1).toDouble();
+    totalAmount += amount;
+
+    QLabel *labelAmount = new QLabel(QString::number(amount));
     labelAmount->setAlignment(Qt::AlignRight);
     ui->balanceTable->setCellWidget(rowcount, 1, labelAmount);
   }
+
+  ui->balanceTable->setRowCount(ui->balanceTable->rowCount() + 1);
+  QLabel *labelTotal = new QLabel("Total");
+  labelTotal->setAlignment(Qt::AlignLeft);
+  ui->balanceTable->setCellWidget(rowcount, 0, labelTotal);
+
+  QLabel *labelTotalAmount = new QLabel(QString::number(totalAmount));
+  labelTotalAmount->setAlignment(Qt::AlignRight);
+  ui->balanceTable->setCellWidget(rowcount, 1, labelTotalAmount);
 }
