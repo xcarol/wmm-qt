@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>BrowseData</class>
- <widget class="QMainWindow" name="BrowseData">
+ <class>BrowseDataView</class>
+ <widget class="QMainWindow" name="BrowseDataView">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>DataBrowse</string>
+   <string>DataBrowseView</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="gridLayoutWidget">
@@ -26,14 +26,14 @@
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-          <widget class="QLabel" name="label">
-           <property name="text">
-            <string>Balance</string>
-           </property>
-          </widget>
-         </item>
-         <item>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Bank Balance</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QTableWidget" name="balanceTable"/>
        </item>
       </layout>

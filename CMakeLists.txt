@@ -43,9 +43,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         views/CategorizeView.h
         views/CategorizeView.cpp
         views/CategorizeView.ui
-        views/BrowseData.h
-        views/BrowseData.cpp
-        views/BrowseData.ui
+        views/BrowseDataView.h
+        views/BrowseDataView.cpp
+        views/BrowseDataView.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
