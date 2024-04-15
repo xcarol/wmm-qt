@@ -91,9 +91,6 @@ bool Database::storeRow(QString bank, QString date, QString description,
 
     if (!query.exec()) {
       lastError = query.lastError().databaseText();
-      const QSqlResult *r = query.result();
-      qDebug() << r;
-      qDebug() << query.lastError();
       success = false;
     }
 
@@ -274,7 +271,6 @@ QList<QStringList> Database::getBanksBalance(QStringList bankNames,
 
       if (query.exec(queryString)) {
         query.next();
-        qDebug() << query.value("balance").toString();
         bankBalance.append(
             QStringList({bankName, query.value("balance").toString()}));
       } else {
