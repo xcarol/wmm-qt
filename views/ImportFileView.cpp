@@ -141,10 +141,10 @@ void ImportFileView::importSelectedFile() {
 
     QString date = row.at(dateColumn - INDEX_OFFSET);
     QString description = row.at(descriptionColumn - INDEX_OFFSET);
-    double amount = row.at(amountColumn - INDEX_OFFSET).toDouble();
+    double amount = QString(row.at(amountColumn - INDEX_OFFSET))
+                        .replace(",", ".")
+                        .toDouble();
 
-    qDebug() << row.at(amountColumn - INDEX_OFFSET);
-    
     if (database.storeRow(bankName, date, description, amount) == false) {
       break;
     }
