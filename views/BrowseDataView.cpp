@@ -27,6 +27,7 @@ void BrowseDataView::updateBankBalanceTable() {
   ui->balanceTable->setColumnCount(2);
   ui->balanceTable->setRowCount(balances.length());
   ui->balanceTable->setHorizontalHeaderLabels({"Bank", "Balance"});
+  ui->balanceTable->verticalHeader()->setVisible(false);
 
   int rowcount = 0;
   for (; rowcount < balances.length(); rowcount++) {
