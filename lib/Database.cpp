@@ -9,12 +9,11 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
-#include <qcontainerfwd.h>
-#include <qlist.h>
 
 Database::Database(QObject *parent) : QObject{parent} {
-  hostname = settings.value(HOSTNAME).toString();
-  database = settings.value(DATABASE).toString();
+  hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
+  port = settings.value(PORT, DEFAULT_PORT).toInt();
+  database = settings.value(DATABASE, DEFAULT_DATABASE).toString();
   username = settings.value(USERNAME).toString();
   userpass = settings.value(USERPASS).toString();
 }
@@ -24,6 +23,11 @@ Database::~Database() { sqlDatabase.close(); }
 void Database::setHostname(QString name) {
   settings.setValue(HOSTNAME, name);
   hostname = name;
+}
+
+void Database::setPort(int port) {
+  settings.setValue(PORT, port);
+  port = port;
 }
 
 void Database::setDatabase(QString name) {
@@ -50,6 +54,7 @@ bool Database::openDatabase() {
   }
 
   sqlDatabase.setHostName(hostname);
+  sqlDatabase.setPort(33306);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
   sqlDatabase.setPassword(userpass);

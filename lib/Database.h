@@ -8,9 +8,14 @@
 #include <QDateTime>
 
 #define HOSTNAME "hostname"
+#define PORT     "port"
 #define DATABASE "database"
 #define USERNAME "username"
 #define USERPASS "userpass"
+
+#define DEFAULT_HOSTNAME "localhost"
+#define DEFAULT_PORT     "3306"
+#define DEFAULT_DATABASE "wmm"
 
 // These sizes are defined in the file: ../database/database.sql
 #define BANK_LENGTH         200
@@ -23,6 +28,7 @@ class Database : public QObject {
 private:
   QString lastError;
   QString hostname;
+  int     port;
   QString database;
   QString username;
   QString userpass;
@@ -40,11 +46,13 @@ public:
   QString getLastErrorText() { return lastError; };
 
   QString getHostname() { return hostname; }
+  int     getPort() { return port;}
   QString getDatabase() { return database; }
   QString getUsername() { return username; }
   QString getUserpass() { return userpass; }
 
   void setHostname(QString name);
+  void setPort(int port);
   void setDatabase(QString name);
   void setUsername(QString name);
   void setUserpass(QString pass);

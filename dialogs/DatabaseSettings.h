@@ -15,10 +15,11 @@ public:
     explicit DatabaseSettings(QWidget *parent = nullptr);
     ~DatabaseSettings();
 
-    void init(QString hostname, QString database, QString username, QString userpass);
+    void init(QString hostname, int port, QString database, QString username, QString userpass);
 
 public:
     QString hostname;
+    int     port;
     QString database;
     QString username;
     QString userpass;
