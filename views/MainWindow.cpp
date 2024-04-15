@@ -4,6 +4,7 @@
 #include "../lib/Database.h"
 #include "CategorizeView.h"
 #include "ImportFileView.h"
+#include "BrowseDataView.h"
 #include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -47,3 +48,11 @@ void MainWindow::on_actionCategorize_triggered() {
   settings.setValue(CURRENT_VIEW, CATEGORIZE_VIEW);
   setCentralWidget(new CategorizeView());
 }
+
+void MainWindow::on_actionBrowse_triggered()
+{
+    QSettings settings = QSettings("com.xicra", "wmm");
+    settings.setValue(CURRENT_VIEW, IMPORT_VIEW);
+    setCentralWidget(new BrowseDataView());
+}
+

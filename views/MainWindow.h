@@ -27,7 +27,9 @@ private slots:
 
   void on_actionCategorize_triggered();
 
-signals:
+  void on_actionBrowse_triggered();
+
+  signals:
   void statusBarUpdated(const QString &message);
 
 private:

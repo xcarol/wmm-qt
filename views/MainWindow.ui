@@ -140,7 +140,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>37</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSettings">
@@ -155,6 +155,7 @@
     </property>
     <addaction name="actionImport"/>
     <addaction name="actionCategorize"/>
+    <addaction name="actionBrowse"/>
    </widget>
    <addaction name="menuSettings"/>
    <addaction name="menuViews"/>
@@ -173,6 +174,11 @@
   <action name="actionCategorize">
    <property name="text">
     <string>Categorize</string>
+   </property>
+  </action>
+  <action name="actionBrowse">
+   <property name="text">
+    <string>Browse</string>
    </property>
   </action>
  </widget>
