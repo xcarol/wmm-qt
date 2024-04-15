@@ -54,7 +54,7 @@ bool Database::openDatabase() {
   }
 
   sqlDatabase.setHostName(hostname);
-  sqlDatabase.setPort(33306);
+  sqlDatabase.setPort(port);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
   sqlDatabase.setPassword(userpass);
