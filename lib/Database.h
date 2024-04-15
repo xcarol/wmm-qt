@@ -5,6 +5,7 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <QDateTime>
 
 #define HOSTNAME "hostname"
 #define DATABASE "database"
@@ -56,6 +57,7 @@ public:
   QStringList getCategoryNames();
   QList<QStringList> getUncategorizedRows(QString filter = QString(), QProgressDialog *dialog = NULL);
   QStringList getColumnNames();
+  QList<QStringList> getBanksBalance(QStringList bankNames = QStringList(), QDate initialDate = QDate::fromString("1970-01-01"), QDate finaDate = QDate::currentDate());
 };
 
 #endif // DATABASE_H

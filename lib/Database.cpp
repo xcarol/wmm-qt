@@ -9,6 +9,8 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
+#include <qcontainerfwd.h>
+#include <qlist.h>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME).toString();
@@ -104,22 +106,20 @@ bool Database::storeRow(QString bank, QString date, QString description,
 
 QString Database::unifyDateToStore(QString date) {
   QDate ymd = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"),
-      "yyyy-MM-dd");
+      QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
 
   QDate dmy = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"),
-      "dd-MM-yyyy");
+      QString(date).replace(QRegularExpression("/"), "-"), "dd-MM-yyyy");
 
-    if (ymd.isValid()) {
-      return ymd.toString(Qt::DateFormat::ISODate);
-    }
+  if (ymd.isValid()) {
+    return ymd.toString(Qt::DateFormat::ISODate);
+  }
 
-    if (dmy.isValid()) {
+  if (dmy.isValid()) {
     return dmy.toString(Qt::DateFormat::ISODate);
-    }
+  }
 
-    return QString("%1 invalid date").arg(date);
+  return QString("%1 invalid date").arg(date);
 }
 
 QStringList Database::getBankNames() {
@@ -253,4 +253,37 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
   }
 
   return updatedRows;
+}
+
+QList<QStringList> Database::getBanksBalance(QStringList bankNames,
+                                             QDate initialDate,
+                                             QDate finaDate) {
+  QList<QStringList> bankBalance;
+
+  if (bankNames.isEmpty()) {
+    bankNames = getBankNames();
+  }
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    foreach (QString bankName, bankNames) {
+      QString queryString = QString("SELECT SUM(amount) as balance from "
+                                    "transactions WHERE bank = '%1'")
+                                .arg(bankName);
+
+      if (query.exec(queryString)) {
+        query.next();
+        qDebug() << query.value("balance").toString();
+        bankBalance.append(
+            QStringList({bankName, query.value("balance").toString()}));
+      } else {
+        lastError = query.lastError().databaseText();
+      }
+    }
+
+    closeDatabase();
+  }
+
+  return bankBalance;
 }
