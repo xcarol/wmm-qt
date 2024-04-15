@@ -12,7 +12,7 @@ BrowseDataView::BrowseDataView(QWidget *parent)
 BrowseDataView::~BrowseDataView() { delete ui; }
 
 void BrowseDataView::updateBankBalanceTable() {
-  int totalAmount = 0;
+  double totalAmount = 0.0;
   Database database = Database();
 
   QList<QStringList> balances = database.getBanksBalance();
@@ -34,7 +34,7 @@ void BrowseDataView::updateBankBalanceTable() {
     labelBank->setAlignment(Qt::AlignLeft);
     ui->balanceTable->setCellWidget(rowcount, 0, labelBank);
 
-    int amount = balances.at(rowcount).at(1).toDouble();
+    double amount = balances.at(rowcount).at(1).toDouble();
     totalAmount += amount;
 
     QLabel *labelAmount = new QLabel(QString::number(amount));
