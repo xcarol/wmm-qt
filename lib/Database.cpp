@@ -9,6 +9,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
+#include <QThread>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -182,7 +183,9 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
     if (query.exec(queryString)) {
 
       int count = 0;
-      dialog->setMaximum(query.numRowsAffected());
+      if (dialog) {
+        dialog->setMaximum(query.numRowsAffected());
+      }
 
       while (query.next()) {
 
@@ -194,9 +197,12 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
         }
 
         rows.append(fields);
-        dialog->setValue(++count);
+        if (dialog) {
+          QThread::sleep(std::chrono::milliseconds{1});
+          dialog->setValue(++count);
+        }
 
-        if (dialog->wasCanceled()) {
+        if (dialog && dialog->wasCanceled()) {
           break;
         }
       }
@@ -287,4 +293,32 @@ QList<QStringList> Database::getBanksBalance(QStringList bankNames,
   }
 
   return bankBalance;
+}
+
+QList<QSqlRecord> Database::execCommand(QString queryString) {
+  QList<QSqlRecord> result;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryString)) {
+      while (query.next()) {
+        result.append(query.record());
+      }
+
+      if (result.isEmpty()) {
+        QSqlRecord record = QSqlRecord();
+        record.append(QSqlField("Rows affected"));
+        record.setValue("Rows affected", query.numRowsAffected());
+        result.append(record);
+      }
+
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return result;
 }

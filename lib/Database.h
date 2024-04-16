@@ -66,6 +66,7 @@ public:
   QList<QStringList> getUncategorizedRows(QString filter = QString(), QProgressDialog *dialog = NULL);
   QStringList getColumnNames();
   QList<QStringList> getBanksBalance(QStringList bankNames = QStringList(), QDate initialDate = QDate::fromString("1970-01-01"), QDate finaDate = QDate::currentDate());
+  QList<QSqlRecord> execCommand(QString queryString);
 };
 
 #endif // DATABASE_H

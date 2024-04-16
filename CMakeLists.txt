@@ -46,6 +46,9 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         views/BrowseDataView.h
         views/BrowseDataView.cpp
         views/BrowseDataView.ui
+        views/SqlCommandView.h
+        views/SqlCommandView.cpp
+        views/SqlCommandView.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

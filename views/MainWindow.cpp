@@ -1,4 +1,5 @@
 #include "MainWindow.h"
+#include "SqlCommandView.h"
 #include "ui_MainWindow.h"
 #include "../dialogs/DatabaseSettings.h"
 #include "../lib/Database.h"
@@ -14,8 +15,14 @@ MainWindow::MainWindow(QWidget *parent)
   QSettings settings = QSettings("com.xicra", "wmm");
   if (settings.value(CURRENT_VIEW).toString() == CATEGORIZE_VIEW) {
     setCentralWidget(new CategorizeView());
-  } else {
+  } else if (settings.value(CURRENT_VIEW).toString() == IMPORT_FILE_VIEW) {
     setCentralWidget(new ImportFileView());
+  } else if (settings.value(CURRENT_VIEW).toString() == BROWSE_DATA_VIEW) {
+    setCentralWidget(new BrowseDataView());
+  } else if (settings.value(CURRENT_VIEW).toString() == SQL_COMMAND_VIEW) {
+    setCentralWidget(new SqlCommandView());
+  } else {
+    setCentralWidget(new MainWindow());
   }
 }
 
@@ -40,7 +47,7 @@ void MainWindow::on_actionDatabase_triggered() {
 
 void MainWindow::on_actionImport_triggered() {
   QSettings settings = QSettings("com.xicra", "wmm");
-  settings.setValue(CURRENT_VIEW, IMPORT_VIEW);
+  settings.setValue(CURRENT_VIEW, IMPORT_FILE_VIEW);
   setCentralWidget(new ImportFileView());
 }
 
@@ -53,7 +60,15 @@ void MainWindow::on_actionCategorize_triggered() {
 void MainWindow::on_actionBrowse_triggered()
 {
     QSettings settings = QSettings("com.xicra", "wmm");
-    settings.setValue(CURRENT_VIEW, IMPORT_VIEW);
+    settings.setValue(CURRENT_VIEW, BROWSE_DATA_VIEW);
     setCentralWidget(new BrowseDataView());
+}
+
+
+void MainWindow::on_actionSql_Command_triggered()
+{
+    QSettings settings = QSettings("com.xicra", "wmm");
+    settings.setValue(CURRENT_VIEW, SQL_COMMAND_VIEW);
+    setCentralWidget(new SqlCommandView());
 }
 
