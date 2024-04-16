@@ -32,12 +32,14 @@ CREATE TABLE `transactions` (
   `date` datetime NOT NULL,
   `description` varchar(200) NOT NULL,
   `category` varchar(200) DEFAULT NULL,
+  `accountable` BOOLEAN NOT NULL DEFAULT TRUE,
   `amount` double NOT NULL,
   PRIMARY KEY (`idtransaction`),
   KEY `bank` (`bank`),
   KEY `description` (`description`),
   KEY `category` (`category`),
-  KEY `amount` (`amount`)
+  KEY `amount` (`amount`),
+  KEY `accountable` (`accountable`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
