@@ -5,7 +5,6 @@
 #include <QLabel>
 #include <QList>
 #include <QMessageBox>
-#include <QThread>
 
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
@@ -100,9 +99,8 @@ void CategorizeView::on_searchButton_clicked() {
       ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
     }
 
-    QThread::sleep(std::chrono::milliseconds{1});
     progress.setValue(rowCount);
-    
+
     if (progress.wasCanceled()) {
       break;
     }
@@ -112,12 +110,12 @@ void CategorizeView::on_searchButton_clicked() {
 }
 
 void CategorizeView::on_updateButton_clicked() {
-  QMessageBox::StandardButton res =
-      QMessageBox::question(QApplication::topLevelWidgets().first(), QString("Update"),
-                            QString("You're about to update %1 records "
-                                    "with the category: %2\nAre you sure?")
-                                .arg(uncategorizedRows.length())
-                                .arg(categoryName));
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString("Update"),
+      QString("You're about to update %1 records "
+              "with the category: %2\nAre you sure?")
+          .arg(uncategorizedRows.length())
+          .arg(categoryName));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }

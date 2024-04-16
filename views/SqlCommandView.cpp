@@ -27,7 +27,8 @@ void SqlCommandView::on_execButton_clicked() {
     return;
   }
 
-  ui->rowsAffectedLabel->setText(QString("Rows affected: %1").arg(records.count()));
+  ui->rowsAffectedLabel->setText(
+      QString("Rows affected: %1").arg(records.count()));
 
   QString errorText = database.getLastErrorText();
   if (errorText.isEmpty() == false) {
@@ -39,9 +40,8 @@ void SqlCommandView::on_execButton_clicked() {
 
   progress.setMaximum(records.count());
 
-  fillResultTable(records, [&progress](int value) {
-    progress.setValue(value);
-  });
+  fillResultTable(records,
+                  [&progress](int value) { progress.setValue(value); });
 }
 
 void SqlCommandView::fillResultTable(QList<QSqlRecord> records,

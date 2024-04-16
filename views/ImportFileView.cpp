@@ -7,7 +7,6 @@
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <QThread>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -198,7 +197,6 @@ bool ImportFileView::checkSelectedFile() {
       break;
     }
 
-    QThread::sleep(std::chrono::milliseconds{1});
     progress.setValue(checkedRows);
 
     if (progress.wasCanceled()) {

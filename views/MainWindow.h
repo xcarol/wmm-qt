@@ -9,11 +9,11 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
-#define CURRENT_VIEW      "CurrentView"
-#define IMPORT_FILE_VIEW  "ImportFileView"
-#define CATEGORIZE_VIEW   "CategorizeView"
-#define BROWSE_DATA_VIEW  "BrowseDataView"
-#define SQL_COMMAND_VIEW  "SqlCommandView"
+#define CURRENT_VIEW "CurrentView"
+#define IMPORT_FILE_VIEW "ImportFileView"
+#define CATEGORIZE_VIEW "CategorizeView"
+#define BROWSE_DATA_VIEW "BrowseDataView"
+#define SQL_COMMAND_VIEW "SqlCommandView"
 
 class MainWindow : public QMainWindow {
   Q_OBJECT
@@ -33,7 +33,7 @@ private slots:
 
   void on_actionSql_Command_triggered();
 
-  signals:
+signals:
   void statusBarUpdated(const QString &message);
 
 private:

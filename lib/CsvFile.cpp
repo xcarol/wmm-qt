@@ -2,7 +2,6 @@
 #include <QFile>
 #include <QIODevice>
 #include <QRegularExpression>
-#include <qtypes.h>
 
 CsvFile::~CsvFile() {
   if (file != NULL) {

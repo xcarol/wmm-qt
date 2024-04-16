@@ -36,7 +36,7 @@ bool DatabaseSettings::checkDatabaseConnection() {
   int currentPort = database.getPort();
   QString currentUsername = database.getUsername();
   QString currentUserpass = database.getUserpass();
-  
+
   updateAttributes();
 
   database.setHostname(hostname);

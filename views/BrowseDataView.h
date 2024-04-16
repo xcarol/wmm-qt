@@ -7,18 +7,17 @@ namespace Ui {
 class BrowseDataView;
 }
 
-class BrowseDataView : public QMainWindow
-{
-    Q_OBJECT
+class BrowseDataView : public QMainWindow {
+  Q_OBJECT
 
 public:
-    explicit BrowseDataView(QWidget *parent = nullptr);
-    ~BrowseDataView();
+  explicit BrowseDataView(QWidget *parent = nullptr);
+  ~BrowseDataView();
 
 private:
-    Ui::BrowseDataView *ui;
+  Ui::BrowseDataView *ui;
 
-    void updateBankBalanceTable();
+  void updateBankBalanceTable();
 };
 
 #endif // BROWSEDATAVIEW_H

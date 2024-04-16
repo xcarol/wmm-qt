@@ -3,12 +3,12 @@
 
 #include <QMainWindow>
 
-#define IDX_COLUMN          0
-#define BANK_COLUMN         1
-#define DATE_COLUMN         2
-#define DESCRIPTION_COLUMN  3
-#define CATEGORY_COLUMN     4
-#define AMOUNT_COLUMN       5
+#define IDX_COLUMN 0
+#define BANK_COLUMN 1
+#define DATE_COLUMN 2
+#define DESCRIPTION_COLUMN 3
+#define CATEGORY_COLUMN 4
+#define AMOUNT_COLUMN 5
 
 namespace Ui {
 class CategorizeView;
@@ -32,7 +32,7 @@ private slots:
 
   void on_filterEdit_editTextChanged(const QString &arg1);
 
-  private:
+private:
   Ui::CategorizeView *ui;
 
   QList<QStringList> uncategorizedRows;

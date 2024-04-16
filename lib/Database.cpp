@@ -9,7 +9,6 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
-#include <QThread>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -198,7 +197,6 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
 
         rows.append(fields);
         if (dialog) {
-          QThread::sleep(std::chrono::milliseconds{1});
           dialog->setValue(++count);
         }
 

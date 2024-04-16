@@ -12,21 +12,21 @@ namespace Ui {
 class SqlCommandView;
 }
 
-class SqlCommandView : public QMainWindow
-{
-    Q_OBJECT
+class SqlCommandView : public QMainWindow {
+  Q_OBJECT
 
 public:
-    explicit SqlCommandView(QWidget *parent = nullptr);
-    ~SqlCommandView();
+  explicit SqlCommandView(QWidget *parent = nullptr);
+  ~SqlCommandView();
 
 private slots:
-    void on_execButton_clicked();
+  void on_execButton_clicked();
 
 private:
-    Ui::SqlCommandView *ui;
+  Ui::SqlCommandView *ui;
 
-    void fillResultTable(QList<QSqlRecord> records, std::function<void(int)> functionObject);
+  void fillResultTable(QList<QSqlRecord> records,
+                       std::function<void(int)> functionObject);
 };
 
 #endif // SQLCOMMANDVIEW_H
