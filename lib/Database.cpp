@@ -26,9 +26,9 @@ void Database::setHostname(QString name) {
   hostname = name;
 }
 
-void Database::setPort(int port) {
-  settings.setValue(PORT, port);
-  port = port;
+void Database::setPort(int newport) {
+  settings.setValue(PORT, newport);
+  port = newport;
 }
 
 void Database::setDatabase(QString name) {
