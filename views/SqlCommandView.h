@@ -26,7 +26,7 @@ private slots:
 private:
     Ui::SqlCommandView *ui;
 
-    void fillResultTable(QList<QSqlRecord> records, QProgressDialog* dialog);
+    void fillResultTable(QList<QSqlRecord> records, std::function<void(int)> functionObject);
 };
 
 #endif // SQLCOMMANDVIEW_H
