@@ -198,10 +198,9 @@ bool ImportFileView::checkSelectedFile() {
       break;
     }
 
-    // Give time for the dialog to show
     QThread::sleep(std::chrono::milliseconds{1});
-
     progress.setValue(checkedRows);
+
     if (progress.wasCanceled()) {
       isCancelled = true;
       break;

@@ -100,9 +100,9 @@ void CategorizeView::on_searchButton_clicked() {
       ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
     }
 
-    // Give time for the dialog to show
     QThread::sleep(std::chrono::milliseconds{1});
     progress.setValue(rowCount);
+    
     if (progress.wasCanceled()) {
       break;
     }
