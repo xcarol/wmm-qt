@@ -7,6 +7,7 @@
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
+#include <QLocale>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -140,9 +141,7 @@ void ImportFileView::importSelectedFile() {
 
     QString date = row.at(dateColumn - INDEX_OFFSET);
     QString description = row.at(descriptionColumn - INDEX_OFFSET);
-    double amount = QString(row.at(amountColumn - INDEX_OFFSET))
-                        .replace(",", ".")
-                        .toDouble();
+    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET));
 
     if (database.storeRow(bankName, date, description, amount) == false) {
       break;

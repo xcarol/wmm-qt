@@ -93,6 +93,11 @@ void CategorizeView::on_searchButton_clicked() {
         label->setAlignment(Qt::AlignRight);
         break;
 
+      case ACCOUNTABLE_COLUMN:
+        label = new QLabel(value);
+        label->setAlignment(Qt::AlignCenter);
+        break;
+
       default:
         label = new QLabel(value);
       }
