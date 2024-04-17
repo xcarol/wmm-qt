@@ -107,4 +107,36 @@ void SqlCommandView::on_backupButton_clicked() {
 }
 
 void SqlCommandView::on_restoreButton_clicked() {
+  QMessageBox ready =
+      QMessageBox(QMessageBox::Icon::Question, "Database restore",
+                  "Make sure table `wmm` is already created.",
+                  QMessageBox::Yes | QMessageBox::No, this);
+
+  if (ready.exec() == QMessageBox::No) {
+    return;
+  }
+
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
+                                                  tr("Sql Files (*.sql)"));
+
+  if (fileName.isEmpty()) {
+    return;
+  }
+
+  Database database = Database();
+
+  if (database.restore(fileName) == false) {
+    QString errorText = database.getLastErrorText();
+    if (errorText.isEmpty() == false) {
+      QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                  QString(database.getLastErrorText()))
+          .exec();
+          return;
+    }
+  }
+
+
+  QMessageBox(QMessageBox::Icon::Information, QString("Database Success"),
+              QString("Database restore from file: %1").arg(fileName))
+      .exec();
 }

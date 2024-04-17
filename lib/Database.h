@@ -18,6 +18,7 @@
 #define DEFAULT_DATABASE "wmm"
 
 #define MYSQLDUMP_PROGRAM "mysqldump"
+#define MYSQL_PROGRAM "mysql"
 
 // These sizes are defined in the file: ../database/database.sql
 #define BANK_LENGTH 200

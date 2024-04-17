@@ -2,6 +2,7 @@
 
 #include <QDate>
 #include <QList>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -9,7 +10,6 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
-#include <QProcess>
 #include <QThread>
 
 Database::Database(QObject *parent) : QObject{parent} {
@@ -323,7 +323,7 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   return result;
 }
 
-bool Database::backup(QString fileName){
+bool Database::backup(QString fileName) {
   QStringList parameters;
 
   parameters.append(QString("--host=%1").arg(hostname));
@@ -335,7 +335,7 @@ bool Database::backup(QString fileName){
   QProcess process;
   process.setStandardOutputFile(fileName);
   process.start(MYSQLDUMP_PROGRAM, parameters);
-  
+
   while (process.waitForFinished()) {
     QThread::sleep(1);
   }
@@ -348,6 +348,31 @@ bool Database::backup(QString fileName){
   return true;
 }
 
-bool Database::restore(QString fileName){
+bool Database::restore(QString fileName) {
+  QProcess process;
+  QStringList parameters;
+  QString sqlCommand = MYSQL_PROGRAM;
+
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  process.setStandardInputFile(fileName);
+  process.start(sqlCommand, parameters);
+
+  while (process.waitForFinished()) {
+    QThread::sleep(1);
+  }
+
+  if (process.exitCode()) {
+    lastError = QString("Error executing: %1.\nexitCode: %2\nErrorString: %3")
+                    .arg(sqlCommand)
+                    .arg(process.exitCode())
+                    .arg(process.errorString());
+    return false;
+  }
+
   return true;
 }
