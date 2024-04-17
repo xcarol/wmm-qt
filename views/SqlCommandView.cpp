@@ -1,6 +1,7 @@
 #include "SqlCommandView.h"
 #include "../lib/Database.h"
 #include "ui_SqlCommandView.h"
+#include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlField>
 
@@ -72,4 +73,38 @@ void SqlCommandView::fillResultTable(QList<QSqlRecord> records,
           row, column, new QLabel(field.value().toString()));
     }
   }
+}
+void SqlCommandView::on_backupButton_clicked() {
+  QString filePath =
+      QFileDialog::getExistingDirectory(this, tr("Open File"), ".");
+
+  if (filePath.isEmpty()) {
+    return;
+  }
+
+  QString fileName =
+      filePath.append("/")
+          .append(QDate::currentDate().toString(Qt::DateFormat::ISODate))
+          .append("-")
+          .append(QTime::currentTime().toString())
+          .append(".sql");
+
+  Database database = Database();
+
+  if (database.backup(fileName) == false) {
+    QString errorText = database.getLastErrorText();
+    if (errorText.isEmpty() == false) {
+      QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                  QString(database.getLastErrorText()))
+          .exec();
+    }
+    return;
+  }
+
+  QMessageBox(QMessageBox::Icon::Information, QString("Database Success"),
+              QString("Database backup created at file: %1").arg(fileName))
+      .exec();
+}
+
+void SqlCommandView::on_restoreButton_clicked() {
 }

@@ -49,3 +49,8 @@ There is a _docker-compose.yml_ file to create a local mysql database.
 And a _mysqlserver.sh_ script to manage it.  
 
 Acces database through [http://localhost:8080](http://localhost:8080)  
+
+## Backup / Restore
+
+This application relies in _mysqldump_ application.  
+Make sure _mysqldump_ is installed and accessible by _$PATH_.  

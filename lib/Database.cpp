@@ -9,6 +9,8 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
+#include <QProcess>
+#include <QThread>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -319,4 +321,33 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   }
 
   return result;
+}
+
+bool Database::backup(QString fileName){
+  QStringList parameters;
+
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  QProcess process;
+  process.setStandardOutputFile(fileName);
+  process.start(MYSQLDUMP_PROGRAM, parameters);
+  
+  while (process.waitForFinished()) {
+    QThread::sleep(1);
+  }
+
+  if (process.exitCode()) {
+    lastError = process.errorString();
+    return false;
+  }
+
+  return true;
+}
+
+bool Database::restore(QString fileName){
+  return true;
 }

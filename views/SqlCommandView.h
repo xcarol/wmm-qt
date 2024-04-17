@@ -22,6 +22,10 @@ public:
 private slots:
   void on_execButton_clicked();
 
+  void on_backupButton_clicked();
+
+  void on_restoreButton_clicked();
+
 private:
   Ui::SqlCommandView *ui;
 

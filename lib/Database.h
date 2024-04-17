@@ -17,6 +17,8 @@
 #define DEFAULT_PORT "3306"
 #define DEFAULT_DATABASE "wmm"
 
+#define MYSQLDUMP_PROGRAM "mysqldump"
+
 // These sizes are defined in the file: ../database/database.sql
 #define BANK_LENGTH 200
 #define DESCRIPTION_LENGTH 200
@@ -71,6 +73,9 @@ public:
                   QDate initialDate = QDate::fromString("1970-01-01"),
                   QDate finaDate = QDate::currentDate());
   QList<QSqlRecord> execCommand(QString queryString);
+
+  bool backup(QString fileName);
+  bool restore(QString fileName);
 };
 
 #endif // DATABASE_H
