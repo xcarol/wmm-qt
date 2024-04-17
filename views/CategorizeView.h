@@ -9,6 +9,7 @@
 #define DESCRIPTION_COLUMN 3
 #define CATEGORY_COLUMN 4
 #define AMOUNT_COLUMN 5
+#define ACCOUNTABLE_COLUMN 6
 
 namespace Ui {
 class CategorizeView;
