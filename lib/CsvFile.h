@@ -1,8 +1,8 @@
 #ifndef CSVFILE_H
 #define CSVFILE_H
 
-#include <QList>
 #include <QFile>
+#include <QList>
 #include <qtypes.h>
 
 #define MAX_ROWS 10

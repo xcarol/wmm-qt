@@ -7,7 +7,6 @@
 #include <QList>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <QThread>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -119,7 +118,7 @@ void ImportFileView::selectImportFile() {
 void ImportFileView::importSelectedFile() {
   Database database = Database();
 
-  if (checkDatabaseConnection() == false) {
+  if (database.checkConnection() == false) {
     return;
   }
 
@@ -141,7 +140,9 @@ void ImportFileView::importSelectedFile() {
 
     QString date = row.at(dateColumn - INDEX_OFFSET);
     QString description = row.at(descriptionColumn - INDEX_OFFSET);
-    double amount = row.at(amountColumn - INDEX_OFFSET).toDouble();
+    double amount = QString(row.at(amountColumn - INDEX_OFFSET))
+                        .replace(",", ".")
+                        .toDouble();
 
     if (database.storeRow(bankName, date, description, amount) == false) {
       break;
@@ -196,10 +197,8 @@ bool ImportFileView::checkSelectedFile() {
       break;
     }
 
-    // Give time for the dialog to show
-    QThread::sleep(std::chrono::milliseconds{1});
-
     progress.setValue(checkedRows);
+
     if (progress.wasCanceled()) {
       isCancelled = true;
       break;
@@ -229,21 +228,6 @@ bool ImportFileView::checkSelectedFile() {
         .exec();
     return true;
   }
-}
-
-bool ImportFileView::checkDatabaseConnection() {
-  Database database = Database();
-
-  if (database.checkConnection() == false) {
-    QMessageBox(
-        QMessageBox::Icon::Warning, QString("Database connection problem"),
-        QString("Error %1 accessing database").arg(database.getLastErrorText()))
-        .exec();
-
-    return false;
-  }
-
-  return true;
 }
 
 void ImportFileView::on_openFileButton_clicked() { selectImportFile(); }
@@ -290,12 +274,4 @@ void ImportFileView::on_banksComboBox_currentIndexChanged(int index) {
 void ImportFileView::on_banksComboBox_currentTextChanged(const QString &arg1) {
   bankName = arg1;
   updateImportButtonState();
-}
-
-void ImportFileView::on_databaseStatusButton_clicked() {
-  if (checkDatabaseConnection()) {
-    QMessageBox(QMessageBox::Icon::Information, QString("Database connection"),
-                "Connected successfully to de database.")
-        .exec();
-  }
 }

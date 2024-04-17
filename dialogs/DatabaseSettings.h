@@ -7,27 +7,32 @@ namespace Ui {
 class DatabaseSettings;
 }
 
-class DatabaseSettings : public QDialog
-{
-    Q_OBJECT
+class DatabaseSettings : public QDialog {
+  Q_OBJECT
 
 public:
-    explicit DatabaseSettings(QWidget *parent = nullptr);
-    ~DatabaseSettings();
+  explicit DatabaseSettings(QWidget *parent = nullptr);
+  ~DatabaseSettings();
 
-    void init(QString hostname, QString database, QString username, QString userpass);
+  void init(QString hostname, int port, QString database, QString username,
+            QString userpass);
 
 public:
-    QString hostname;
-    QString database;
-    QString username;
-    QString userpass;
+  QString hostname;
+  int port;
+  QString database;
+  QString username;
+  QString userpass;
 
 private slots:
-    void on_buttonBox_accepted();
+  void on_buttonBox_accepted();
+
+  void on_databaseStatusButton_clicked();
 
 private:
-    Ui::DatabaseSettings *ui;
+  Ui::DatabaseSettings *ui;
+  void updateAttributes();
+  bool checkDatabaseConnection();
 };
 
 #endif // DATABASESETTINGS_H

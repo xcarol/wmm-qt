@@ -2,6 +2,7 @@
 
 #include <QDate>
 #include <QList>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -9,10 +10,12 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QSqlResult>
+#include <QThread>
 
 Database::Database(QObject *parent) : QObject{parent} {
-  hostname = settings.value(HOSTNAME).toString();
-  database = settings.value(DATABASE).toString();
+  hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
+  port = settings.value(PORT, DEFAULT_PORT).toInt();
+  database = settings.value(DATABASE, DEFAULT_DATABASE).toString();
   username = settings.value(USERNAME).toString();
   userpass = settings.value(USERPASS).toString();
 }
@@ -22,6 +25,11 @@ Database::~Database() { sqlDatabase.close(); }
 void Database::setHostname(QString name) {
   settings.setValue(HOSTNAME, name);
   hostname = name;
+}
+
+void Database::setPort(int newport) {
+  settings.setValue(PORT, newport);
+  port = newport;
 }
 
 void Database::setDatabase(QString name) {
@@ -48,6 +56,7 @@ bool Database::openDatabase() {
   }
 
   sqlDatabase.setHostName(hostname);
+  sqlDatabase.setPort(port);
   sqlDatabase.setDatabaseName(database);
   sqlDatabase.setUserName(username);
   sqlDatabase.setPassword(userpass);
@@ -89,9 +98,6 @@ bool Database::storeRow(QString bank, QString date, QString description,
 
     if (!query.exec()) {
       lastError = query.lastError().databaseText();
-      const QSqlResult *r = query.result();
-      qDebug() << r;
-      qDebug() << query.lastError();
       success = false;
     }
 
@@ -104,22 +110,20 @@ bool Database::storeRow(QString bank, QString date, QString description,
 
 QString Database::unifyDateToStore(QString date) {
   QDate ymd = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"),
-      "yyyy-MM-dd");
+      QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
 
   QDate dmy = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"),
-      "dd-MM-yyyy");
+      QString(date).replace(QRegularExpression("/"), "-"), "dd-MM-yyyy");
 
-    if (ymd.isValid()) {
-      return ymd.toString(Qt::DateFormat::ISODate);
-    }
+  if (ymd.isValid()) {
+    return ymd.toString(Qt::DateFormat::ISODate);
+  }
 
-    if (dmy.isValid()) {
+  if (dmy.isValid()) {
     return dmy.toString(Qt::DateFormat::ISODate);
-    }
+  }
 
-    return QString("%1 invalid date").arg(date);
+  return QString("%1 invalid date").arg(date);
 }
 
 QStringList Database::getBankNames() {
@@ -180,7 +184,9 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
     if (query.exec(queryString)) {
 
       int count = 0;
-      dialog->setMaximum(query.numRowsAffected());
+      if (dialog) {
+        dialog->setMaximum(query.numRowsAffected());
+      }
 
       while (query.next()) {
 
@@ -192,9 +198,11 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
         }
 
         rows.append(fields);
-        dialog->setValue(++count);
+        if (dialog) {
+          dialog->setValue(++count);
+        }
 
-        if (dialog->wasCanceled()) {
+        if (dialog && dialog->wasCanceled()) {
           break;
         }
       }
@@ -253,4 +261,118 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
   }
 
   return updatedRows;
+}
+
+QList<QStringList> Database::getBanksBalance(QStringList bankNames,
+                                             QDate initialDate,
+                                             QDate finaDate) {
+  QList<QStringList> bankBalance;
+
+  if (bankNames.isEmpty()) {
+    bankNames = getBankNames();
+  }
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    foreach (QString bankName, bankNames) {
+      QString queryString = QString("SELECT SUM(amount) as balance from "
+                                    "transactions WHERE bank = '%1'")
+                                .arg(bankName);
+
+      if (query.exec(queryString)) {
+        query.next();
+        bankBalance.append(
+            QStringList({bankName, query.value("balance").toString()}));
+      } else {
+        lastError = query.lastError().databaseText();
+      }
+    }
+
+    closeDatabase();
+  }
+
+  return bankBalance;
+}
+
+QList<QSqlRecord> Database::execCommand(QString queryString) {
+  QList<QSqlRecord> result;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryString)) {
+      while (query.next()) {
+        result.append(query.record());
+      }
+
+      if (result.isEmpty()) {
+        QSqlRecord record = QSqlRecord();
+        record.append(QSqlField("Rows affected"));
+        record.setValue("Rows affected", query.numRowsAffected());
+        result.append(record);
+      }
+
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return result;
+}
+
+bool Database::backup(QString fileName) {
+  QStringList parameters;
+
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  QProcess process;
+  process.setStandardOutputFile(fileName);
+  process.start(MYSQLDUMP_PROGRAM, parameters);
+
+  while (process.waitForFinished()) {
+    QThread::sleep(1);
+  }
+
+  if (process.exitCode()) {
+    lastError = process.errorString();
+    return false;
+  }
+
+  return true;
+}
+
+bool Database::restore(QString fileName) {
+  QProcess process;
+  QStringList parameters;
+  QString sqlCommand = MYSQL_PROGRAM;
+
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  process.setStandardInputFile(fileName);
+  process.start(sqlCommand, parameters);
+
+  while (process.waitForFinished()) {
+    QThread::sleep(1);
+  }
+
+  if (process.exitCode()) {
+    lastError = QString("Error executing: %1.\nexitCode: %2\nErrorString: %3")
+                    .arg(sqlCommand)
+                    .arg(process.exitCode())
+                    .arg(process.errorString());
+    return false;
+  }
+
+  return true;
 }
