@@ -265,7 +265,7 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
 
 QList<QStringList> Database::getBanksBalance(QStringList bankNames,
                                              QDate initialDate,
-                                             QDate finaDate) {
+                                             QDate finalDate) {
   QList<QStringList> bankBalance;
 
   if (bankNames.isEmpty()) {
@@ -276,14 +276,19 @@ QList<QStringList> Database::getBanksBalance(QStringList bankNames,
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
     foreach (QString bankName, bankNames) {
-      QString queryString = QString("SELECT SUM(amount) as balance from "
-                                    "transactions WHERE bank = '%1'")
-                                .arg(bankName);
+      QString queryString =
+          QString("SELECT SUM(amount) as balance from "
+                  "transactions WHERE bank = '%1'"
+                  " AND date >= '%2' AND date <= '%3'")
+              .arg(bankName)
+              .arg(initialDate.toString(Qt::DateFormat::ISODate))
+              .arg(finalDate.toString(Qt::DateFormat::ISODate));
 
       if (query.exec(queryString)) {
-        query.next();
-        bankBalance.append(
-            QStringList({bankName, query.value("balance").toString()}));
+        if (query.next()) {
+          bankBalance.append(
+              QStringList({bankName, query.value("balance").toString()}));
+        }
       } else {
         lastError = query.lastError().databaseText();
       }
@@ -375,4 +380,25 @@ bool Database::restore(QString fileName) {
   }
 
   return true;
+}
+
+QStringList Database::getYears() {
+  QStringList years;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec("SELECT DISTINCT YEAR(date) FROM transactions")) {
+      while (query.next()) {
+
+        years.append(query.value(0).toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return years;
 }
