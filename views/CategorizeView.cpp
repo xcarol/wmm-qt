@@ -65,8 +65,7 @@ void CategorizeView::on_searchButton_clicked() {
         n, new QTableWidgetItem(QString(labels.at(n).toUpper())));
   }
 
-  QLocale locale;
-  QString dateFormat = locale.dateFormat(QLocale::ShortFormat);
+  QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
 
   progress.reset();
   progress.setMaximum(numberOfRows);

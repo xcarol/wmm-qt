@@ -17,7 +17,6 @@ BrowseDataView::~BrowseDataView() { delete ui; }
 
 void BrowseDataView::updateBankTable() {
   double totalAmount = 0.0;
-  QLocale locale = QLocale();
   Database database = Database();
 
   QList<QStringList> balances = database.getBanksBalance(
@@ -45,7 +44,7 @@ void BrowseDataView::updateBankTable() {
     double amount = balances.at(rowcount).at(1).toDouble();
     totalAmount += amount;
 
-    QLabel *labelAmount = new QLabel(locale.toCurrencyString(amount));
+    QLabel *labelAmount = new QLabel(QLocale().toCurrencyString(amount));
     labelAmount->setAlignment(Qt::AlignRight);
     ui->bankTable->setCellWidget(rowcount, 1, labelAmount);
   }
@@ -55,7 +54,7 @@ void BrowseDataView::updateBankTable() {
   labelTotal->setAlignment(Qt::AlignLeft);
   ui->bankTable->setCellWidget(rowcount, 0, labelTotal);
 
-  QLabel *labelTotalAmount = new QLabel(locale.toCurrencyString(totalAmount));
+  QLabel *labelTotalAmount = new QLabel(QLocale().toCurrencyString(totalAmount));
   labelTotalAmount->setAlignment(Qt::AlignRight);
   ui->bankTable->setCellWidget(rowcount, 1, labelTotalAmount);
 }
@@ -63,7 +62,6 @@ void BrowseDataView::updateBankTable() {
 void BrowseDataView::updateCategoryTable() {
   int noAmountCategoriesCount =0;
   double totalAmount = 0.0;
-  QLocale locale = QLocale();
   Database database = Database();
 
   QList<QStringList> balances = database.getCategoriesBalance(
@@ -103,13 +101,13 @@ void BrowseDataView::updateCategoryTable() {
     ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 0, labelCategory);
 
     QLabel *labelAmount =
-        new QLabel(locale.toCurrencyString(amount, QString(), 2));
+        new QLabel(QLocale().toCurrencyString(amount, QString(), 2));
     labelAmount->setAlignment(Qt::AlignRight);
     ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 1, labelAmount);
 
     if (addMonthAverage) {
       QLabel *averageAmount =
-          new QLabel(locale.toCurrencyString(amount / 12, QString(), 2));
+          new QLabel(QLocale().toCurrencyString(amount / 12, QString(), 2));
       averageAmount->setAlignment(Qt::AlignRight);
       ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 2, averageAmount);
     }
@@ -121,14 +119,14 @@ void BrowseDataView::updateCategoryTable() {
   labelTotal->setAlignment(Qt::AlignLeft);
   ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 0, labelTotal);
 
-  QLabel *labelTotalAmount = new QLabel(locale.toCurrencyString(totalAmount));
+  QLabel *labelTotalAmount = new QLabel(QLocale().toCurrencyString(totalAmount));
   labelTotalAmount->setAlignment(Qt::AlignRight);
   ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 1, labelTotalAmount);
 }
 
 void BrowseDataView::fillYearsCombo() {
   Database database = Database();
-  QStringList years = database.getYears();
+  QStringList years = database.getYears(false);
   ui->yearBox->addItem("");
   ui->yearBox->addItems(years);
 }
