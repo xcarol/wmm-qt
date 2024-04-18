@@ -61,6 +61,7 @@ void BrowseDataView::updateBankTable() {
 }
 
 void BrowseDataView::updateCategoryTable() {
+  int noAmountCategoriesCount =0;
   double totalAmount = 0.0;
   QLocale locale = QLocale();
   Database database = Database();
@@ -88,34 +89,41 @@ void BrowseDataView::updateCategoryTable() {
 
   int rowcount = 0;
   for (; rowcount < balances.length(); rowcount++) {
+    double amount = balances.at(rowcount).at(1).toDouble();
+
+    if (amount == 0) {
+      noAmountCategoriesCount++;
+      continue;
+    }
+
+    totalAmount += amount;
+
     QLabel *labelCategory = new QLabel(balances.at(rowcount).at(0));
     labelCategory->setAlignment(Qt::AlignLeft);
-    ui->categoryTable->setCellWidget(rowcount, 0, labelCategory);
-
-    double amount = balances.at(rowcount).at(1).toDouble();
-    totalAmount += amount;
+    ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 0, labelCategory);
 
     QLabel *labelAmount =
         new QLabel(locale.toCurrencyString(amount, QString(), 2));
     labelAmount->setAlignment(Qt::AlignRight);
-    ui->categoryTable->setCellWidget(rowcount, 1, labelAmount);
+    ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 1, labelAmount);
 
     if (addMonthAverage) {
       QLabel *averageAmount =
           new QLabel(locale.toCurrencyString(amount / 12, QString(), 2));
       averageAmount->setAlignment(Qt::AlignRight);
-      ui->categoryTable->setCellWidget(rowcount, 2, averageAmount);
+      ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 2, averageAmount);
     }
   }
 
+  ui->categoryTable->setRowCount(ui->categoryTable->rowCount() - noAmountCategoriesCount);
   ui->categoryTable->setRowCount(ui->categoryTable->rowCount() + 1);
   QLabel *labelTotal = new QLabel("Total");
   labelTotal->setAlignment(Qt::AlignLeft);
-  ui->categoryTable->setCellWidget(rowcount, 0, labelTotal);
+  ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 0, labelTotal);
 
   QLabel *labelTotalAmount = new QLabel(locale.toCurrencyString(totalAmount));
   labelTotalAmount->setAlignment(Qt::AlignRight);
-  ui->categoryTable->setCellWidget(rowcount, 1, labelTotalAmount);
+  ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 1, labelTotalAmount);
 }
 
 void BrowseDataView::fillYearsCombo() {
