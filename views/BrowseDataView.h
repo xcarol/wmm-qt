@@ -26,6 +26,7 @@ private:
   Ui::BrowseDataView *ui;
 
   void updateBankTable();
+  void updateCategoryTable();
   void fillYearsCombo();
 };
 

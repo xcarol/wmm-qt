@@ -73,6 +73,10 @@ public:
   getBanksBalance(QStringList bankNames = QStringList(),
                   QDate initialDate = QDate::fromString("1970-01-01"),
                   QDate finalDate = QDate::currentDate());
+  QList<QStringList>
+  getCategoriesBalance(QStringList bankNames = QStringList(),
+                  QDate initialDate = QDate::fromString("1970-01-01"),
+                  QDate finalDate = QDate::currentDate());
   QStringList getYears();
   QList<QSqlRecord> execCommand(QString queryString);
 

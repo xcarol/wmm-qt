@@ -300,6 +300,43 @@ QList<QStringList> Database::getBanksBalance(QStringList bankNames,
   return bankBalance;
 }
 
+QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
+                                                  QDate initialDate,
+                                                  QDate finalDate) {
+  QList<QStringList> bankBalance;
+
+  if (categoryNames.isEmpty()) {
+    categoryNames = getCategoryNames();
+  }
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    foreach (QString categoryName, categoryNames) {
+      QString queryString =
+          QString("SELECT SUM(amount) as balance from "
+                  "transactions WHERE category = '%1'"
+                  " AND date >= '%2' AND date <= '%3'")
+              .arg(categoryName)
+              .arg(initialDate.toString(Qt::DateFormat::ISODate))
+              .arg(finalDate.toString(Qt::DateFormat::ISODate));
+
+      if (query.exec(queryString)) {
+        if (query.next()) {
+          bankBalance.append(
+              QStringList({categoryName, query.value("balance").toString()}));
+        }
+      } else {
+        lastError = query.lastError().databaseText();
+      }
+    }
+
+    closeDatabase();
+  }
+
+  return bankBalance;
+}
+
 QList<QSqlRecord> Database::execCommand(QString queryString) {
   QList<QSqlRecord> result;
 

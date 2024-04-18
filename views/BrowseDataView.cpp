@@ -59,6 +59,51 @@ void BrowseDataView::updateBankTable() {
   ui->bankTable->setCellWidget(rowcount, 1, labelTotalAmount);
 }
 
+void BrowseDataView::updateCategoryTable() {
+  double totalAmount = 0.0;
+  Database database = Database();
+
+  QList<QStringList> balances = database.getCategoriesBalance(
+      QStringList(), QDate::fromString(startDate, Qt::DateFormat::ISODate),
+      QDate::fromString(endDate, Qt::DateFormat::ISODate));
+
+  if (balances.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+
+  ui->categoryTable->setColumnCount(2);
+  ui->categoryTable->setRowCount(balances.length());
+  ui->categoryTable->setHorizontalHeaderLabels({"Category", "Balance"});
+  ui->categoryTable->verticalHeader()->setVisible(false);
+
+  int rowcount = 0;
+  for (; rowcount < balances.length(); rowcount++) {
+    QLabel *labelCategory = new QLabel(balances.at(rowcount).at(0));
+    labelCategory->setAlignment(Qt::AlignLeft);
+    ui->categoryTable->setCellWidget(rowcount, 0, labelCategory);
+
+    double amount = balances.at(rowcount).at(1).toDouble();
+    totalAmount += amount;
+
+    QLocale locale = QLocale();
+    QLabel *labelAmount = new QLabel(locale.toCurrencyString(amount));
+    labelAmount->setAlignment(Qt::AlignRight);
+    ui->categoryTable->setCellWidget(rowcount, 1, labelAmount);
+  }
+
+  ui->categoryTable->setRowCount(ui->categoryTable->rowCount() + 1);
+  QLabel *labelTotal = new QLabel("Total");
+  labelTotal->setAlignment(Qt::AlignLeft);
+  ui->categoryTable->setCellWidget(rowcount, 0, labelTotal);
+
+  QLabel *labelTotalAmount = new QLabel(QString::number(totalAmount));
+  labelTotalAmount->setAlignment(Qt::AlignRight);
+  ui->categoryTable->setCellWidget(rowcount, 1, labelTotalAmount);
+}
+
 void BrowseDataView::fillYearsCombo() {
   Database database = Database();
   QStringList years = database.getYears();
@@ -71,6 +116,7 @@ void BrowseDataView::on_byyearButton_clicked() {
   startDate = QString("%1-01-01").arg(year);
   endDate = QString("%1-12-31").arg(year);
   updateBankTable();
+  updateCategoryTable();
 }
 
 void BrowseDataView::on_bydateButton_clicked() {}
