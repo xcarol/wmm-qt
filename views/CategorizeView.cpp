@@ -23,6 +23,7 @@ void CategorizeView::on_searchButton_clicked() {
   Database database = Database();
 
   ui->categoryComboBox->clear();
+  ui->categoryComboBox->addItem("");
   ui->categoryComboBox->addItems(database.getCategoryNames());
 
   ui->searchResultsTable->clear();
@@ -64,8 +65,7 @@ void CategorizeView::on_searchButton_clicked() {
         n, new QTableWidgetItem(QString(labels.at(n).toUpper())));
   }
 
-  QLocale locale;
-  QString dateFormat = locale.dateFormat(QLocale::ShortFormat);
+  QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
 
   progress.reset();
   progress.setMaximum(numberOfRows);
@@ -138,6 +138,8 @@ void CategorizeView::on_updateButton_clicked() {
                 QString("A total of %1 rows updated").arg(updatedRows))
         .exec();
   }
+
+  ui->filterEdit->clearEditText();
 }
 
 void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
