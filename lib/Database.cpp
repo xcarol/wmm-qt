@@ -419,7 +419,7 @@ bool Database::restore(QString fileName) {
   return true;
 }
 
-QStringList Database::getYears() {
+QStringList Database::getYears(bool ascending) {
   QStringList years;
 
   if (openDatabase()) {
@@ -435,6 +435,10 @@ QStringList Database::getYears() {
     }
 
     closeDatabase();
+  }
+
+  if (ascending == false) {
+    std::reverse(years.begin(), years.end());
   }
 
   return years;
