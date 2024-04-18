@@ -53,12 +53,16 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QDateEdit" name="endDateEdit"/>
+           <widget class="QDateEdit" name="endDateEdit">
+            <property name="displayFormat">
+             <string>dd/MM/yyyy</string>
+            </property>
+           </widget>
           </item>
           <item row="0" column="1">
            <widget class="QDateEdit" name="startDateEdit">
             <property name="displayFormat">
-             <string>d/M/yyyy</string>
+             <string>dd/MM/yyyy</string>
             </property>
            </widget>
           </item>
@@ -89,7 +93,7 @@
           <item>
            <widget class="QPushButton" name="bydateButton">
             <property name="text">
-             <string>Browse</string>
+             <string>Browse by period</string>
             </property>
            </widget>
           </item>
@@ -151,7 +155,7 @@
           <item>
            <widget class="QPushButton" name="byyearButton">
             <property name="text">
-             <string>Browse</string>
+             <string>Browse by year</string>
             </property>
            </widget>
           </item>

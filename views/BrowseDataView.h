@@ -25,6 +25,7 @@ private slots:
 private:
   Ui::BrowseDataView *ui;
 
+  bool addMonthAverage = false;
   void updateBankTable();
   void updateCategoryTable();
   void fillYearsCombo();
