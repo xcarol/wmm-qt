@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ca_ES">
+<TS version="2.1" language="en_US">
 <context>
     <name></name>
     <message id="Balance">
@@ -26,57 +26,57 @@
         <location filename="../views/BrowseDataView.ui" line="14"/>
         <location filename="../views/BrowseDataView.ui" line="14"/>
         <source>DataBrowseView</source>
-        <translation>DataBrowseView</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="21"/>
         <location filename="../views/BrowseDataView.ui" line="21"/>
         <source>Find your money!</source>
-        <translation>Troba els teus diners!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="45"/>
         <location filename="../views/BrowseDataView.ui" line="45"/>
         <source>Browse by date period</source>
-        <translation>Explora per periode de dates</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="54"/>
         <location filename="../views/BrowseDataView.ui" line="54"/>
         <source>Start date</source>
-        <translation>Data inicial</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="61"/>
         <location filename="../views/BrowseDataView.ui" line="68"/>
         <location filename="../views/BrowseDataView.ui" line="61"/>
         <source>dd/MM/yyyy</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="75"/>
         <location filename="../views/BrowseDataView.ui" line="75"/>
         <source>End date</source>
-        <translation>Data final</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="99"/>
         <location filename="../views/BrowseDataView.ui" line="99"/>
         <source>Browse by period</source>
-        <translation>Explora per periode</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="118"/>
         <location filename="../views/BrowseDataView.ui" line="161"/>
         <location filename="../views/BrowseDataView.ui" line="118"/>
         <source>Browse by year</source>
-        <translation>Explora per any</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="127"/>
         <location filename="../views/BrowseDataView.ui" line="127"/>
         <source>Year</source>
-        <translation>Any</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="28"/>
@@ -89,7 +89,7 @@
         <location filename="../views/BrowseDataView.cpp" line="28"/>
         <location filename="../views/BrowseDataView.cpp" line="73"/>
         <source>Database error</source>
-        <translation>Error a la base de dades</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
@@ -101,7 +101,7 @@
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <source>Bank</source>
-        <translation>Banc</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
@@ -125,7 +125,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <source>Balance</source>
-        <translation>Balanç</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -145,7 +145,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <source>Category</source>
-        <translation>Categoria</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -153,7 +153,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <source>Month average</source>
-        <translation>Mitja mensual</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="54"/>
@@ -186,7 +186,7 @@
         <location filename="../views/CategorizeView.ui" line="72"/>
         <location filename="../views/CategorizeView.ui" line="72"/>
         <source>Category</source>
-        <translation>Categoria</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.ui" line="99"/>
@@ -214,7 +214,7 @@
         <location filename="../views/CategorizeView.cpp" line="49"/>
         <location filename="../views/CategorizeView.cpp" line="133"/>
         <source>Database error</source>
-        <translation type="unfinished">Error a la base de dades</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="75"/>
@@ -360,7 +360,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.ui" line="138"/>
         <location filename="../views/ImportFileView.ui" line="138"/>
         <source>Bank</source>
-        <translation type="unfinished">Banc</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="176"/>
@@ -408,7 +408,7 @@ Are you sure?</source>
     <message>
         <location filename="../views/ImportFileView.cpp" line="168"/>
         <source>Database error</source>
-        <translation type="unfinished">Error a la base de dades</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="172"/>
@@ -598,7 +598,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="96"/>
         <location filename="../views/SqlCommandView.cpp" line="130"/>
         <source>Database error</source>
-        <translation type="unfinished">Error a la base de dades</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="78"/>

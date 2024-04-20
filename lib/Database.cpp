@@ -123,7 +123,7 @@ QString Database::unifyDateToStore(QString date) {
     return dmy.toString(Qt::DateFormat::ISODate);
   }
 
-  return QString("%1 invalid date").arg(date);
+  return QString(tr("%1 invalid date")).arg(date);
 }
 
 QStringList Database::getBankNames() {

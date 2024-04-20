@@ -11,24 +11,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_PREFIX_PATH "/home/xcarol/Qt/6.7.0/gcc_64/")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Sql LinguistTools)
 
-find_package(Qt6 REQUIRED COMPONENTS Sql)
-
-set(TS_FILES lang/wmm_ca_ES.ts)
-
-set(PROJECT_SOURCES
-        main/main.cpp
-        views/MainWindow.cpp
-        views/MainWindow.h
-        views/MainWindow.ui
-        ${TS_FILES}
+set(TS_FILES
+    lang/wmm_ca_ES.ts
+    lang/wmm_es_ES.ts
+    lang/wmm_en.ts
 )
 
-qt_add_executable(wmm
-    MANUAL_FINALIZATION
-    ${PROJECT_SOURCES}
+set(PROJECT_SOURCES
+    main/main.cpp
+    views/MainWindow.cpp
+    views/MainWindow.h
+    views/MainWindow.ui
     lib/CsvFile.h
     lib/CsvFile.cpp
     views/ImportFileView.h
@@ -48,12 +43,26 @@ qt_add_executable(wmm
     views/SqlCommandView.h
     views/SqlCommandView.cpp
     views/SqlCommandView.ui
+    ${TS_FILES}
 )
 
-qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+qt_add_executable(wmm
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
 
-target_link_libraries(wmm PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(wmm PRIVATE Qt${QT_VERSION_MAJOR}::Sql)
+qt6_add_lupdate(
+    SOURCES ${PROJECT_SOURCES}
+    TS_FILES ${TS_FILES}
+)
+
+qt6_add_lrelease(
+    TS_FILES ${TS_FILES}
+    QM_FILES_OUTPUT_VARIABLE qm_files
+)
+
+target_link_libraries(wmm PRIVATE Qt6::Widgets)
+target_link_libraries(wmm PRIVATE Qt6::Sql)
 
 include(GNUInstallDirs)
 install(TARGETS wmm
@@ -61,5 +70,7 @@ install(TARGETS wmm
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
+
+install(FILES ${qm_files} DESTINATION .)
 
 qt_finalize_executable(wmm)
