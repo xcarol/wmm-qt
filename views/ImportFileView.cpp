@@ -95,8 +95,8 @@ void ImportFileView::updatePreview() {
 }
 
 void ImportFileView::selectImportFile() {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
-                                                  tr("Csv Files (*.csv)"));
+  QString fileName =
+      QFileDialog::getOpenFileName(this, "Open File", ".", "Csv Files (*.csv)");
 
   if (fileName.isEmpty()) {
     return;

@@ -75,8 +75,7 @@ void SqlCommandView::fillResultTable(QList<QSqlRecord> records,
   }
 }
 void SqlCommandView::on_backupButton_clicked() {
-  QString filePath =
-      QFileDialog::getExistingDirectory(this, tr("Open File"), ".");
+  QString filePath = QFileDialog::getExistingDirectory(this, "Open File", ".");
 
   if (filePath.isEmpty()) {
     return;
@@ -116,8 +115,8 @@ void SqlCommandView::on_restoreButton_clicked() {
     return;
   }
 
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
-                                                  tr("Sql Files (*.sql)"));
+  QString fileName =
+      QFileDialog::getOpenFileName(this, "Open File", ".", "Sql Files (*.sql)");
 
   if (fileName.isEmpty()) {
     return;
@@ -131,10 +130,9 @@ void SqlCommandView::on_restoreButton_clicked() {
       QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
                   QString(database.getLastErrorText()))
           .exec();
-          return;
+      return;
     }
   }
-
 
   QMessageBox(QMessageBox::Icon::Information, QString("Database Success"),
               QString("Database restore from file: %1").arg(fileName))
