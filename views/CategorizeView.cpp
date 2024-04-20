@@ -140,6 +140,8 @@ void CategorizeView::on_updateButton_clicked() {
   }
 
   ui->filterEdit->clearEditText();
+  ui->searchResultsTable->clear();
+  ui->searchResultsTable->setColumnCount(0);
 }
 
 void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
