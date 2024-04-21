@@ -141,7 +141,14 @@ void ImportFileView::importSelectedFile() {
 
     QString date = row.at(dateColumn - INDEX_OFFSET);
     QString description = row.at(descriptionColumn - INDEX_OFFSET);
-    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET));
+
+    bool ok = false;
+    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+
+    if (ok == false) {
+      QLocale locale = QLocale("C");
+      amount = locale.toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+    }
 
     if (database.storeRow(bankName, date, description, amount) == false) {
       break;
