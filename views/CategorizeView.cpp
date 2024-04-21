@@ -58,7 +58,6 @@ void CategorizeView::on_searchButton_clicked() {
 
   ui->searchResultsTable->setRowCount(numberOfRows);
   ui->searchResultsTable->setColumnCount(numberOfColumns);
-  ui->searchResultsTable->verticalHeader()->setVisible(false);
 
   for (int n = 0; n < labels.length(); n++) {
     ui->searchResultsTable->setHorizontalHeaderItem(
