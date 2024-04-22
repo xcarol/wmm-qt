@@ -316,7 +316,7 @@ Are you sure?</source>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Configuración de conexión a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="42"/>

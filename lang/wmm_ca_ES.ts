@@ -316,7 +316,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <source>Dialog</source>
-        <translation></translation>
+        <translation>Configuració de connexió a la base de dades</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="42"/>
