@@ -2,6 +2,7 @@
 #include "../lib/Database.h"
 #include "ui_BrowseDataView.h"
 #include <QMessageBox>
+#include <qttranslation.h>
 
 BrowseDataView::BrowseDataView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::BrowseDataView) {
@@ -24,7 +25,7 @@ void BrowseDataView::updateBankTable() {
       QDate::fromString(endDate, Qt::DateFormat::ISODate));
 
   if (balances.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
     return;
@@ -32,7 +33,7 @@ void BrowseDataView::updateBankTable() {
 
   ui->bankTable->setColumnCount(2);
   ui->bankTable->setRowCount(balances.length());
-  ui->bankTable->setHorizontalHeaderLabels({"Bank", "Balance"});
+  ui->bankTable->setHorizontalHeaderLabels({tr("Bank"), tr("Balance")});
   ui->bankTable->verticalHeader()->setVisible(false);
 
   int rowcount = 0;
@@ -50,7 +51,7 @@ void BrowseDataView::updateBankTable() {
   }
 
   ui->bankTable->setRowCount(ui->bankTable->rowCount() + 1);
-  QLabel *labelTotal = new QLabel("Total");
+  QLabel *labelTotal = new QLabel(tr("Total"));
   labelTotal->setAlignment(Qt::AlignLeft);
   ui->bankTable->setCellWidget(rowcount, 0, labelTotal);
 
@@ -69,7 +70,7 @@ void BrowseDataView::updateCategoryTable() {
       QDate::fromString(endDate, Qt::DateFormat::ISODate));
 
   if (balances.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
     return;
@@ -79,9 +80,9 @@ void BrowseDataView::updateCategoryTable() {
   ui->categoryTable->setRowCount(balances.length());
   if (addMonthAverage) {
     ui->categoryTable->setHorizontalHeaderLabels(
-        {"Category", "Balance", "Month average"});
+        {tr("Category"), tr("Balance"), tr("Month average")});
   } else {
-    ui->categoryTable->setHorizontalHeaderLabels({"Category", "Balance"});
+    ui->categoryTable->setHorizontalHeaderLabels({tr("Category"), tr("Balance")});
   }
   ui->categoryTable->verticalHeader()->setVisible(false);
 
@@ -115,7 +116,7 @@ void BrowseDataView::updateCategoryTable() {
 
   ui->categoryTable->setRowCount(ui->categoryTable->rowCount() - noAmountCategoriesCount);
   ui->categoryTable->setRowCount(ui->categoryTable->rowCount() + 1);
-  QLabel *labelTotal = new QLabel("Total");
+  QLabel *labelTotal = new QLabel(tr("Total"));
   labelTotal->setAlignment(Qt::AlignLeft);
   ui->categoryTable->setCellWidget(rowcount - noAmountCategoriesCount, 0, labelTotal);
 

@@ -11,83 +11,58 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_PREFIX_PATH "/home/xcarol/Qt/6.7.0/gcc_64/")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Sql LinguistTools)
 
-find_package(Qt6 REQUIRED COMPONENTS Sql)
-
-set(TS_FILES lang/wmm_ca_ES.ts)
+set(TS_FILES
+    lang/wmm_ca_ES.ts
+    lang/wmm_es_ES.ts
+    lang/wmm_en.ts
+)
 
 set(PROJECT_SOURCES
-        main/main.cpp
-        views/MainWindow.cpp
-        views/MainWindow.h
-        views/MainWindow.ui
-        ${TS_FILES}
+    main/main.cpp
+    views/MainWindow.cpp
+    views/MainWindow.h
+    views/MainWindow.ui
+    lib/CsvFile.h
+    lib/CsvFile.cpp
+    views/ImportFileView.h
+    views/ImportFileView.cpp
+    views/ImportFileView.ui
+    dialogs/DatabaseSettings.h
+    dialogs/DatabaseSettings.cpp
+    dialogs/DatabaseSettings.ui
+    lib/Database.h
+    lib/Database.cpp
+    views/CategorizeView.h
+    views/CategorizeView.cpp
+    views/CategorizeView.ui
+    views/BrowseDataView.h
+    views/BrowseDataView.cpp
+    views/BrowseDataView.ui
+    views/SqlCommandView.h
+    views/SqlCommandView.cpp
+    views/SqlCommandView.ui
+    ${TS_FILES}
 )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(wmm
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-        lib/CsvFile.h
-        lib/CsvFile.cpp
-        views/ImportFileView.h
-        views/ImportFileView.cpp
-        views/ImportFileView.ui
-        dialogs/DatabaseSettings.h
-        dialogs/DatabaseSettings.cpp
-        dialogs/DatabaseSettings.ui
-        lib/Database.h
-        lib/Database.cpp
-        views/CategorizeView.h
-        views/CategorizeView.cpp
-        views/CategorizeView.ui
-        views/BrowseDataView.h
-        views/BrowseDataView.cpp
-        views/BrowseDataView.ui
-        views/SqlCommandView.h
-        views/SqlCommandView.cpp
-        views/SqlCommandView.ui
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET wmm APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-else()
-    if(ANDROID)
-        add_library(wmm SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(wmm
-            ${PROJECT_SOURCES}
-        )
-    endif()
-
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
-endif()
-
-target_link_libraries(wmm PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(wmm PRIVATE Qt${QT_VERSION_MAJOR}::Sql)
-
-# Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
-# If you are developing for iOS or macOS you should consider setting an
-# explicit, fixed bundle identifier manually though.
-if(${QT_VERSION} VERSION_LESS 6.1.0)
-  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.wmm)
-endif()
-set_target_properties(wmm PROPERTIES
-    ${BUNDLE_ID_OPTION}
-    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE
+qt_add_executable(wmm
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
 )
+
+qt6_add_lupdate(
+    SOURCES ${PROJECT_SOURCES}
+    TS_FILES ${TS_FILES}
+)
+
+qt6_add_lrelease(
+    TS_FILES ${TS_FILES}
+    QM_FILES_OUTPUT_VARIABLE qm_files
+)
+
+target_link_libraries(wmm PRIVATE Qt6::Widgets)
+target_link_libraries(wmm PRIVATE Qt6::Sql)
 
 include(GNUInstallDirs)
 install(TARGETS wmm
@@ -96,6 +71,6 @@ install(TARGETS wmm
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(wmm)
-endif()
+install(FILES ${qm_files} DESTINATION .)
+
+qt_finalize_executable(wmm)

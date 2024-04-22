@@ -47,8 +47,8 @@ bool DatabaseSettings::checkDatabaseConnection() {
   bool success = database.checkConnection();
   if (success == false) {
     QMessageBox(
-        QMessageBox::Icon::Warning, QString("Database connection problem"),
-        QString("Error %1 accessing database").arg(database.getLastErrorText()))
+        QMessageBox::Icon::Warning, QString(tr("Database connection problem")),
+        QString(tr("Error %1 accessing database")).arg(database.getLastErrorText()))
         .exec();
   }
 
@@ -62,8 +62,8 @@ bool DatabaseSettings::checkDatabaseConnection() {
 
 void DatabaseSettings::on_databaseStatusButton_clicked() {
   if (checkDatabaseConnection()) {
-    QMessageBox(QMessageBox::Icon::Information, QString("Database connection"),
-                "Connected successfully to de database.")
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database connection")),
+                tr("Connected successfully to de database."))
         .exec();
   }
 }

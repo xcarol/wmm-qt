@@ -95,8 +95,8 @@ void ImportFileView::updatePreview() {
 }
 
 void ImportFileView::selectImportFile() {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
-                                                  tr("Csv Files (*.csv)"));
+  QString fileName =
+      QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Csv Files (*.csv)"));
 
   if (fileName.isEmpty()) {
     return;
@@ -107,7 +107,7 @@ void ImportFileView::selectImportFile() {
   if (CsvFile::isValidCsvFile(fileName) == true) {
     csvFile.open(fileName);
     ui->rowsCountLabel->setText(
-        QString("Rows to import: %1").arg(csvFile.rowsCount()));
+        QString(tr("Rows to import: %1")).arg(csvFile.rowsCount()));
     if (checkSelectedFile()) {
       updatePreview();
     } else {
@@ -124,10 +124,10 @@ void ImportFileView::importSelectedFile() {
   }
 
   QProgressDialog progress =
-      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", tr("Cancel"), 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
-  progress.setWindowTitle("Import progress...");
+  progress.setWindowTitle(tr("Import progress..."));
 
   bool isCancelled = false;
   int storedRows = 0;
@@ -141,14 +141,21 @@ void ImportFileView::importSelectedFile() {
 
     QString date = row.at(dateColumn - INDEX_OFFSET);
     QString description = row.at(descriptionColumn - INDEX_OFFSET);
-    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET));
+
+    bool ok = false;
+    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+
+    if (ok == false) {
+      QLocale locale = QLocale("C");
+      amount = locale.toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+    }
 
     if (database.storeRow(bankName, date, description, amount) == false) {
       break;
     }
 
     progress.setLabelText(
-        QString("%1 of %2 rows stored...").arg(storedRows).arg(rowsToStore));
+        QString(tr("%1 of %2 rows stored...")).arg(storedRows).arg(rowsToStore));
     progress.setValue(storedRows);
     if (progress.wasCanceled()) {
       isCancelled = true;
@@ -159,18 +166,18 @@ void ImportFileView::importSelectedFile() {
   progress.cancel();
 
   if (isCancelled) {
-    QMessageBox(QMessageBox::Icon::Information, QString("Import cancelled"),
-                QString("A total of %1 from %2 rows imported")
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Import cancelled")),
+                QString(tr("A total of %1 from %2 rows imported"))
                     .arg(storedRows)
                     .arg(rowsToStore))
         .exec();
   } else if (database.getLastErrorText().length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("A total of %1 from %2 rows imported")
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 from %2 rows imported"))
                     .arg(storedRows)
                     .arg(rowsToStore))
         .exec();
@@ -179,10 +186,10 @@ void ImportFileView::importSelectedFile() {
 
 bool ImportFileView::checkSelectedFile() {
   QProgressDialog progress =
-      QProgressDialog("", "Cancel", 0, csvFile.rowsCount());
+      QProgressDialog("", tr("Cancel"), 0, csvFile.rowsCount());
 
   progress.setWindowModality(Qt::WindowModal);
-  progress.setWindowTitle("Check progress...");
+  progress.setWindowTitle(tr("Check progress..."));
 
   bool isCancelled = false;
   int checkedRows = 0;
@@ -208,20 +215,20 @@ bool ImportFileView::checkSelectedFile() {
 
   if (isCancelled) {
     QMessageBox(
-        QMessageBox::Icon::Information, QString("Check file cancelled"),
-        QString("Check process cancelled at line %1.").arg(checkedRows + 1))
+        QMessageBox::Icon::Information, QString(tr("Check file cancelled")),
+        QString(tr("Check process cancelled at line %1.")).arg(checkedRows + 1))
         .exec();
     return false;
   } else if (checkedRows != rowsToCheck) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Check file error"),
-                QString("Something's wrong at line %1. Row: %2")
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Check file error")),
+                QString(tr("Something's wrong at line %1. Row: %2"))
                     .arg(checkedRows + 1)
                     .arg(row.length()))
         .exec();
     return false;
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString("Check success"),
-                QString("A total of %1 from %2 rows checked successfully")
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Check success")),
+                QString(tr("A total of %1 from %2 rows checked successfully"))
                     .arg(checkedRows)
                     .arg(rowsToCheck))
         .exec();

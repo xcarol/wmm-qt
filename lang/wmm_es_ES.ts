@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ca_ES">
+<TS version="2.1" language="es_ES">
 <context>
     <name></name>
     <message id="Balance">
@@ -9,7 +9,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <source></source>
-        <translation>Balanç</translation>
+        <translation>Balance</translation>
     </message>
     <message id="Month average">
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -17,7 +17,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <source></source>
-        <translation>Mitja mensual</translation>
+        <translation>Media mensual</translation>
     </message>
 </context>
 <context>
@@ -26,25 +26,25 @@
         <location filename="../views/BrowseDataView.ui" line="14"/>
         <location filename="../views/BrowseDataView.ui" line="14"/>
         <source>DataBrowseView</source>
-        <translation>DataBrowseView</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="21"/>
         <location filename="../views/BrowseDataView.ui" line="21"/>
         <source>Find your money!</source>
-        <translation>Troba els teus diners!</translation>
+        <translation>Encuentra tu dinero!</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="45"/>
         <location filename="../views/BrowseDataView.ui" line="45"/>
         <source>Browse by date period</source>
-        <translation>Explora per periode de dates</translation>
+        <translation>Explorar por periodo de fechas</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="54"/>
         <location filename="../views/BrowseDataView.ui" line="54"/>
         <source>Start date</source>
-        <translation>Data inicial</translation>
+        <translation>Fecha inicial</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="61"/>
@@ -57,26 +57,26 @@
         <location filename="../views/BrowseDataView.ui" line="75"/>
         <location filename="../views/BrowseDataView.ui" line="75"/>
         <source>End date</source>
-        <translation>Data final</translation>
+        <translation>Fecha final</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="99"/>
         <location filename="../views/BrowseDataView.ui" line="99"/>
         <source>Browse by period</source>
-        <translation>Explora per periode</translation>
+        <translation>Explorar por periodo</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="118"/>
         <location filename="../views/BrowseDataView.ui" line="161"/>
         <location filename="../views/BrowseDataView.ui" line="118"/>
         <source>Browse by year</source>
-        <translation>Explora per any</translation>
+        <translation>Explorar por año</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.ui" line="127"/>
         <location filename="../views/BrowseDataView.ui" line="127"/>
         <source>Year</source>
-        <translation>Any</translation>
+        <translation>Año</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="28"/>
@@ -95,7 +95,7 @@
         <location filename="../views/BrowseDataView.cpp" line="28"/>
         <location filename="../views/BrowseDataView.cpp" line="73"/>
         <source>Database error</source>
-        <translation>Error a la base de dades</translation>
+        <translation>Error en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
@@ -110,7 +110,7 @@
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <source>Bank</source>
-        <translation>Banc</translation>
+        <translation>Banco</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
@@ -143,7 +143,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <source>Balance</source>
-        <translation>Balanç</translation>
+        <translation>Balance</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -169,7 +169,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <source>Category</source>
-        <translation>Categoria</translation>
+        <translation>Categoría</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -180,7 +180,7 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <source>Month average</source>
-        <translation>Mitja mensual</translation>
+        <translation>Media mensual</translation>
     </message>
     <message>
         <location filename="../views/BrowseDataView.cpp" line="54"/>
@@ -192,7 +192,7 @@
         <location filename="../views/BrowseDataView.cpp" line="54"/>
         <location filename="../views/BrowseDataView.cpp" line="119"/>
         <source>Total</source>
-        <translation>Total</translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -207,26 +207,26 @@
         <location filename="../views/CategorizeView.ui" line="27"/>
         <location filename="../views/CategorizeView.ui" line="27"/>
         <source>Filter</source>
-        <translation>Filtre</translation>
+        <translation>Filtro</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.ui" line="51"/>
         <location filename="../views/CategorizeView.ui" line="51"/>
         <source>Search</source>
-        <translation>Cerca</translation>
+        <translation>Buscar</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.ui" line="72"/>
         <location filename="../views/CategorizeView.ui" line="72"/>
         <source>Category</source>
-        <translation>Categoria</translation>
+        <translation>Categoría</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.ui" line="99"/>
         <location filename="../views/CategorizeView.ui" line="99"/>
         <location filename="../views/CategorizeView.cpp" line="118"/>
         <source>Update</source>
-        <translation>Actualitza</translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="38"/>
@@ -234,7 +234,7 @@
         <location filename="../views/CategorizeView.cpp" line="38"/>
         <location filename="../views/CategorizeView.cpp" line="38"/>
         <source>Searching for rows with filter %1</source>
-        <translation>Buscant registres amb el filtre %1</translation>
+        <translation>Buscando filas con el filtro %1</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="38"/>
@@ -242,7 +242,7 @@
         <location filename="../views/CategorizeView.cpp" line="38"/>
         <location filename="../views/CategorizeView.cpp" line="38"/>
         <source>Cancel</source>
-        <translation>Cancel·la</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="41"/>
@@ -250,7 +250,7 @@
         <location filename="../views/CategorizeView.cpp" line="41"/>
         <location filename="../views/CategorizeView.cpp" line="41"/>
         <source>Search...</source>
-        <translation>Cerca...</translation>
+        <translation>Buscar...</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="49"/>
@@ -262,7 +262,7 @@
         <location filename="../views/CategorizeView.cpp" line="49"/>
         <location filename="../views/CategorizeView.cpp" line="132"/>
         <source>Database error</source>
-        <translation>Error a la base de dades</translation>
+        <translation>Error en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="75"/>
@@ -270,7 +270,7 @@
         <location filename="../views/CategorizeView.cpp" line="74"/>
         <location filename="../views/CategorizeView.cpp" line="74"/>
         <source>Processing %1 of %2 rows found.</source>
-        <translation>Processant %1 de %2 registres trobats.</translation>
+        <translation>Procesando %1 de %2 filas encontradas.</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="120"/>
@@ -279,8 +279,8 @@
         <location filename="../views/CategorizeView.cpp" line="119"/>
         <source>You&apos;re about to update %1 records with the category: %2
 Are you sure?</source>
-        <translation>Estàs a punt d&apos;actualitzar %1 registres amb la categoria: %2
-N&apos;estàs segur?</translation>
+        <translation>Estás a punto de actualizar %1 registros con la categoría: %2
+¿Estás seguro?</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="137"/>
@@ -288,7 +288,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/CategorizeView.cpp" line="136"/>
         <location filename="../views/CategorizeView.cpp" line="136"/>
         <source>Database success</source>
-        <translation>Operació correcte a la base de dades</translation>
+        <translation>Exito en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="138"/>
@@ -296,7 +296,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/CategorizeView.cpp" line="137"/>
         <location filename="../views/CategorizeView.cpp" line="137"/>
         <source>A total of %1 rows updated</source>
-        <translation>S&apos;ha actualitzat un total de %1 registres</translation>
+        <translation>Un total de %1 registros actualizados</translation>
     </message>
 </context>
 <context>
@@ -307,7 +307,7 @@ N&apos;estàs segur?</translation>
         <location filename="../lib/Database.cpp" line="126"/>
         <location filename="../lib/Database.cpp" line="126"/>
         <source>%1 invalid date</source>
-        <translation>%1 data.invàlida</translation>
+        <translation>%1 fecha inválida</translation>
     </message>
 </context>
 <context>
@@ -316,7 +316,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="14"/>
         <source>Dialog</source>
-        <translation>Configuració de connexió a la base de dades</translation>
+        <translation>Configuración de conexión a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="42"/>
@@ -328,31 +328,31 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.ui" line="55"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="55"/>
         <source>Database name</source>
-        <translation>Nom de la base de dades</translation>
+        <translation>Nombre de la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="68"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="68"/>
         <source>User name</source>
-        <translation>Nom d&apos;usuari</translation>
+        <translation>Nombre de usuario</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="81"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="81"/>
         <source>User password</source>
-        <translation>Contrasenya</translation>
+        <translation>Contraseña</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="137"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="137"/>
         <source>Port</source>
-        <translation></translation>
+        <translation>Puerto</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.ui" line="160"/>
         <location filename="../dialogs/DatabaseSettings.ui" line="160"/>
         <source>Check Database Connection</source>
-        <translation>Comprobar la connexió</translation>
+        <translation>Comprobar la conexión a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
@@ -360,7 +360,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
         <source>Database connection problem</source>
-        <translation>Problema de connexió a la base de dades</translation>
+        <translation>Problema de conexión a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
@@ -368,7 +368,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
         <source>Error %1 accessing database</source>
-        <translation>Error %1 accedint a la base de dades</translation>
+        <translation>Error %1 accediendo a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
@@ -376,7 +376,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
         <source>Database connection</source>
-        <translation>Connexió a la base de dades</translation>
+        <translation>Conexión a la base de datos</translation>
     </message>
     <message>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
@@ -384,7 +384,7 @@ N&apos;estàs segur?</translation>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
         <source>Connected successfully to de database.</source>
-        <translation>Connectat a la base de dades correctament.</translation>
+        <translation>Conectado correctamente a la base de datos.</translation>
     </message>
 </context>
 <context>
@@ -400,49 +400,49 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.ui" line="25"/>
         <location filename="../views/ImportFileView.cpp" line="99"/>
         <source>Open File</source>
-        <translation>Obre arxiu</translation>
+        <translation>Abrir archivo</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="43"/>
         <location filename="../views/ImportFileView.ui" line="43"/>
         <source>Select the date column</source>
-        <translation>Selecciona la columna de la data</translation>
+        <translation>Selecciona la columna de la fecha</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="53"/>
         <location filename="../views/ImportFileView.ui" line="53"/>
         <source>Select the amount column</source>
-        <translation>Selecciona la columna de la quantitat</translation>
+        <translation>Selecciona la columna de la cantidad</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="76"/>
         <location filename="../views/ImportFileView.ui" line="76"/>
         <source>Select the description column</source>
-        <translation>Selecciona la columna de la descripció</translation>
+        <translation>Selecciona la columna de la descripción</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="105"/>
         <location filename="../views/ImportFileView.ui" line="105"/>
         <source>Rows to import: 0</source>
-        <translation>Files a importar: 0</translation>
+        <translation>Filas a importar: 0</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="119"/>
         <location filename="../views/ImportFileView.ui" line="119"/>
         <source>First row is the header</source>
-        <translation>La primera fila es la capçalera</translation>
+        <translation>La primera fila es la cabecera</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="138"/>
         <location filename="../views/ImportFileView.ui" line="138"/>
         <source>Bank</source>
-        <translation>Banc</translation>
+        <translation>Banco</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.ui" line="176"/>
         <location filename="../views/ImportFileView.ui" line="176"/>
         <source>Import</source>
-        <translation></translation>
+        <translation>Importar</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="99"/>
@@ -450,7 +450,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="99"/>
         <location filename="../views/ImportFileView.cpp" line="99"/>
         <source>Csv Files (*.csv)</source>
-        <translation>Arxius Csv (*.csv)</translation>
+        <translation>Archivos Csv (*.csv)</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="110"/>
@@ -458,7 +458,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="110"/>
         <location filename="../views/ImportFileView.cpp" line="110"/>
         <source>Rows to import: %1</source>
-        <translation>Files a importar: %1</translation>
+        <translation>Filas a importar: %1</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="127"/>
@@ -470,7 +470,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="127"/>
         <location filename="../views/ImportFileView.cpp" line="189"/>
         <source>Cancel</source>
-        <translation>Cancel·la</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="130"/>
@@ -478,7 +478,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="130"/>
         <location filename="../views/ImportFileView.cpp" line="130"/>
         <source>Import progress...</source>
-        <translation>Importació en marxa...</translation>
+        <translation>Progreso de importanción...</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="151"/>
@@ -486,7 +486,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="158"/>
         <location filename="../views/ImportFileView.cpp" line="158"/>
         <source>%1 of %2 rows stored...</source>
-        <translation>%1 de %2 files guardades...</translation>
+        <translation>%1 de %2 registros guardados...</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="162"/>
@@ -494,7 +494,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="169"/>
         <location filename="../views/ImportFileView.cpp" line="169"/>
         <source>Import cancelled</source>
-        <translation>Importació cancel·lada</translation>
+        <translation>Importación cancelada</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="163"/>
@@ -506,7 +506,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="170"/>
         <location filename="../views/ImportFileView.cpp" line="180"/>
         <source>A total of %1 from %2 rows imported</source>
-        <translation>S&apos;han importat %1 files d&apos;un total de %2</translation>
+        <translation>Se han importando %1 filas de un total de %2</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="168"/>
@@ -514,7 +514,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="175"/>
         <location filename="../views/ImportFileView.cpp" line="175"/>
         <source>Database error</source>
-        <translation>Error a la base de dades</translation>
+        <translation>Error en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="172"/>
@@ -522,7 +522,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="179"/>
         <location filename="../views/ImportFileView.cpp" line="179"/>
         <source>Database success</source>
-        <translation>Operació correcte a la base de dades</translation>
+        <translation>Exito en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="185"/>
@@ -530,7 +530,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="192"/>
         <location filename="../views/ImportFileView.cpp" line="192"/>
         <source>Check progress...</source>
-        <translation>Comprovació en marxa...</translation>
+        <translation>Progreso de la comprobación...</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="211"/>
@@ -538,7 +538,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="218"/>
         <location filename="../views/ImportFileView.cpp" line="218"/>
         <source>Check file cancelled</source>
-        <translation>Comprovació de l&apos;arxiu fallida</translation>
+        <translation>Comprobación del archivo cancelada</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="212"/>
@@ -546,7 +546,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="219"/>
         <location filename="../views/ImportFileView.cpp" line="219"/>
         <source>Check process cancelled at line %1.</source>
-        <translation>El procés de cancel·lació s&apos;ha aturat a la fila %1.</translation>
+        <translation>Proceso de comprobación parado en la línea %1.</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="216"/>
@@ -554,7 +554,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="223"/>
         <location filename="../views/ImportFileView.cpp" line="223"/>
         <source>Check file error</source>
-        <translation>Error en la comprovació de l&apos;arxiu</translation>
+        <translation>Error en la comprobación del archivo</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="217"/>
@@ -562,7 +562,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="224"/>
         <location filename="../views/ImportFileView.cpp" line="224"/>
         <source>Something&apos;s wrong at line %1. Row: %2</source>
-        <translation>Hi ha alguna cosa malament a la línia %1. Fila: %2</translation>
+        <translation>Hay elgo que no está bien en la línea %1. Fila: %2</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="223"/>
@@ -570,7 +570,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="230"/>
         <location filename="../views/ImportFileView.cpp" line="230"/>
         <source>Check success</source>
-        <translation>Comprovació exitosa</translation>
+        <translation>Comprobación correcte</translation>
     </message>
     <message>
         <location filename="../views/ImportFileView.cpp" line="224"/>
@@ -578,7 +578,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/ImportFileView.cpp" line="231"/>
         <location filename="../views/ImportFileView.cpp" line="231"/>
         <source>A total of %1 from %2 rows checked successfully</source>
-        <translation>S&apos;ha comprovat correctament %1 files d&apos;un total de %2</translation>
+        <translation>Se han comprobado %1 filas de un total de %2</translation>
     </message>
 </context>
 <context>
@@ -591,17 +591,17 @@ N&apos;estàs segur?</translation>
     <message>
         <location filename="../views/MainWindow.ui" line="30"/>
         <source>Settings</source>
-        <translation>Configuració</translation>
+        <translation>Configuración</translation>
     </message>
     <message>
         <location filename="../views/MainWindow.ui" line="36"/>
         <source>Views</source>
-        <translation>Vistes</translation>
+        <translation>Vistas</translation>
     </message>
     <message>
         <location filename="../views/MainWindow.ui" line="49"/>
         <source>Database...</source>
-        <translation>Base de dades...</translation>
+        <translation>Base de datos...</translation>
     </message>
     <message>
         <location filename="../views/MainWindow.ui" line="54"/>
@@ -611,7 +611,7 @@ N&apos;estàs segur?</translation>
     <message>
         <location filename="../views/MainWindow.ui" line="59"/>
         <source>Categorize</source>
-        <translation>Categoritzar</translation>
+        <translation>Categorizar</translation>
     </message>
     <message>
         <location filename="../views/MainWindow.ui" line="64"/>
@@ -621,7 +621,7 @@ N&apos;estàs segur?</translation>
     <message>
         <location filename="../views/MainWindow.ui" line="69"/>
         <source>Sql Command</source>
-        <translation>Comanda Sql</translation>
+        <translation>Comando Sql</translation>
     </message>
 </context>
 <context>
@@ -637,13 +637,13 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.ui" line="27"/>
         <location filename="../views/SqlCommandView.cpp" line="22"/>
         <source>Sql Command</source>
-        <translation>Comanda Sql</translation>
+        <translation>Comando Sql</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.ui" line="48"/>
         <location filename="../views/SqlCommandView.ui" line="48"/>
         <source>Rows affected: 0</source>
-        <translation>Files afectades: 0</translation>
+        <translation>Filas afectadas: 0</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.ui" line="68"/>
@@ -655,19 +655,19 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.ui" line="82"/>
         <location filename="../views/SqlCommandView.ui" line="82"/>
         <source>Database maintenance</source>
-        <translation>Manteniment de la base de dades</translation>
+        <translation>Mantenimiento de la base de datos</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.ui" line="102"/>
         <location filename="../views/SqlCommandView.ui" line="102"/>
         <source>Backup...</source>
-        <translation>Copia de seguretat...</translation>
+        <translation>Copia de seguridad...</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.ui" line="109"/>
         <location filename="../views/SqlCommandView.ui" line="109"/>
         <source>Restore...</source>
-        <translation>Restauració...</translation>
+        <translation>Restauración...</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
@@ -675,7 +675,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <source>Executing query...</source>
-        <translation>Executant la query...</translation>
+        <translation>Ejecutando la query...</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
@@ -683,7 +683,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <source>Cancel</source>
-        <translation>Cancel·la</translation>
+        <translation>Cancela</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
@@ -691,7 +691,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
         <source>Rows affected: %1</source>
-        <translation>Files afectades %1</translation>
+        <translation>Filas afectadas: %1</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="36"/>
@@ -707,7 +707,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="96"/>
         <location filename="../views/SqlCommandView.cpp" line="130"/>
         <source>Database error</source>
-        <translation>Error a la base de dades</translation>
+        <translation>Error en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="78"/>
@@ -719,7 +719,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="78"/>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
         <source>Open File</source>
-        <translation>Obre arxiu</translation>
+        <translation>Abrir archivo</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="103"/>
@@ -731,7 +731,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="103"/>
         <location filename="../views/SqlCommandView.cpp" line="137"/>
         <source>Database Success</source>
-        <translation>Operació correcte a la base de dades</translation>
+        <translation>Exito en la base de datos</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
@@ -739,7 +739,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
         <source>Database backup created at file: %1</source>
-        <translation>Copia de seguretat creada a l&apos;arxiu: %1</translation>
+        <translation>Copia de seguridad de la base de datos creada en el archivo: %1</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="110"/>
@@ -747,7 +747,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="110"/>
         <location filename="../views/SqlCommandView.cpp" line="110"/>
         <source>Database restore</source>
-        <translation>Restauració de la base de dades</translation>
+        <translation>Restauración de la base de datos</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
@@ -755,7 +755,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
         <source>Make sure table `wmm` is already created.</source>
-        <translation>Assegura&apos;t que la taula `wmm` ja ha estat creada.</translation>
+        <translation>Asegurate que la tabla `wmm` ya está creada.</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
@@ -763,7 +763,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
         <source>Sql Files (*.sql)</source>
-        <translation>Arxius Sql (*.sql)</translation>
+        <translation>Archivos Sql (*.sql)</translation>
     </message>
     <message>
         <location filename="../views/SqlCommandView.cpp" line="138"/>
@@ -771,7 +771,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/SqlCommandView.cpp" line="138"/>
         <location filename="../views/SqlCommandView.cpp" line="138"/>
         <source>Database restore from file: %1</source>
-        <translation>Base de dades restaurada des de l&apos;arxiu: %1</translation>
+        <translation>Base de datos restaurada desde el archivo: %1</translation>
     </message>
 </context>
 </TS>

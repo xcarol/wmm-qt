@@ -35,10 +35,10 @@ void CategorizeView::on_searchButton_clicked() {
   QStringList labels = database.getColumnNames();
 
   QProgressDialog progress = QProgressDialog(
-      QString("Searching for rows with filter %1").arg(appliedFilter), "Cancel",
+      QString(tr("Searching for rows with filter %1")).arg(appliedFilter), tr("Cancel"),
       0, 0);
   progress.setWindowModality(Qt::WindowModal);
-  progress.setWindowTitle("Search...");
+  progress.setWindowTitle(tr("Search..."));
 
   uncategorizedRows = database.getUncategorizedRows(appliedFilter, &progress);
 
@@ -46,7 +46,7 @@ void CategorizeView::on_searchButton_clicked() {
     progress.cancel();
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
-      QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                   QString(database.getLastErrorText()))
           .exec();
     }
@@ -58,7 +58,6 @@ void CategorizeView::on_searchButton_clicked() {
 
   ui->searchResultsTable->setRowCount(numberOfRows);
   ui->searchResultsTable->setColumnCount(numberOfColumns);
-  ui->searchResultsTable->verticalHeader()->setVisible(false);
 
   for (int n = 0; n < labels.length(); n++) {
     ui->searchResultsTable->setHorizontalHeaderItem(
@@ -72,7 +71,7 @@ void CategorizeView::on_searchButton_clicked() {
 
   for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
 
-    progress.setLabelText(QString("Processing %1 of %2 rows found.")
+    progress.setLabelText(QString(tr("Processing %1 of %2 rows found."))
                               .arg(rowCount)
                               .arg(numberOfRows));
 
@@ -116,9 +115,9 @@ void CategorizeView::on_searchButton_clicked() {
 
 void CategorizeView::on_updateButton_clicked() {
   QMessageBox::StandardButton res = QMessageBox::question(
-      QApplication::topLevelWidgets().first(), QString("Update"),
-      QString("You're about to update %1 records "
-              "with the category: %2\nAre you sure?")
+      QApplication::topLevelWidgets().first(), QString(tr("Update")),
+      QString(tr("You're about to update %1 records "
+              "with the category: %2\nAre you sure?"))
           .arg(uncategorizedRows.length())
           .arg(categoryName));
   if (res == QMessageBox::StandardButton::No) {
@@ -130,16 +129,20 @@ void CategorizeView::on_updateButton_clicked() {
   ulong updatedRows = database.updateRowsCategory(appliedFilter, categoryName);
 
   if (updatedRows != uncategorizedRows.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString("Database error"),
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString("Database success"),
-                QString("A total of %1 rows updated").arg(updatedRows))
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 rows updated")).arg(updatedRows))
         .exec();
   }
 
   ui->filterEdit->clearEditText();
+  ui->categoryComboBox->clearEditText();
+  ui->searchResultsTable->clear();
+  ui->searchResultsTable->setColumnCount(0);
+  uncategorizedRows.clear();
 }
 
 void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
