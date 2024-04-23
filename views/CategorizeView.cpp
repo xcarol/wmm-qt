@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QList>
 #include <QMessageBox>
+#include <QKeyEvent>
 
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
@@ -142,6 +143,7 @@ void CategorizeView::on_updateButton_clicked() {
   ui->categoryComboBox->clearEditText();
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setColumnCount(0);
+  ui->searchResultsTable->setRowCount(0);
   uncategorizedRows.clear();
 }
 
@@ -170,5 +172,12 @@ void CategorizeView::setFilter(QString filter) {
     filters.append(appliedFilter);
     settings.setValue("filters", filters);
     ui->filterEdit->addItem(appliedFilter);
+  }
+}
+
+void CategorizeView::keyPressEvent(QKeyEvent *e)
+{
+  if (e->key() == Qt::Key_Return) {
+    on_searchButton_clicked();
   }
 }

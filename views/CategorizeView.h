@@ -33,7 +33,9 @@ private slots:
 
   void on_filterEdit_editTextChanged(const QString &arg1);
 
-private:
+  void	keyPressEvent(QKeyEvent *event) override;
+
+  private:
   Ui::CategorizeView *ui;
 
   QList<QStringList> uncategorizedRows;
