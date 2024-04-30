@@ -396,7 +396,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/CategorizeView.cpp" line="200"/>
         <location filename="../views/CategorizeView.cpp" line="200"/>
         <source>Duplicate rows: %1</source>
-        <translation>Files duplicades %1</translation>
+        <translation>Files duplicades: %1</translation>
     </message>
     <message>
         <location filename="../views/CategorizeView.cpp" line="206"/>
