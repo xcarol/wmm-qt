@@ -143,7 +143,14 @@
        </layout>
       </item>
       <item>
-       <widget class="QTableWidget" name="duplicateRowsTable"/>
+       <widget class="QTableWidget" name="duplicateRowsTable">
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
