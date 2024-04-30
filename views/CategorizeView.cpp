@@ -195,7 +195,8 @@ void CategorizeView::on_searchDuplicateButton_clicked() {
   int numberOfColumns = 4;
   int numberOfRows = duplicates.length();
 
-  ui->duplicateRowsLabel->setText(QString(tr("Duplicate rows: %1")).arg(numberOfRows));
+  ui->duplicateRowsLabel->setText(
+      QString(tr("Duplicate rows: %1")).arg(numberOfRows));
   ui->duplicateRowsTable->clear();
   ui->duplicateRowsTable->setRowCount(numberOfRows);
   ui->duplicateRowsTable->setColumnCount(numberOfColumns);
@@ -214,12 +215,17 @@ void CategorizeView::on_searchDuplicateButton_clicked() {
 
   for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
 
-    ui->duplicateRowsTable->setVerticalHeaderItem(rowCount, new QTableWidgetItem(duplicates.at(rowCount).at(0)));
+    ui->duplicateRowsTable->setVerticalHeaderItem(
+        rowCount, new QTableWidgetItem(duplicates.at(rowCount).at(0)));
 
-    ui->duplicateRowsTable->setCellWidget(rowCount, 0, new QLabel(duplicates.at(rowCount).at(1)));
-    ui->duplicateRowsTable->setCellWidget(rowCount, 1, new QLabel(duplicates.at(rowCount).at(2)));
-    ui->duplicateRowsTable->setCellWidget(rowCount, 2, new QLabel(duplicates.at(rowCount).at(3)));
-    ui->duplicateRowsTable->setCellWidget(rowCount, 3, new QLabel(duplicates.at(rowCount).at(4)));
+    ui->duplicateRowsTable->setCellWidget(
+        rowCount, 0, new QLabel(duplicates.at(rowCount).at(1)));
+    ui->duplicateRowsTable->setCellWidget(
+        rowCount, 1, new QLabel(duplicates.at(rowCount).at(2)));
+    ui->duplicateRowsTable->setCellWidget(
+        rowCount, 2, new QLabel(duplicates.at(rowCount).at(3)));
+    ui->duplicateRowsTable->setCellWidget(
+        rowCount, 3, new QLabel(duplicates.at(rowCount).at(4)));
   }
 }
 
