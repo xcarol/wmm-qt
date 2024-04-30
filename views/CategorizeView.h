@@ -9,7 +9,6 @@
 #define DESCRIPTION_COLUMN 3
 #define CATEGORY_COLUMN 4
 #define AMOUNT_COLUMN 5
-#define ACCOUNTABLE_COLUMN 6
 
 namespace Ui {
 class CategorizeView;
@@ -23,6 +22,8 @@ public:
   ~CategorizeView();
 
 private slots:
+  void addCellToSearchResultsTable(int numberOfColumns, int rowCount, QStringList row);
+
   void on_searchButton_clicked();
 
   void on_updateButton_clicked();
@@ -33,7 +34,11 @@ private slots:
 
   void on_filterEdit_editTextChanged(const QString &arg1);
 
-private:
+  void on_searchDuplicateButton_clicked();
+
+  void on_deleteDuplicatesButton_clicked();
+
+  private:
   Ui::CategorizeView *ui;
 
   QList<QStringList> uncategorizedRows;

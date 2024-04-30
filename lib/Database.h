@@ -79,6 +79,7 @@ public:
                   QDate finalDate = QDate::currentDate());
   QStringList getYears(bool ascending = true);
   QList<QSqlRecord> execCommand(QString queryString);
+  QList<QStringList> getDuplicateRows();
 
   bool backup(QString fileName);
   bool restore(QString fileName);

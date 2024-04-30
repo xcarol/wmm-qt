@@ -52,5 +52,12 @@ Acces database through [http://localhost:8080](http://localhost:8080)
 
 ## Backup / Restore
 
-This application relies in _mysqldump_ application.  
-Make sure _mysqldump_ is installed and accessible by _$PATH_.  
+This application relies in the _mysql_ and _mysqldump_ applications to backup and restore the database.  
+Make sure _mysql_ and _mysqldump_ are installed and accessible by _$PATH_.  
+
+## Translations
+
+Use the _lupdate_ and _lrelease_ tools to update the language files.  
+When using the vscode CMake extension, it provides an easy way to run them both from its _Project outline_ view.  
+
+Use _linguist_ tool from the command line to translate the literals.  

@@ -11,6 +11,7 @@ CategorizeView::CategorizeView(QWidget *parent)
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
+  ui->duplicateRowsTable->horizontalHeader()->setStretchLastSection(true);
 
   QSettings settings = QSettings("com.xicra", "wmm");
   QStringList filters = settings.value("filters").toStringList();
@@ -18,6 +19,34 @@ CategorizeView::CategorizeView(QWidget *parent)
 }
 
 CategorizeView::~CategorizeView() { delete ui; }
+
+void CategorizeView::addCellToSearchResultsTable(int numberOfColumns,
+                                                 int rowCount,
+                                                 QStringList rowFields) {
+  QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
+
+  for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
+    QString value = rowFields.at(columnCount);
+
+    QLabel *label;
+    switch (columnCount) {
+    case DATE_COLUMN:
+      label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
+                             .toString(dateFormat));
+      label->setAlignment(Qt::AlignCenter);
+      break;
+
+    case AMOUNT_COLUMN:
+      label = new QLabel(QString::number(value.toDouble()));
+      label->setAlignment(Qt::AlignRight);
+      break;
+
+    default:
+      label = new QLabel(value);
+    }
+    ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
+  }
+}
 
 void CategorizeView::on_searchButton_clicked() {
   Database database = Database();
@@ -35,8 +64,8 @@ void CategorizeView::on_searchButton_clicked() {
   QStringList labels = database.getColumnNames();
 
   QProgressDialog progress = QProgressDialog(
-      QString(tr("Searching for rows with filter %1")).arg(appliedFilter), tr("Cancel"),
-      0, 0);
+      QString(tr("Searching for rows with filter %1")).arg(appliedFilter),
+      tr("Cancel"), 0, 0);
   progress.setWindowModality(Qt::WindowModal);
   progress.setWindowTitle(tr("Search..."));
 
@@ -64,8 +93,6 @@ void CategorizeView::on_searchButton_clicked() {
         n, new QTableWidgetItem(QString(labels.at(n).toUpper())));
   }
 
-  QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
-
   progress.reset();
   progress.setMaximum(numberOfRows);
 
@@ -75,33 +102,8 @@ void CategorizeView::on_searchButton_clicked() {
                               .arg(rowCount)
                               .arg(numberOfRows));
 
-    for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
-      QStringList row = uncategorizedRows.at(rowCount);
-      QString value = row.at(columnCount);
-
-      QLabel *label;
-      switch (columnCount) {
-      case DATE_COLUMN:
-        label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
-                               .toString(dateFormat));
-        label->setAlignment(Qt::AlignCenter);
-        break;
-
-      case AMOUNT_COLUMN:
-        label = new QLabel(QString::number(value.toDouble()));
-        label->setAlignment(Qt::AlignRight);
-        break;
-
-      case ACCOUNTABLE_COLUMN:
-        label = new QLabel(value);
-        label->setAlignment(Qt::AlignCenter);
-        break;
-
-      default:
-        label = new QLabel(value);
-      }
-      ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
-    }
+    addCellToSearchResultsTable(numberOfColumns, rowCount,
+                                uncategorizedRows.at(rowCount));
 
     progress.setValue(rowCount);
 
@@ -117,7 +119,7 @@ void CategorizeView::on_updateButton_clicked() {
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("Update")),
       QString(tr("You're about to update %1 records "
-              "with the category: %2\nAre you sure?"))
+                 "with the category: %2\nAre you sure?"))
           .arg(uncategorizedRows.length())
           .arg(categoryName));
   if (res == QMessageBox::StandardButton::No) {
@@ -172,3 +174,52 @@ void CategorizeView::setFilter(QString filter) {
     ui->filterEdit->addItem(appliedFilter);
   }
 }
+
+void CategorizeView::on_searchDuplicateButton_clicked() {
+  Database database = Database();
+  QList<QStringList> duplicates = database.getDuplicateRows();
+  if (database.getLastErrorText().isEmpty() == false) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+  if (duplicates.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database")),
+                QString(tr("No duplicate rows found.")))
+        .exec();
+    return;
+  }
+
+  int numberOfColumns = 4;
+  int numberOfRows = duplicates.length();
+
+  ui->duplicateRowsLabel->setText(QString(tr("Duplicate rows: %1")).arg(numberOfRows));
+  ui->duplicateRowsTable->clear();
+  ui->duplicateRowsTable->setRowCount(numberOfRows);
+  ui->duplicateRowsTable->setColumnCount(numberOfColumns);
+
+  ui->duplicateRowsTable->setHorizontalHeaderItem(
+      0, new QTableWidgetItem(QString(tr("Bank"))));
+
+  ui->duplicateRowsTable->setHorizontalHeaderItem(
+      1, new QTableWidgetItem(QString(tr("Date"))));
+
+  ui->duplicateRowsTable->setHorizontalHeaderItem(
+      2, new QTableWidgetItem(QString(tr("Description"))));
+
+  ui->duplicateRowsTable->setHorizontalHeaderItem(
+      3, new QTableWidgetItem(QString(tr("Amount"))));
+
+  for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
+
+    ui->duplicateRowsTable->setVerticalHeaderItem(rowCount, new QTableWidgetItem(duplicates.at(rowCount).at(0)));
+
+    ui->duplicateRowsTable->setCellWidget(rowCount, 0, new QLabel(duplicates.at(rowCount).at(1)));
+    ui->duplicateRowsTable->setCellWidget(rowCount, 1, new QLabel(duplicates.at(rowCount).at(2)));
+    ui->duplicateRowsTable->setCellWidget(rowCount, 2, new QLabel(duplicates.at(rowCount).at(3)));
+    ui->duplicateRowsTable->setCellWidget(rowCount, 3, new QLabel(duplicates.at(rowCount).at(4)));
+  }
+}
+
+void CategorizeView::on_deleteDuplicatesButton_clicked() {}
