@@ -144,6 +144,7 @@ void CategorizeView::on_updateButton_clicked() {
   ui->categoryComboBox->clearEditText();
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setColumnCount(0);
+  ui->searchResultsTable->setRowCount(0);
   uncategorizedRows.clear();
 }
 
