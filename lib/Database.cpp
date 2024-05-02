@@ -404,6 +404,32 @@ QList<QStringList> Database::getDuplicateRows() {
   return result;
 }
 
+int Database::deleteRows(QList<int> rows) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    QString strIds;
+
+    foreach (int row, rows) {
+      strIds.append(QString::number(row)).append(",");
+    }
+
+    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)").arg(strIds.removeLast());
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
 bool Database::backup(QString fileName) {
   QStringList parameters;
 
