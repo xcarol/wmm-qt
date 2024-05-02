@@ -6,6 +6,7 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <qlist.h>
 
 #define HOSTNAME "hostname"
 #define PORT "port"
@@ -79,6 +80,8 @@ public:
                   QDate finalDate = QDate::currentDate());
   QStringList getYears(bool ascending = true);
   QList<QSqlRecord> execCommand(QString queryString);
+  QList<QStringList> getDuplicateRows();
+  int deleteRows(QList<int> rows);
 
   bool backup(QString fileName);
   bool restore(QString fileName);

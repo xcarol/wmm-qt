@@ -27,13 +27,13 @@ DROP TABLE IF EXISTS `transactions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transactions` (
-  `idtransaction` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `bank` varchar(200) NOT NULL,
   `date` datetime NOT NULL,
   `description` varchar(200) NOT NULL,
   `category` varchar(200) DEFAULT NULL,
   `amount` double NOT NULL,
-  PRIMARY KEY (`idtransaction`),
+  PRIMARY KEY (`id`),
   KEY `bank` (`bank`),
   KEY `description` (`description`),
   KEY `category` (`category`),

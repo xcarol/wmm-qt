@@ -365,6 +365,71 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   return result;
 }
 
+QList<QStringList> Database::getDuplicateRows() {
+  QList<QStringList> result;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    QString queryString = QString("SELECT * FROM transactions t1"
+                                  " WHERE EXISTS ("
+                                  "    SELECT 1"
+                                  "    FROM transactions t2"
+                                  "    WHERE t1.bank = t2.bank"
+                                  "    AND t1.date = t2.date"
+                                  "    AND t1.description = t2.description"
+                                  "    AND t1.amount = t2.amount"
+                                  "    AND t1.id <> t2.id"
+                                  " )"
+                                  " ORDER BY bank, date DESC");
+
+    if (query.exec(queryString)) {
+      while (query.next()) {
+        QStringList row;
+        row.append(query.value("id").toString());
+        row.append(query.value("bank").toString());
+        row.append(query.value("date").toString());
+        row.append(query.value("description").toString());
+        row.append(query.value("amount").toString());
+        result.append(row);
+      }
+
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return result;
+}
+
+int Database::deleteRows(QList<int> rows) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    QString strIds;
+
+    foreach (int row, rows) {
+      strIds.append(QString::number(row)).append(",");
+    }
+
+    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)").arg(strIds.removeLast());
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
 bool Database::backup(QString fileName) {
   QStringList parameters;
 
