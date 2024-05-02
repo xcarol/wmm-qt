@@ -10,6 +10,7 @@ CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
+  ui->deleteDuplicatesButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
   ui->duplicateRowsTable->horizontalHeader()->setStretchLastSection(true);
 
@@ -176,6 +177,20 @@ void CategorizeView::setFilter(QString filter) {
   }
 }
 
+QList<int> CategorizeView::getSelectedRowsHeaders() {
+  QList<int> ids;
+
+  foreach (QTableWidgetSelectionRange range,
+           ui->duplicateRowsTable->selectedRanges()) {
+    for (int row = range.topRow(); row <= range.bottomRow(); row++) {
+      QTableWidgetItem *item = ui->duplicateRowsTable->verticalHeaderItem(row);
+      ids.append(item->text().toInt());
+    }
+  }
+
+  return ids;
+}
+
 void CategorizeView::on_searchDuplicateButton_clicked() {
   Database database = Database();
   QList<QStringList> duplicates = database.getDuplicateRows();
@@ -229,4 +244,33 @@ void CategorizeView::on_searchDuplicateButton_clicked() {
   }
 }
 
-void CategorizeView::on_deleteDuplicatesButton_clicked() {}
+void CategorizeView::on_deleteDuplicatesButton_clicked() {
+  QList<int> selectedIds = getSelectedRowsHeaders();
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
+      QString(tr("You're about to DELETE %1 RECORDS "
+                 "\nAre you sure?"))
+          .arg(selectedIds.length()));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  Database database = Database();
+
+  ulong updatedRows = database.deleteRows(selectedIds);
+
+  if (updatedRows != selectedIds.length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 rows deleted.")).arg(updatedRows))
+        .exec();
+  }
+}
+
+void CategorizeView::on_duplicateRowsTable_itemSelectionChanged() {
+  ui->deleteDuplicatesButton->setEnabled(getSelectedRowsHeaders().length() > 0);
+}

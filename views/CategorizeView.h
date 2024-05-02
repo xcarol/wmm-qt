@@ -2,6 +2,7 @@
 #define CATEGORIZEVIEW_H
 
 #include <QMainWindow>
+#include <QTableWidget>
 
 #define IDX_COLUMN 0
 #define BANK_COLUMN 1
@@ -38,6 +39,8 @@ private slots:
 
   void on_deleteDuplicatesButton_clicked();
 
+  void on_duplicateRowsTable_itemSelectionChanged();
+
   private:
   Ui::CategorizeView *ui;
 
@@ -47,6 +50,7 @@ private slots:
 
   void updateUpdateButtonState();
   void setFilter(QString filter);
+  QList<int> getSelectedRowsHeaders();
 };
 
 #endif // CATEGORIZEVIEW_H
