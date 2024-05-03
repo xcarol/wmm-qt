@@ -192,7 +192,7 @@ QList<int> CategorizeView::getSelectedRowsHeaders() {
   return ids;
 }
 
-void CategorizeView::on_searchDuplicateButton_clicked() {
+void CategorizeView::updateDuplicatesTable() {
   Database database = Database();
   QList<QStringList> duplicates = database.getDuplicateRows();
   if (database.getLastErrorText().isEmpty() == false) {
@@ -245,6 +245,10 @@ void CategorizeView::on_searchDuplicateButton_clicked() {
   }
 }
 
+void CategorizeView::on_searchDuplicateButton_clicked() {
+  updateDuplicatesTable();
+}
+
 void CategorizeView::on_deleteDuplicatesButton_clicked() {
   QList<int> selectedIds = getSelectedRowsHeaders();
 
@@ -270,6 +274,8 @@ void CategorizeView::on_deleteDuplicatesButton_clicked() {
                 QString(tr("A total of %1 rows deleted.")).arg(updatedRows))
         .exec();
   }
+
+  updateDuplicatesTable();
 }
 
 void CategorizeView::on_duplicateRowsTable_itemSelectionChanged() {
@@ -304,5 +310,7 @@ void CategorizeView::on_markNotDuplicatesButton_clicked()
                 QString(tr("A total of %1 rows marked as not duplicate.")).arg(updatedRows))
         .exec();
   }
+
+  updateDuplicatesTable();
 }
 

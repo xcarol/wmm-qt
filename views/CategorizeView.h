@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableWidget>
+#include <qlist.h>
 
 #define IDX_COLUMN 0
 #define BANK_COLUMN 1
@@ -53,6 +54,7 @@ private slots:
   void updateUpdateButtonState();
   void setFilter(QString filter);
   QList<int> getSelectedRowsHeaders();
+  void updateDuplicatesTable();
 };
 
 #endif // CATEGORIZEVIEW_H
