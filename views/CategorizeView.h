@@ -41,6 +41,8 @@ private slots:
 
   void on_duplicateRowsTable_itemSelectionChanged();
 
+  void on_markNotDuplicatesButton_clicked();
+
   private:
   Ui::CategorizeView *ui;
 

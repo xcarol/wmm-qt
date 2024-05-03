@@ -28,12 +28,14 @@ DROP TABLE IF EXISTS `transactions`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transactions` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `not_duplicate` BOOL DEFAULT FALSE,
   `bank` varchar(200) NOT NULL,
   `date` datetime NOT NULL,
   `description` varchar(200) NOT NULL,
   `category` varchar(200) DEFAULT NULL,
   `amount` double NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `not_duplicate` (`not_duplicate`),
   KEY `bank` (`bank`),
   KEY `description` (`description`),
   KEY `category` (`category`),

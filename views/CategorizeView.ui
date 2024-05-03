@@ -168,6 +168,13 @@
          </spacer>
         </item>
         <item>
+         <widget class="QPushButton" name="markNotDuplicatesButton">
+          <property name="text">
+           <string>Mark selected as NOT duplicate</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="deleteDuplicatesButton">
           <property name="text">
            <string>Delete selected</string>
