@@ -561,7 +561,7 @@ N&apos;estàs segur?</translation>
     <message>
         <location filename="../views/CategorizeView.cpp" line="304"/>
         <source>A total of %1 rows marked as not duplicate.</source>
-        <translation>S&apos;ha marcat com a no duplicatsun total de %1 registres</translation>
+        <translation>S&apos;ha marcat com a no duplicats un total de %1 registres</translation>
     </message>
 </context>
 <context>
