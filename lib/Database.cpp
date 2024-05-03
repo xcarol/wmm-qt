@@ -380,6 +380,8 @@ QList<QStringList> Database::getDuplicateRows() {
                                   "    AND t1.description = t2.description"
                                   "    AND t1.amount = t2.amount"
                                   "    AND t1.id <> t2.id"
+                                  "    AND t1.not_duplicate = FALSE"
+                                  "    AND t2.not_duplicate = FALSE"
                                   " )"
                                   " ORDER BY bank, date DESC");
 
@@ -416,7 +418,35 @@ int Database::deleteRows(QList<int> rows) {
       strIds.append(QString::number(row)).append(",");
     }
 
-    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)").arg(strIds.removeLast());
+    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)")
+                              .arg(strIds.removeLast());
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
+int Database::markAsNotDuplicateRows(QList<int> rows) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    QString strIds;
+
+    foreach (int row, rows) {
+      strIds.append(QString::number(row)).append(",");
+    }
+
+    QString queryString = QString("UPDATE transactions SET not_duplicate = TRUE WHERE id IN (%1)")
+                              .arg(strIds.removeLast());
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();

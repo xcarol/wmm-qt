@@ -11,6 +11,7 @@ CategorizeView::CategorizeView(QWidget *parent)
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
   ui->deleteDuplicatesButton->setEnabled(false);
+  ui->markNotDuplicatesButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
   ui->duplicateRowsTable->horizontalHeader()->setStretchLastSection(true);
 
@@ -272,5 +273,36 @@ void CategorizeView::on_deleteDuplicatesButton_clicked() {
 }
 
 void CategorizeView::on_duplicateRowsTable_itemSelectionChanged() {
-  ui->deleteDuplicatesButton->setEnabled(getSelectedRowsHeaders().length() > 0);
+  int enable = getSelectedRowsHeaders().length() > 0;
+  ui->deleteDuplicatesButton->setEnabled(enable);
+  ui->markNotDuplicatesButton->setEnabled(enable);
 }
+
+void CategorizeView::on_markNotDuplicatesButton_clicked()
+{
+  QList<int> selectedIds = getSelectedRowsHeaders();
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("MARK NOT DUPLICATE")),
+      QString(tr("You're about to mark %1 records as not duplicate."
+                 "\nAre you sure?"))
+          .arg(selectedIds.length()));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  Database database = Database();
+
+  ulong updatedRows = database.markAsNotDuplicateRows(selectedIds);
+
+  if (updatedRows != selectedIds.length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 rows marked as not duplicate.")).arg(updatedRows))
+        .exec();
+  }
+}
+

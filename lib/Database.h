@@ -82,6 +82,7 @@ public:
   QList<QSqlRecord> execCommand(QString queryString);
   QList<QStringList> getDuplicateRows();
   int deleteRows(QList<int> rows);
+  int markAsNotDuplicateRows(QList<int> rows);
 
   bool backup(QString fileName);
   bool restore(QString fileName);
