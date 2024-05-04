@@ -89,8 +89,7 @@ bool Database::storeRow(QString bank, QString date, QString description,
     bool success = true;
 
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    query.prepare("INSERT INTO transactions (bank, date, description, amount) "
-                  "VALUES (:bank, :date, :description, :amount)");
+    query.prepare(queryInsertRow);
     query.bindValue(":bank", bank.left(BANK_LENGTH));
     query.bindValue(":date", unifyDateToStore(date));
     query.bindValue(":description", description.left(DESCRIPTION_LENGTH));
@@ -132,7 +131,7 @@ QStringList Database::getBankNames() {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT DISTINCT bank FROM transactions")) {
+    if (query.exec(queryBankNames)) {
       while (query.next()) {
         bankNames.append(query.value("bank").toString());
       }
@@ -152,8 +151,7 @@ QStringList Database::getCategoryNames() {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT DISTINCT category FROM transactions WHERE category "
-                   "IS NOT NULL AND TRIM(category) <> ''")) {
+    if (query.exec(queryCategoryNames)) {
       while (query.next()) {
         categoryNames.append(query.value("category").toString());
       }
@@ -173,12 +171,10 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString =
-        "SELECT * FROM transactions WHERE (TRIM(category) = '' "
-        "OR category IS NULL)";
+    QString queryString = queryUncategorizedRows;
 
     if (!filter.isEmpty()) {
-      queryString.append(QString(" AND description REGEXP '%1'").arg(filter));
+      queryString.append(QString(queryUncategorizedRowsFilter).arg(filter));
     }
 
     if (query.exec(queryString)) {
@@ -222,7 +218,7 @@ QStringList Database::getColumnNames() {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT * FROM transactions LIMIT 1")) {
+    if (query.exec(queryColumnNames)) {
       while (query.next()) {
 
         QSqlRecord rec = query.record();
@@ -245,11 +241,9 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString =
-        QString("UPDATE transactions SET category = '%2' WHERE description "
-                "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)")
-            .arg(regexp.length() ? regexp : ".*")
-            .arg(category.left(CATEGORY_LENGHT));
+    QString queryString = QString(queryUpdateRowsCategory)
+                              .arg(regexp.length() ? regexp : ".*")
+                              .arg(category.left(CATEGORY_LENGHT));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
@@ -277,9 +271,7 @@ QList<QStringList> Database::getBanksBalance(QStringList bankNames,
 
     foreach (QString bankName, bankNames) {
       QString queryString =
-          QString("SELECT SUM(amount) as balance from "
-                  "transactions WHERE bank = '%1'"
-                  " AND date >= '%2' AND date <= '%3'")
+          QString(queryBankBalances)
               .arg(bankName)
               .arg(initialDate.toString(Qt::DateFormat::ISODate))
               .arg(finalDate.toString(Qt::DateFormat::ISODate));
@@ -314,9 +306,7 @@ QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
 
     foreach (QString categoryName, categoryNames) {
       QString queryString =
-          QString("SELECT SUM(amount) as balance from "
-                  "transactions WHERE category = '%1'"
-                  " AND date >= '%2' AND date <= '%3'")
+          QString(queryCategoryBalances)
               .arg(categoryName)
               .arg(initialDate.toString(Qt::DateFormat::ISODate))
               .arg(finalDate.toString(Qt::DateFormat::ISODate));
@@ -371,19 +361,7 @@ QList<QStringList> Database::getDuplicateRows() {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    QString queryString = QString("SELECT * FROM transactions t1"
-                                  " WHERE EXISTS ("
-                                  "    SELECT 1"
-                                  "    FROM transactions t2"
-                                  "    WHERE t1.bank = t2.bank"
-                                  "    AND t1.date = t2.date"
-                                  "    AND t1.description = t2.description"
-                                  "    AND t1.amount = t2.amount"
-                                  "    AND t1.id <> t2.id"
-                                  "    AND t1.not_duplicate = FALSE"
-                                  "    AND t2.not_duplicate = FALSE"
-                                  " )"
-                                  " ORDER BY bank, date DESC");
+    QString queryString = QString(queryDuplicateRows);
 
     if (query.exec(queryString)) {
       while (query.next()) {
@@ -418,8 +396,7 @@ int Database::deleteRows(QList<int> rows) {
       strIds.append(QString::number(row)).append(",");
     }
 
-    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)")
-                              .arg(strIds.removeLast());
+    QString queryString = QString(queryDeleteRows).arg(strIds.removeLast());
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
@@ -445,8 +422,8 @@ int Database::markAsNotDuplicateRows(QList<int> rows) {
       strIds.append(QString::number(row)).append(",");
     }
 
-    QString queryString = QString("UPDATE transactions SET not_duplicate = TRUE WHERE id IN (%1)")
-                              .arg(strIds.removeLast());
+    QString queryString =
+        QString(queryMarkNotDuplicateRows).arg(strIds.removeLast());
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
@@ -520,7 +497,7 @@ QStringList Database::getYears(bool ascending) {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT DISTINCT YEAR(date) FROM transactions")) {
+    if (query.exec(queryYears)) {
       while (query.next()) {
 
         years.append(query.value(0).toString());
