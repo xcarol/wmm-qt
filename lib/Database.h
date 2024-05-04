@@ -104,6 +104,8 @@ private:
   QList<QStringList> getBalance(QString queryBalance, QStringList entites,
                                 QDate initialDate, QDate finalDate);
 
+  QString rowsToSqlList(QList<int> rows);
+
 public:
   explicit Database(QObject *parent = nullptr);
   ~Database();

@@ -118,6 +118,16 @@ QList<QStringList> Database::getBalance(QString queryBalance,
   return balances;
 }
 
+QString Database::rowsToSqlList(QList<int> rows) {
+  QString ids;
+
+  foreach (int row, rows) {
+    ids.append(QString::number(row)).append(",");
+  }
+
+  return ids.removeLast();
+}
+
 bool Database::checkConnection() {
   if (openDatabase()) {
     closeDatabase();
@@ -318,7 +328,8 @@ QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
     categoryNames = getCategoryNames();
   }
 
-  return getBalance(queryCategoryBalances, categoryNames, initialDate, finalDate);
+  return getBalance(queryCategoryBalances, categoryNames, initialDate,
+                    finalDate);
 }
 
 QList<QSqlRecord> Database::execCommand(QString queryString) {
@@ -383,14 +394,7 @@ int Database::deleteRows(QList<int> rows) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    QString strIds;
-
-    foreach (int row, rows) {
-      strIds.append(QString::number(row)).append(",");
-    }
-
-    QString queryString = QString(queryDeleteRows).arg(strIds.removeLast());
+    QString queryString = QString(queryDeleteRows).arg(rowsToSqlList(rows));
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
@@ -409,15 +413,8 @@ int Database::markAsNotDuplicateRows(QList<int> rows) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    QString strIds;
-
-    foreach (int row, rows) {
-      strIds.append(QString::number(row)).append(",");
-    }
-
     QString queryString =
-        QString(queryMarkNotDuplicateRows).arg(strIds.removeLast());
+        QString(queryMarkNotDuplicateRows).arg(rowsToSqlList(rows));
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
