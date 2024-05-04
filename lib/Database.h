@@ -101,7 +101,9 @@ private:
   void closeDatabase();
 
   QStringList databaseConnectionParameters();
-  
+  QList<QStringList> getBalance(QString queryBalance, QStringList entites,
+                                QDate initialDate, QDate finalDate);
+
 public:
   explicit Database(QObject *parent = nullptr);
   ~Database();

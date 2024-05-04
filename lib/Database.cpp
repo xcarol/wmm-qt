@@ -11,6 +11,7 @@
 #include <QSqlRecord>
 #include <QSqlResult>
 #include <QThread>
+#include <qcontainerfwd.h>
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -84,6 +85,37 @@ QStringList Database::databaseConnectionParameters() {
   parameters.append(DEFAULT_DATABASE);
 
   return parameters;
+}
+
+QList<QStringList> Database::getBalance(QString queryBalance,
+                                        QStringList entites, QDate initialDate,
+                                        QDate finalDate) {
+  QList<QStringList> balances;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    foreach (QString entity, entites) {
+      QString queryString =
+          QString(queryBalance)
+              .arg(entity)
+              .arg(initialDate.toString(Qt::DateFormat::ISODate))
+              .arg(finalDate.toString(Qt::DateFormat::ISODate));
+
+      if (query.exec(queryString)) {
+        if (query.next()) {
+          balances.append(
+              QStringList({entity, query.value("balance").toString()}));
+        }
+      } else {
+        lastError = query.lastError().databaseText();
+      }
+    }
+
+    closeDatabase();
+  }
+
+  return balances;
 }
 
 bool Database::checkConnection() {
@@ -272,71 +304,21 @@ ulong Database::updateRowsCategory(QString regexp, QString category) {
 QList<QStringList> Database::getBanksBalance(QStringList bankNames,
                                              QDate initialDate,
                                              QDate finalDate) {
-  QList<QStringList> bankBalance;
-
   if (bankNames.isEmpty()) {
     bankNames = getBankNames();
   }
 
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    foreach (QString bankName, bankNames) {
-      QString queryString =
-          QString(queryBankBalances)
-              .arg(bankName)
-              .arg(initialDate.toString(Qt::DateFormat::ISODate))
-              .arg(finalDate.toString(Qt::DateFormat::ISODate));
-
-      if (query.exec(queryString)) {
-        if (query.next()) {
-          bankBalance.append(
-              QStringList({bankName, query.value("balance").toString()}));
-        }
-      } else {
-        lastError = query.lastError().databaseText();
-      }
-    }
-
-    closeDatabase();
-  }
-
-  return bankBalance;
+  return getBalance(queryBankBalances, bankNames, initialDate, finalDate);
 }
 
 QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
                                                   QDate initialDate,
                                                   QDate finalDate) {
-  QList<QStringList> bankBalance;
-
   if (categoryNames.isEmpty()) {
     categoryNames = getCategoryNames();
   }
 
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    foreach (QString categoryName, categoryNames) {
-      QString queryString =
-          QString(queryCategoryBalances)
-              .arg(categoryName)
-              .arg(initialDate.toString(Qt::DateFormat::ISODate))
-              .arg(finalDate.toString(Qt::DateFormat::ISODate));
-
-      if (query.exec(queryString)) {
-        if (query.next()) {
-          bankBalance.append(
-              QStringList({categoryName, query.value("balance").toString()}));
-        }
-      } else {
-        lastError = query.lastError().databaseText();
-      }
-    }
-
-    closeDatabase();
-  }
-
-  return bankBalance;
+  return getBalance(queryCategoryBalances, categoryNames, initialDate, finalDate);
 }
 
 QList<QSqlRecord> Database::execCommand(QString queryString) {
