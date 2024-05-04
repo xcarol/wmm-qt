@@ -74,6 +74,18 @@ void Database::closeDatabase() {
   sqlDatabase = QSqlDatabase();
 }
 
+QStringList Database::databaseConnectionParameters() {
+  QStringList parameters;
+
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  return parameters;
+}
+
 bool Database::checkConnection() {
   if (openDatabase()) {
     closeDatabase();
@@ -438,15 +450,9 @@ int Database::markAsNotDuplicateRows(QList<int> rows) {
 }
 
 bool Database::backup(QString fileName) {
-  QStringList parameters;
-
-  parameters.append(QString("--host=%1").arg(hostname));
-  parameters.append(QString("--port=%1").arg(port));
-  parameters.append(QString("--user=%1").arg(username));
-  parameters.append(QString("--password=%1").arg(userpass));
-  parameters.append(DEFAULT_DATABASE);
-
+  QStringList parameters = databaseConnectionParameters();
   QProcess process;
+
   process.setStandardOutputFile(fileName);
   process.start(MYSQLDUMP_PROGRAM, parameters);
 
@@ -464,14 +470,8 @@ bool Database::backup(QString fileName) {
 
 bool Database::restore(QString fileName) {
   QProcess process;
-  QStringList parameters;
+  QStringList parameters = databaseConnectionParameters();
   QString sqlCommand = MYSQL_PROGRAM;
-
-  parameters.append(QString("--host=%1").arg(hostname));
-  parameters.append(QString("--port=%1").arg(port));
-  parameters.append(QString("--user=%1").arg(username));
-  parameters.append(QString("--password=%1").arg(userpass));
-  parameters.append(DEFAULT_DATABASE);
 
   process.setStandardInputFile(fileName);
   process.start(sqlCommand, parameters);
