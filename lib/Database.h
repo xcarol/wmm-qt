@@ -6,8 +6,6 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
-#include <qcontainerfwd.h>
-#include <qlist.h>
 
 #define HOSTNAME "hostname"
 #define PORT "port"
@@ -104,6 +102,7 @@ private:
   QList<QStringList> getBalance(QString queryBalance, QStringList entites,
                                 QDate initialDate, QDate finalDate);
 
+  QString unifyDateToStore(QString);
   QString rowsToSqlList(QList<int> rows);
 
 public:
@@ -126,13 +125,12 @@ public:
 
   bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
-  QString unifyDateToStore(QString);
   ulong updateRowsCategory(QString, QString);
   QStringList getBankNames();
   QStringList getCategoryNames();
+  QStringList getColumnNames();
   QList<QStringList> getUncategorizedRows(QString filter = QString(),
                                           QProgressDialog *dialog = NULL);
-  QStringList getColumnNames();
   QList<QStringList>
   getBanksBalance(QStringList bankNames = QStringList(),
                   QDate initialDate = QDate::fromString("1970-01-01"),
@@ -141,11 +139,12 @@ public:
   getCategoriesBalance(QStringList bankNames = QStringList(),
                        QDate initialDate = QDate::fromString("1970-01-01"),
                        QDate finalDate = QDate::currentDate());
-  QStringList getYears(bool ascending = true);
-  QList<QSqlRecord> execCommand(QString queryString);
   QList<QStringList> getDuplicateRows();
+  QStringList getYears(bool ascending = true);
+
   int deleteRows(QList<int> rows);
   int markAsNotDuplicateRows(QList<int> rows);
+  QList<QSqlRecord> execCommand(QString queryString);
 
   bool backup(QString fileName);
   bool restore(QString fileName);

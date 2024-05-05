@@ -1,5 +1,3 @@
-#include "Database.h"
-
 #include <QDate>
 #include <QList>
 #include <QProcess>
@@ -11,7 +9,8 @@
 #include <QSqlRecord>
 #include <QSqlResult>
 #include <QThread>
-#include <qcontainerfwd.h>
+
+#include "Database.h"
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -118,6 +117,24 @@ QList<QStringList> Database::getBalance(QString queryBalance,
   return balances;
 }
 
+QString Database::unifyDateToStore(QString date) {
+  QDate ymd = QDate::fromString(
+      QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
+
+  QDate dmy = QDate::fromString(
+      QString(date).replace(QRegularExpression("/"), "-"), "dd-MM-yyyy");
+
+  if (ymd.isValid()) {
+    return ymd.toString(Qt::DateFormat::ISODate);
+  }
+
+  if (dmy.isValid()) {
+    return dmy.toString(Qt::DateFormat::ISODate);
+  }
+
+  return QString(tr("%1 invalid date")).arg(date);
+}
+
 QString Database::rowsToSqlList(QList<int> rows) {
   QString ids;
 
@@ -161,22 +178,25 @@ bool Database::storeRow(QString bank, QString date, QString description,
   return false;
 }
 
-QString Database::unifyDateToStore(QString date) {
-  QDate ymd = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
+ulong Database::updateRowsCategory(QString regexp, QString category) {
+  ulong updatedRows;
 
-  QDate dmy = QDate::fromString(
-      QString(date).replace(QRegularExpression("/"), "-"), "dd-MM-yyyy");
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryUpdateRowsCategory)
+                              .arg(regexp.length() ? regexp : ".*")
+                              .arg(category.left(CATEGORY_LENGHT));
 
-  if (ymd.isValid()) {
-    return ymd.toString(Qt::DateFormat::ISODate);
+    if (query.exec(queryString)) {
+      updatedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
   }
 
-  if (dmy.isValid()) {
-    return dmy.toString(Qt::DateFormat::ISODate);
-  }
-
-  return QString(tr("%1 invalid date")).arg(date);
+  return updatedRows;
 }
 
 QStringList Database::getBankNames() {
@@ -217,6 +237,30 @@ QStringList Database::getCategoryNames() {
   }
 
   return categoryNames;
+}
+
+QStringList Database::getColumnNames() {
+  QStringList names;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryColumnNames)) {
+      while (query.next()) {
+
+        QSqlRecord rec = query.record();
+        for (int n = 0; n < rec.count(); n++) {
+          names.append(rec.fieldName(n));
+        }
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return names;
 }
 
 QList<QStringList> Database::getUncategorizedRows(QString filter,
@@ -266,51 +310,6 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
   return rows;
 }
 
-QStringList Database::getColumnNames() {
-  QStringList names;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    if (query.exec(queryColumnNames)) {
-      while (query.next()) {
-
-        QSqlRecord rec = query.record();
-        for (int n = 0; n < rec.count(); n++) {
-          names.append(rec.fieldName(n));
-        }
-      }
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return names;
-}
-
-ulong Database::updateRowsCategory(QString regexp, QString category) {
-  ulong updatedRows;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryUpdateRowsCategory)
-                              .arg(regexp.length() ? regexp : ".*")
-                              .arg(category.left(CATEGORY_LENGHT));
-
-    if (query.exec(queryString)) {
-      updatedRows = query.numRowsAffected();
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return updatedRows;
-}
-
 QList<QStringList> Database::getBanksBalance(QStringList bankNames,
                                              QDate initialDate,
                                              QDate finalDate) {
@@ -330,34 +329,6 @@ QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
 
   return getBalance(queryCategoryBalances, categoryNames, initialDate,
                     finalDate);
-}
-
-QList<QSqlRecord> Database::execCommand(QString queryString) {
-  QList<QSqlRecord> result;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    if (query.exec(queryString)) {
-      while (query.next()) {
-        result.append(query.record());
-      }
-
-      if (result.isEmpty()) {
-        QSqlRecord record = QSqlRecord();
-        record.append(QSqlField("Rows affected"));
-        record.setValue("Rows affected", query.numRowsAffected());
-        result.append(record);
-      }
-
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return result;
 }
 
 QList<QStringList> Database::getDuplicateRows() {
@@ -387,6 +358,32 @@ QList<QStringList> Database::getDuplicateRows() {
   }
 
   return result;
+}
+
+
+QStringList Database::getYears(bool ascending) {
+  QStringList years;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryYears)) {
+      while (query.next()) {
+
+        years.append(query.value(0).toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  if (ascending == false) {
+    std::reverse(years.begin(), years.end());
+  }
+
+  return years;
 }
 
 int Database::deleteRows(QList<int> rows) {
@@ -426,6 +423,34 @@ int Database::markAsNotDuplicateRows(QList<int> rows) {
   }
 
   return affectedRows;
+}
+
+QList<QSqlRecord> Database::execCommand(QString queryString) {
+  QList<QSqlRecord> result;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryString)) {
+      while (query.next()) {
+        result.append(query.record());
+      }
+
+      if (result.isEmpty()) {
+        QSqlRecord record = QSqlRecord();
+        record.append(QSqlField("Rows affected"));
+        record.setValue("Rows affected", query.numRowsAffected());
+        result.append(record);
+      }
+
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return result;
 }
 
 bool Database::backup(QString fileName) {
@@ -468,29 +493,4 @@ bool Database::restore(QString fileName) {
   }
 
   return true;
-}
-
-QStringList Database::getYears(bool ascending) {
-  QStringList years;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    if (query.exec(queryYears)) {
-      while (query.next()) {
-
-        years.append(query.value(0).toString());
-      }
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  if (ascending == false) {
-    std::reverse(years.begin(), years.end());
-  }
-
-  return years;
 }

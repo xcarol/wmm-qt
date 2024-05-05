@@ -3,7 +3,6 @@
 
 #include <QFile>
 #include <QList>
-#include <qtypes.h>
 
 #define MAX_ROWS 10
 
