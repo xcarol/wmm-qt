@@ -1,5 +1,3 @@
-#include "Database.h"
-
 #include <QDate>
 #include <QList>
 #include <QProcess>
@@ -11,6 +9,8 @@
 #include <QSqlRecord>
 #include <QSqlResult>
 #include <QThread>
+
+#include "Database.h"
 
 Database::Database(QObject *parent) : QObject{parent} {
   hostname = settings.value(HOSTNAME, DEFAULT_HOSTNAME).toString();
@@ -74,38 +74,47 @@ void Database::closeDatabase() {
   sqlDatabase = QSqlDatabase();
 }
 
-bool Database::checkConnection() {
-  if (openDatabase()) {
-    closeDatabase();
-    return true;
-  }
+QStringList Database::databaseConnectionParameters() {
+  QStringList parameters;
 
-  return false;
+  parameters.append(QString("--host=%1").arg(hostname));
+  parameters.append(QString("--port=%1").arg(port));
+  parameters.append(QString("--user=%1").arg(username));
+  parameters.append(QString("--password=%1").arg(userpass));
+  parameters.append(DEFAULT_DATABASE);
+
+  return parameters;
 }
 
-bool Database::storeRow(QString bank, QString date, QString description,
-                        double amount) {
+QList<QStringList> Database::getBalance(QString queryBalance,
+                                        QStringList entites, QDate initialDate,
+                                        QDate finalDate) {
+  QList<QStringList> balances;
+
   if (openDatabase()) {
-    bool success = true;
-
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    query.prepare("INSERT INTO transactions (bank, date, description, amount) "
-                  "VALUES (:bank, :date, :description, :amount)");
-    query.bindValue(":bank", bank.left(BANK_LENGTH));
-    query.bindValue(":date", unifyDateToStore(date));
-    query.bindValue(":description", description.left(DESCRIPTION_LENGTH));
-    query.bindValue(":amount", amount);
 
-    if (!query.exec()) {
-      lastError = query.lastError().databaseText();
-      success = false;
+    foreach (QString entity, entites) {
+      QString queryString =
+          QString(queryBalance)
+              .arg(entity)
+              .arg(initialDate.toString(Qt::DateFormat::ISODate))
+              .arg(finalDate.toString(Qt::DateFormat::ISODate));
+
+      if (query.exec(queryString)) {
+        if (query.next()) {
+          balances.append(
+              QStringList({entity, query.value("balance").toString()}));
+        }
+      } else {
+        lastError = query.lastError().databaseText();
+      }
     }
 
     closeDatabase();
-    return success;
   }
 
-  return false;
+  return balances;
 }
 
 QString Database::unifyDateToStore(QString date) {
@@ -126,13 +135,77 @@ QString Database::unifyDateToStore(QString date) {
   return QString(tr("%1 invalid date")).arg(date);
 }
 
+QString Database::rowsToSqlList(QList<int> rows) {
+  QString ids;
+
+  foreach (int row, rows) {
+    ids.append(QString::number(row)).append(",");
+  }
+
+  return ids.removeLast();
+}
+
+bool Database::checkConnection() {
+  if (openDatabase()) {
+    closeDatabase();
+    return true;
+  }
+
+  return false;
+}
+
+bool Database::storeRow(QString bank, QString date, QString description,
+                        double amount) {
+  if (openDatabase()) {
+    bool success = true;
+
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    query.prepare(queryInsertRow);
+    query.bindValue(":bank", bank.left(BANK_LENGTH));
+    query.bindValue(":date", unifyDateToStore(date));
+    query.bindValue(":description", description.left(DESCRIPTION_LENGTH));
+    query.bindValue(":amount", amount);
+
+    if (!query.exec()) {
+      lastError = query.lastError().databaseText();
+      success = false;
+    }
+
+    closeDatabase();
+    return success;
+  }
+
+  return false;
+}
+
+ulong Database::updateRowsCategory(QString regexp, QString category) {
+  ulong updatedRows;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryUpdateRowsCategory)
+                              .arg(regexp.length() ? regexp : ".*")
+                              .arg(category.left(CATEGORY_LENGHT));
+
+    if (query.exec(queryString)) {
+      updatedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return updatedRows;
+}
+
 QStringList Database::getBankNames() {
   QStringList bankNames;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT DISTINCT bank FROM transactions")) {
+    if (query.exec(queryBankNames)) {
       while (query.next()) {
         bankNames.append(query.value("bank").toString());
       }
@@ -152,8 +225,7 @@ QStringList Database::getCategoryNames() {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec("SELECT DISTINCT category FROM transactions WHERE category "
-                   "IS NOT NULL AND TRIM(category) <> ''")) {
+    if (query.exec(queryCategoryNames)) {
       while (query.next()) {
         categoryNames.append(query.value("category").toString());
       }
@@ -167,18 +239,40 @@ QStringList Database::getCategoryNames() {
   return categoryNames;
 }
 
+QStringList Database::getColumnNames() {
+  QStringList names;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryColumnNames)) {
+      while (query.next()) {
+
+        QSqlRecord rec = query.record();
+        for (int n = 0; n < rec.count(); n++) {
+          names.append(rec.fieldName(n));
+        }
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return names;
+}
+
 QList<QStringList> Database::getUncategorizedRows(QString filter,
                                                   QProgressDialog *dialog) {
   QList<QStringList> rows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString =
-        "SELECT * FROM transactions WHERE (TRIM(category) = '' "
-        "OR category IS NULL)";
+    QString queryString = queryUncategorizedRows;
 
     if (!filter.isEmpty()) {
-      queryString.append(QString(" AND description REGEXP '%1'").arg(filter));
+      queryString.append(QString(queryUncategorizedRowsFilter).arg(filter));
     }
 
     if (query.exec(queryString)) {
@@ -216,125 +310,119 @@ QList<QStringList> Database::getUncategorizedRows(QString filter,
   return rows;
 }
 
-QStringList Database::getColumnNames() {
-  QStringList names;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    if (query.exec("SELECT * FROM transactions LIMIT 1")) {
-      while (query.next()) {
-
-        QSqlRecord rec = query.record();
-        for (int n = 0; n < rec.count(); n++) {
-          names.append(rec.fieldName(n));
-        }
-      }
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return names;
-}
-
-ulong Database::updateRowsCategory(QString regexp, QString category) {
-  ulong updatedRows;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString =
-        QString("UPDATE transactions SET category = '%2' WHERE description "
-                "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)")
-            .arg(regexp.length() ? regexp : ".*")
-            .arg(category.left(CATEGORY_LENGHT));
-
-    if (query.exec(queryString)) {
-      updatedRows = query.numRowsAffected();
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return updatedRows;
-}
-
 QList<QStringList> Database::getBanksBalance(QStringList bankNames,
                                              QDate initialDate,
                                              QDate finalDate) {
-  QList<QStringList> bankBalance;
-
   if (bankNames.isEmpty()) {
     bankNames = getBankNames();
   }
 
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    foreach (QString bankName, bankNames) {
-      QString queryString =
-          QString("SELECT SUM(amount) as balance from "
-                  "transactions WHERE bank = '%1'"
-                  " AND date >= '%2' AND date <= '%3'")
-              .arg(bankName)
-              .arg(initialDate.toString(Qt::DateFormat::ISODate))
-              .arg(finalDate.toString(Qt::DateFormat::ISODate));
-
-      if (query.exec(queryString)) {
-        if (query.next()) {
-          bankBalance.append(
-              QStringList({bankName, query.value("balance").toString()}));
-        }
-      } else {
-        lastError = query.lastError().databaseText();
-      }
-    }
-
-    closeDatabase();
-  }
-
-  return bankBalance;
+  return getBalance(queryBankBalances, bankNames, initialDate, finalDate);
 }
 
 QList<QStringList> Database::getCategoriesBalance(QStringList categoryNames,
                                                   QDate initialDate,
                                                   QDate finalDate) {
-  QList<QStringList> bankBalance;
-
   if (categoryNames.isEmpty()) {
     categoryNames = getCategoryNames();
   }
 
+  return getBalance(queryCategoryBalances, categoryNames, initialDate,
+                    finalDate);
+}
+
+QList<QStringList> Database::getDuplicateRows() {
+  QList<QStringList> result;
+
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    foreach (QString categoryName, categoryNames) {
-      QString queryString =
-          QString("SELECT SUM(amount) as balance from "
-                  "transactions WHERE category = '%1'"
-                  " AND date >= '%2' AND date <= '%3'")
-              .arg(categoryName)
-              .arg(initialDate.toString(Qt::DateFormat::ISODate))
-              .arg(finalDate.toString(Qt::DateFormat::ISODate));
+    QString queryString = QString(queryDuplicateRows);
 
-      if (query.exec(queryString)) {
-        if (query.next()) {
-          bankBalance.append(
-              QStringList({categoryName, query.value("balance").toString()}));
-        }
-      } else {
-        lastError = query.lastError().databaseText();
+    if (query.exec(queryString)) {
+      while (query.next()) {
+        QStringList row;
+        row.append(query.value("id").toString());
+        row.append(query.value("bank").toString());
+        row.append(query.value("date").toString());
+        row.append(query.value("description").toString());
+        row.append(query.value("amount").toString());
+        result.append(row);
       }
+
+    } else {
+      lastError = query.lastError().databaseText();
     }
 
     closeDatabase();
   }
 
-  return bankBalance;
+  return result;
+}
+
+
+QStringList Database::getYears(bool ascending) {
+  QStringList years;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryYears)) {
+      while (query.next()) {
+
+        years.append(query.value(0).toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  if (ascending == false) {
+    std::reverse(years.begin(), years.end());
+  }
+
+  return years;
+}
+
+int Database::deleteRows(QList<int> rows) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryDeleteRows).arg(rowsToSqlList(rows));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
+int Database::markAsNotDuplicateRows(QList<int> rows) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryMarkNotDuplicateRows).arg(rowsToSqlList(rows));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
 }
 
 QList<QSqlRecord> Database::execCommand(QString queryString) {
@@ -365,111 +453,10 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   return result;
 }
 
-QList<QStringList> Database::getDuplicateRows() {
-  QList<QStringList> result;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    QString queryString = QString("SELECT * FROM transactions t1"
-                                  " WHERE EXISTS ("
-                                  "    SELECT 1"
-                                  "    FROM transactions t2"
-                                  "    WHERE t1.bank = t2.bank"
-                                  "    AND t1.date = t2.date"
-                                  "    AND t1.description = t2.description"
-                                  "    AND t1.amount = t2.amount"
-                                  "    AND t1.id <> t2.id"
-                                  "    AND t1.not_duplicate = FALSE"
-                                  "    AND t2.not_duplicate = FALSE"
-                                  " )"
-                                  " ORDER BY bank, date DESC");
-
-    if (query.exec(queryString)) {
-      while (query.next()) {
-        QStringList row;
-        row.append(query.value("id").toString());
-        row.append(query.value("bank").toString());
-        row.append(query.value("date").toString());
-        row.append(query.value("description").toString());
-        row.append(query.value("amount").toString());
-        result.append(row);
-      }
-
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return result;
-}
-
-int Database::deleteRows(QList<int> rows) {
-  int affectedRows = 0;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    QString strIds;
-
-    foreach (int row, rows) {
-      strIds.append(QString::number(row)).append(",");
-    }
-
-    QString queryString = QString("DELETE FROM transactions WHERE id IN (%1)")
-                              .arg(strIds.removeLast());
-
-    if (query.exec(queryString)) {
-      affectedRows = query.numRowsAffected();
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return affectedRows;
-}
-
-int Database::markAsNotDuplicateRows(QList<int> rows) {
-  int affectedRows = 0;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    QString strIds;
-
-    foreach (int row, rows) {
-      strIds.append(QString::number(row)).append(",");
-    }
-
-    QString queryString = QString("UPDATE transactions SET not_duplicate = TRUE WHERE id IN (%1)")
-                              .arg(strIds.removeLast());
-
-    if (query.exec(queryString)) {
-      affectedRows = query.numRowsAffected();
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  return affectedRows;
-}
-
 bool Database::backup(QString fileName) {
-  QStringList parameters;
-
-  parameters.append(QString("--host=%1").arg(hostname));
-  parameters.append(QString("--port=%1").arg(port));
-  parameters.append(QString("--user=%1").arg(username));
-  parameters.append(QString("--password=%1").arg(userpass));
-  parameters.append(DEFAULT_DATABASE);
-
+  QStringList parameters = databaseConnectionParameters();
   QProcess process;
+
   process.setStandardOutputFile(fileName);
   process.start(MYSQLDUMP_PROGRAM, parameters);
 
@@ -487,14 +474,8 @@ bool Database::backup(QString fileName) {
 
 bool Database::restore(QString fileName) {
   QProcess process;
-  QStringList parameters;
+  QStringList parameters = databaseConnectionParameters();
   QString sqlCommand = MYSQL_PROGRAM;
-
-  parameters.append(QString("--host=%1").arg(hostname));
-  parameters.append(QString("--port=%1").arg(port));
-  parameters.append(QString("--user=%1").arg(username));
-  parameters.append(QString("--password=%1").arg(userpass));
-  parameters.append(DEFAULT_DATABASE);
 
   process.setStandardInputFile(fileName);
   process.start(sqlCommand, parameters);
@@ -512,29 +493,4 @@ bool Database::restore(QString fileName) {
   }
 
   return true;
-}
-
-QStringList Database::getYears(bool ascending) {
-  QStringList years;
-
-  if (openDatabase()) {
-    QSqlQuery query = QSqlQuery(sqlDatabase);
-
-    if (query.exec("SELECT DISTINCT YEAR(date) FROM transactions")) {
-      while (query.next()) {
-
-        years.append(query.value(0).toString());
-      }
-    } else {
-      lastError = query.lastError().databaseText();
-    }
-
-    closeDatabase();
-  }
-
-  if (ascending == false) {
-    std::reverse(years.begin(), years.end());
-  }
-
-  return years;
 }
