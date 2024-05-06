@@ -49,9 +49,12 @@ private:
 
   QString queryColumnNames = QString("SELECT * FROM transactions LIMIT 1");
 
-  QString queryUpdateRowsCategory =
+  QString queryUpdateRowsCategoryWithDescriptionRegex =
       QString("UPDATE transactions SET category = '%2' WHERE description "
               "REGEXP '%1' AND (TRIM(category) = '' OR category IS NULL)");
+
+  QString queryUpdateRowsCategoryWithIds =
+      QString("UPDATE transactions SET category = '%1' WHERE id IN(%2)");
 
   QString queryBankBalances = QString(
       "SELECT SUM(amount) as balance from transactions WHERE bank = '%1' AND "
@@ -65,7 +68,7 @@ private:
   QString queryDuplicateRows = QString("SELECT * FROM transactions t1"
                                        " WHERE EXISTS ("
                                        "    SELECT 1"
-                                       "    FROM %1 t2"
+                                       "    FROM transactions t2"
                                        "    WHERE t1.bank = t2.bank"
                                        "    AND t1.date = t2.date"
                                        "    AND t1.description = t2.description"
@@ -125,7 +128,8 @@ public:
 
   bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
-  ulong updateRowsCategory(QString, QString);
+  ulong updateRowsCategory(QString descriptionRegex, QString category);
+  ulong updateRowsCategory(QList<int> rowIds, QString category);
   QStringList getBankNames();
   QStringList getCategoryNames();
   QStringList getColumnNames();
