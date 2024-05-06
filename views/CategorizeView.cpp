@@ -35,7 +35,7 @@ void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
 }
 
 void CategorizeView::on_deleteDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders();
+  QList<int> selectedIds = getSelectedRowsHeaders(ui->duplicateRowsTable);
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
@@ -51,7 +51,7 @@ void CategorizeView::on_deleteDuplicatesButton_clicked() {
 }
 
 void CategorizeView::on_duplicateRowsTable_itemSelectionChanged() {
-  int enable = getSelectedRowsHeaders().length() > 0;
+  int enable = getSelectedRowsHeaders(ui->duplicateRowsTable).length() > 0;
   ui->deleteDuplicatesButton->setEnabled(enable);
   ui->markNotDuplicatesButton->setEnabled(enable);
 }
@@ -69,7 +69,7 @@ void CategorizeView::on_filterEdit_returnPressed() {
 }
 
 void CategorizeView::on_markNotDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders();
+  QList<int> selectedIds = getSelectedRowsHeaders(ui->searchResultsTable);
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(),
@@ -94,55 +94,106 @@ void CategorizeView::on_searchDuplicateButton_clicked() {
   updateDuplicatesTable();
 }
 
+void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
+  int enable = getSelectedRowsHeaders(ui->searchResultsTable).length() > 0;
+  updateUpdateButtonState();
+}
+
 void CategorizeView::on_updateButton_clicked() {
+  QList<int> selectedRows = getSelectedRowsHeaders(ui->searchResultsTable);
+
+  if (selectedRows.length() == 0) {
+    selectedRows = getAllRowsHeaders(ui->searchResultsTable);
+  }
+
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("Update")),
       QString(tr("You're about to update %1 records "
                  "with the category: %2\nAre you sure?"))
-          .arg(uncategorizedRows.length())
+          .arg(selectedRows.length())
           .arg(categoryName));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }
 
-  updateUncategorizedRows();
+  updateUncategorizedRows(selectedRows);
 }
 
-void CategorizeView::addCellToSearchResultsTable(int numberOfColumns,
-                                                 int rowCount,
-                                                 QStringList rowFields) {
+void CategorizeView::addHeadersToSearchResultsTable(QStringList headers) {
+  ui->searchResultsTable->setHorizontalHeaderItem(
+      SEARCH_TABLE_BANK_COLUMN,
+      new QTableWidgetItem(
+          QString(headers.at(DATABASE_TABLE_BANK_FIELD).toUpper())));
+  ui->searchResultsTable->setHorizontalHeaderItem(
+      SEARCH_TABLE_DATE_COLUMN,
+      new QTableWidgetItem(
+          QString(headers.at(DATABASE_TABLE_DATE_FIELD).toUpper())));
+  ui->searchResultsTable->setHorizontalHeaderItem(
+      SEARCH_TABLE_DESCRIPTION_COLUMN,
+      new QTableWidgetItem(
+          QString(headers.at(DATABASE_TABLE_DESCRIPTION_FIELD).toUpper())));
+  ui->searchResultsTable->setHorizontalHeaderItem(
+      SEARCH_TABLE_CATEGORY_COLUMN,
+      new QTableWidgetItem(
+          QString(headers.at(DATABASE_TABLE_CATEGORY_FIELD).toUpper())));
+  ui->searchResultsTable->setHorizontalHeaderItem(
+      SEARCH_TABLE_AMOUNT_COLUMN,
+      new QTableWidgetItem(
+          QString(headers.at(DATABASE_TABLE_AMOUNT_FIELD).toUpper())));
+}
+
+void CategorizeView::addRowToSearchResultsTable(int row,
+                                                QStringList rowFields) {
+  QString value;
+  QLabel *label;
   QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
 
-  for (int columnCount = 0; columnCount < numberOfColumns; columnCount++) {
-    QString value = rowFields.at(columnCount);
+  ui->searchResultsTable->setVerticalHeaderItem(
+      row, new QTableWidgetItem(rowFields.at(DATABASE_TABLE_ID_FIELD)));
 
-    QLabel *label;
-    switch (columnCount) {
-    case DATE_COLUMN:
-      label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
-                             .toString(dateFormat));
-      label->setAlignment(Qt::AlignCenter);
-      break;
+  value = rowFields.at(DATABASE_TABLE_BANK_FIELD);
+  label = new QLabel(value);
+  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_BANK_COLUMN, label);
 
-    case AMOUNT_COLUMN:
-      label = new QLabel(QString::number(value.toDouble()));
-      label->setAlignment(Qt::AlignRight);
-      break;
+  value = rowFields.at(DATABASE_TABLE_DATE_FIELD);
+  label = new QLabel(
+      QDate::fromString(value, Qt::DateFormat::ISODate).toString(dateFormat));
+  label->setAlignment(Qt::AlignCenter);
+  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_DATE_COLUMN, label);
 
-    default:
-      label = new QLabel(value);
-    }
-    ui->searchResultsTable->setCellWidget(rowCount, columnCount, label);
-  }
+  value = rowFields.at(DATABASE_TABLE_DESCRIPTION_FIELD);
+  label = new QLabel(value);
+  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_DESCRIPTION_COLUMN,
+                                        label);
+
+  value = rowFields.at(DATABASE_TABLE_CATEGORY_FIELD);
+  label = new QLabel(value);
+  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_CATEGORY_COLUMN,
+                                        label);
+
+  value = rowFields.at(DATABASE_TABLE_AMOUNT_FIELD);
+  label = new QLabel(QString::number(value.toDouble()));
+  label->setAlignment(Qt::AlignRight);
+  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_AMOUNT_COLUMN, label);
 }
 
-QList<int> CategorizeView::getSelectedRowsHeaders() {
+QList<int> CategorizeView::getAllRowsHeaders(QTableWidget *tableWidget) {
   QList<int> ids;
 
-  foreach (QTableWidgetSelectionRange range,
-           ui->duplicateRowsTable->selectedRanges()) {
+  for (int row = 0; row < tableWidget->rowCount(); row++) {
+    QTableWidgetItem *item = tableWidget->verticalHeaderItem(row);
+    ids.append(item->text().toInt());
+  }
+
+  return ids;
+}
+
+QList<int> CategorizeView::getSelectedRowsHeaders(QTableWidget *tableWidget) {
+  QList<int> ids;
+
+  foreach (QTableWidgetSelectionRange range, tableWidget->selectedRanges()) {
     for (int row = range.topRow(); row <= range.bottomRow(); row++) {
-      QTableWidgetItem *item = ui->duplicateRowsTable->verticalHeaderItem(row);
+      QTableWidgetItem *item = tableWidget->verticalHeaderItem(row);
       ids.append(item->text().toInt());
     }
   }
@@ -204,7 +255,8 @@ void CategorizeView::searchUncategorizedRows() {
   progress.setWindowModality(Qt::WindowModal);
   progress.setWindowTitle(tr("Search..."));
 
-  uncategorizedRows = database.getUncategorizedRows(appliedFilter, &progress);
+  QList<QStringList> uncategorizedRows =
+      database.getUncategorizedRows(appliedFilter, &progress);
 
   if (labels.length() == 0 || uncategorizedRows.length() == 0) {
     progress.cancel();
@@ -218,15 +270,11 @@ void CategorizeView::searchUncategorizedRows() {
   }
 
   int numberOfRows = uncategorizedRows.count();
-  int numberOfColumns = uncategorizedRows.at(0).count();
 
   ui->searchResultsTable->setRowCount(numberOfRows);
-  ui->searchResultsTable->setColumnCount(numberOfColumns);
+  ui->searchResultsTable->setColumnCount(SEARCH_TABLE_COLUMN_COUNT);
 
-  for (int n = 0; n < labels.length(); n++) {
-    ui->searchResultsTable->setHorizontalHeaderItem(
-        n, new QTableWidgetItem(QString(labels.at(n).toUpper())));
-  }
+  addHeadersToSearchResultsTable(labels);
 
   progress.reset();
   progress.setMaximum(numberOfRows);
@@ -237,8 +285,7 @@ void CategorizeView::searchUncategorizedRows() {
                               .arg(rowCount)
                               .arg(numberOfRows));
 
-    addCellToSearchResultsTable(numberOfColumns, rowCount,
-                                uncategorizedRows.at(rowCount));
+    addRowToSearchResultsTable(rowCount, uncategorizedRows.at(rowCount));
 
     progress.setValue(rowCount);
 
@@ -311,12 +358,12 @@ void CategorizeView::updateDuplicatesTable() {
   }
 }
 
-void CategorizeView::updateUncategorizedRows() {
+void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
   Database database = Database();
 
-  ulong updatedRows = database.updateRowsCategory(appliedFilter, categoryName);
+  ulong updatedRows = database.updateRowsCategory(rowIds, categoryName);
 
-  if (updatedRows != uncategorizedRows.length()) {
+  if (updatedRows != rowIds.length()) {
     QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
@@ -331,10 +378,9 @@ void CategorizeView::updateUncategorizedRows() {
   ui->searchResultsTable->clear();
   ui->searchResultsTable->setColumnCount(0);
   ui->searchResultsTable->setRowCount(0);
-  uncategorizedRows.clear();
 }
 
 void CategorizeView::updateUpdateButtonState() {
-  ui->updateButton->setEnabled(uncategorizedRows.length() > 0 &&
+  ui->updateButton->setEnabled(ui->searchResultsTable->rowCount() > 0 &&
                                categoryName.length() > 0);
 }
