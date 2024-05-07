@@ -47,11 +47,13 @@ private:
   void addHeadersToSearchResultsTable(QStringList headers);
   void addRowToSearchResultsTable(int row, QStringList rowFields);
   QList<int> getAllRowsHeaders(QTableWidget *tableWidget);
+  QList<int> getSelectedRows(QTableWidget *tableWidget);
   QList<int> getSelectedRowsHeaders(QTableWidget *tableWidget);
   void searchUncategorizedRows();
   void setFilter(QString filter);
   void updateUncategorizedRows(QList<int> rowsIds);
   void updateUpdateButtonState();
+  void updateView();
 };
 
 #endif // CATEGORIZEVIEW_H

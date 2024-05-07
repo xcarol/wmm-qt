@@ -142,6 +142,18 @@ QList<int> CategorizeView::getAllRowsHeaders(QTableWidget *tableWidget) {
   return ids;
 }
 
+QList<int> CategorizeView::getSelectedRows(QTableWidget *tableWidget) {
+  QList<int> rows;
+
+  foreach (QTableWidgetSelectionRange range, tableWidget->selectedRanges()) {
+    for (int row = range.topRow(); row <= range.bottomRow(); row++) {
+      rows.append(row);
+    }
+  }
+
+  return rows;
+}
+
 QList<int> CategorizeView::getSelectedRowsHeaders(QTableWidget *tableWidget) {
   QList<int> ids;
 
@@ -241,14 +253,27 @@ void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
         .exec();
   }
 
-  ui->filterEdit->clearEditText();
-  ui->categoryComboBox->clearEditText();
-  ui->searchResultsTable->clear();
-  ui->searchResultsTable->setColumnCount(0);
-  ui->searchResultsTable->setRowCount(0);
+  updateView();
 }
 
 void CategorizeView::updateUpdateButtonState() {
   ui->updateButton->setEnabled(ui->searchResultsTable->rowCount() > 0 &&
                                categoryName.length() > 0);
+}
+
+void CategorizeView::updateView() {
+  ui->categoryComboBox->clearEditText();
+
+  QList<int> rows = getSelectedRows(ui->searchResultsTable);
+
+  if (rows.isEmpty()) {
+    ui->searchResultsTable->clear();
+    ui->searchResultsTable->setColumnCount(0);
+    ui->searchResultsTable->setRowCount(0);
+    return;
+  }
+
+  for (int row = 0; row < rows.length(); row++) {
+    ui->searchResultsTable->removeRow(rows.at(row) - row);
+  }
 }
