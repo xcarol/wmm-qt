@@ -264,16 +264,18 @@ void CategorizeView::updateUpdateButtonState() {
 void CategorizeView::updateView() {
   ui->categoryComboBox->clearEditText();
 
-  QList<int> rows = getSelectedRows(ui->searchResultsTable);
+  QList<QTableWidgetSelectionRange> ranges =
+      ui->searchResultsTable->selectedRanges();
 
-  if (rows.isEmpty()) {
+  if (ranges.isEmpty()) {
+    ui->filterEdit->clearEditText();
     ui->searchResultsTable->clear();
     ui->searchResultsTable->setColumnCount(0);
     ui->searchResultsTable->setRowCount(0);
-    return;
-  }
-
-  for (int row = 0; row < rows.length(); row++) {
-    ui->searchResultsTable->removeRow(rows.at(row) - row);
+  } else {
+    while (!ranges.isEmpty()) {
+      ui->searchResultsTable->removeRow(ranges.at(0).topRow());
+      ranges = ui->searchResultsTable->selectedRanges();
+    }
   }
 }
