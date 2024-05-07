@@ -117,6 +117,13 @@
       </item>
      </layout>
     </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="numRowsLabel">
+      <property name="text">
+       <string>Uncategorized rows:</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
  </widget>

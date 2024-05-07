@@ -204,6 +204,8 @@ void CategorizeView::searchUncategorizedRows() {
 
   int numberOfRows = uncategorizedRows.count();
 
+  ui->numRowsLabel->setText(
+      QString(tr("Uncategorized rows: %1")).arg(QString::number(numberOfRows)));
   ui->searchResultsTable->setRowCount(numberOfRows);
   ui->searchResultsTable->setColumnCount(SEARCH_TABLE_COLUMN_COUNT);
 
