@@ -31,14 +31,10 @@ public:
 
 private slots:
   void on_categoryComboBox_editTextChanged(const QString &arg1);
-  void on_deleteDuplicatesButton_clicked();
-  void on_duplicateRowsTable_itemSelectionChanged();
   void on_filterEdit_currentIndexChanged(int index);
   void on_filterEdit_editTextChanged(const QString &arg1);
   void on_filterEdit_returnPressed();
-  void on_markNotDuplicatesButton_clicked();
   void on_searchButton_clicked();
-  void on_searchDuplicateButton_clicked();
   void on_searchResultsTable_itemSelectionChanged();
   void on_updateButton_clicked();
 
@@ -52,11 +48,8 @@ private:
   void addRowToSearchResultsTable(int row, QStringList rowFields);
   QList<int> getAllRowsHeaders(QTableWidget *tableWidget);
   QList<int> getSelectedRowsHeaders(QTableWidget *tableWidget);
-  void deleteDuplicateRows(QList<int> ids);
-  void markDuplicateRows(QList<int> ids);
   void searchUncategorizedRows();
   void setFilter(QString filter);
-  void updateDuplicatesTable();
   void updateUncategorizedRows(QList<int> rowsIds);
   void updateUpdateButtonState();
 };

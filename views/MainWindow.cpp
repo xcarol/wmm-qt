@@ -3,18 +3,19 @@
 #include "../lib/Database.h"
 #include "BrowseDataView.h"
 #include "CategorizeView.h"
+#include "DuplicatesView.h"
 #include "ImportFileView.h"
 #include "SqlCommandView.h"
 #include "ui_MainWindow.h"
-#include <QSettings>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  QSettings settings = QSettings("com.xicra", "wmm");
   if (settings.value(CURRENT_VIEW).toString() == CATEGORIZE_VIEW) {
     setCentralWidget(new CategorizeView());
+  } else if (settings.value(CURRENT_VIEW).toString() == DUPLICATES_VIEW) {
+    setCentralWidget(new DuplicatesView());
   } else if (settings.value(CURRENT_VIEW).toString() == IMPORT_FILE_VIEW) {
     setCentralWidget(new ImportFileView());
   } else if (settings.value(CURRENT_VIEW).toString() == BROWSE_DATA_VIEW) {
@@ -47,25 +48,28 @@ void MainWindow::on_actionDatabase_triggered() {
 }
 
 void MainWindow::on_actionImport_triggered() {
-  QSettings settings = QSettings("com.xicra", "wmm");
   settings.setValue(CURRENT_VIEW, IMPORT_FILE_VIEW);
   setCentralWidget(new ImportFileView());
 }
 
 void MainWindow::on_actionCategorize_triggered() {
-  QSettings settings = QSettings("com.xicra", "wmm");
   settings.setValue(CURRENT_VIEW, CATEGORIZE_VIEW);
   setCentralWidget(new CategorizeView());
 }
 
 void MainWindow::on_actionBrowse_triggered() {
-  QSettings settings = QSettings("com.xicra", "wmm");
   settings.setValue(CURRENT_VIEW, BROWSE_DATA_VIEW);
   setCentralWidget(new BrowseDataView());
 }
 
 void MainWindow::on_actionSql_Command_triggered() {
-  QSettings settings = QSettings("com.xicra", "wmm");
   settings.setValue(CURRENT_VIEW, SQL_COMMAND_VIEW);
   setCentralWidget(new SqlCommandView());
 }
+
+void MainWindow::on_actionDuplicates_triggered()
+{
+  settings.setValue(CURRENT_VIEW, DUPLICATES_VIEW);
+  setCentralWidget(new DuplicatesView());
+}
+

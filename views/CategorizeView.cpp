@@ -14,10 +14,7 @@ CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
   ui->updateButton->setEnabled(false);
-  ui->deleteDuplicatesButton->setEnabled(false);
-  ui->markNotDuplicatesButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
-  ui->duplicateRowsTable->horizontalHeader()->setStretchLastSection(true);
 
   QSettings settings = QSettings("com.xicra", "wmm");
   QStringList filters = settings.value("filters").toStringList();
@@ -34,28 +31,6 @@ void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
   updateUpdateButtonState();
 }
 
-void CategorizeView::on_deleteDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders(ui->duplicateRowsTable);
-
-  QMessageBox::StandardButton res = QMessageBox::question(
-      QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
-      QString(tr("You're about to DELETE %1 RECORDS "
-                 "\nAre you sure?"))
-          .arg(selectedIds.length()));
-  if (res == QMessageBox::StandardButton::No) {
-    return;
-  }
-
-  deleteDuplicateRows(selectedIds);
-  updateDuplicatesTable();
-}
-
-void CategorizeView::on_duplicateRowsTable_itemSelectionChanged() {
-  int enable = getSelectedRowsHeaders(ui->duplicateRowsTable).length() > 0;
-  ui->deleteDuplicatesButton->setEnabled(enable);
-  ui->markNotDuplicatesButton->setEnabled(enable);
-}
-
 void CategorizeView::on_filterEdit_currentIndexChanged(int index) {
   appliedFilter = ui->filterEdit->itemText(index);
 }
@@ -68,30 +43,9 @@ void CategorizeView::on_filterEdit_returnPressed() {
   on_searchButton_clicked();
 }
 
-void CategorizeView::on_markNotDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders(ui->searchResultsTable);
-
-  QMessageBox::StandardButton res = QMessageBox::question(
-      QApplication::topLevelWidgets().first(),
-      QString(tr("MARK NOT DUPLICATE")),
-      QString(tr("You're about to mark %1 records as not duplicate."
-                 "\nAre you sure?"))
-          .arg(selectedIds.length()));
-  if (res == QMessageBox::StandardButton::No) {
-    return;
-  }
-
-  markDuplicateRows(selectedIds);
-  updateDuplicatesTable();
-}
-
 void CategorizeView::on_searchButton_clicked() {
   searchUncategorizedRows();
   updateUpdateButtonState();
-}
-
-void CategorizeView::on_searchDuplicateButton_clicked() {
-  updateDuplicatesTable();
 }
 
 void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
@@ -201,39 +155,6 @@ QList<int> CategorizeView::getSelectedRowsHeaders(QTableWidget *tableWidget) {
   return ids;
 }
 
-void CategorizeView::deleteDuplicateRows(QList<int> ids) {
-  Database database = Database();
-
-  ulong updatedRows = database.deleteRows(ids);
-
-  if (updatedRows != ids.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 rows deleted.")).arg(updatedRows))
-        .exec();
-  }
-}
-
-void CategorizeView::markDuplicateRows(QList<int> ids) {
-  Database database = Database();
-
-  ulong updatedRows = database.markAsNotDuplicateRows(ids);
-
-  if (updatedRows != ids.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 rows marked as not duplicate."))
-                    .arg(updatedRows))
-        .exec();
-  }
-}
-
 void CategorizeView::searchUncategorizedRows() {
   Database database = Database();
 
@@ -302,59 +223,6 @@ void CategorizeView::setFilter(QString filter) {
     filters.append(appliedFilter);
     settings.setValue("filters", filters);
     ui->filterEdit->addItem(appliedFilter);
-  }
-}
-
-void CategorizeView::updateDuplicatesTable() {
-  Database database = Database();
-  QList<QStringList> duplicates = database.getDuplicateRows();
-  if (database.getLastErrorText().isEmpty() == false) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-    return;
-  }
-  if (duplicates.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database")),
-                QString(tr("No duplicate rows found.")))
-        .exec();
-    return;
-  }
-
-  int numberOfColumns = 4;
-  int numberOfRows = duplicates.length();
-
-  ui->duplicateRowsLabel->setText(
-      QString(tr("Duplicate rows: %1")).arg(numberOfRows));
-  ui->duplicateRowsTable->clear();
-  ui->duplicateRowsTable->setRowCount(numberOfRows);
-  ui->duplicateRowsTable->setColumnCount(numberOfColumns);
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      0, new QTableWidgetItem(QString(tr("Bank"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      1, new QTableWidgetItem(QString(tr("Date"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      2, new QTableWidgetItem(QString(tr("Description"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      3, new QTableWidgetItem(QString(tr("Amount"))));
-
-  for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
-
-    ui->duplicateRowsTable->setVerticalHeaderItem(
-        rowCount, new QTableWidgetItem(duplicates.at(rowCount).at(0)));
-
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 0, new QLabel(duplicates.at(rowCount).at(1)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 1, new QLabel(duplicates.at(rowCount).at(2)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 2, new QLabel(duplicates.at(rowCount).at(3)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 3, new QLabel(duplicates.at(rowCount).at(4)));
   }
 }
 
