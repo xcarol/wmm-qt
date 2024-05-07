@@ -738,58 +738,58 @@ N&apos;estàs segur?</translation>
         <location filename="../views/DuplicatesView.ui" line="14"/>
         <location filename="../views/DuplicatesView.ui" line="14"/>
         <source>DuplicatesView</source>
-        <translation type="unfinished"></translation>
+        <translation>DuplicatesView</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.ui" line="23"/>
         <location filename="../views/DuplicatesView.ui" line="32"/>
         <source>Duplicate rows</source>
-        <translation type="unfinished">Files duplicades</translation>
+        <translation>Files duplicades</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.ui" line="43"/>
         <location filename="../views/DuplicatesView.ui" line="52"/>
         <source>Search duplicates</source>
-        <translation type="unfinished">Cerca duplicats</translation>
+        <translation>Cerca duplicats</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.ui" line="77"/>
         <location filename="../views/DuplicatesView.ui" line="86"/>
         <source>Mark selected as NOT duplicate</source>
-        <translation type="unfinished">Marca els sel·leccionats com NO duplicats</translation>
+        <translation>Marca els sel·leccionats com NO duplicats</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.ui" line="84"/>
         <location filename="../views/DuplicatesView.ui" line="93"/>
         <source>Delete selected</source>
-        <translation type="unfinished">Elimina els sel·leccionats</translation>
+        <translation>Elimina els sel·leccionats</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="27"/>
         <location filename="../views/DuplicatesView.cpp" line="27"/>
         <source>DELETE</source>
-        <translation type="unfinished">ESBORRAMENT</translation>
+        <translation>ESBORRAMENT</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="28"/>
         <location filename="../views/DuplicatesView.cpp" line="28"/>
         <source>You&apos;re about to DELETE %1 RECORDS 
 Are you sure?</source>
-        <translation type="unfinished">Ets a punt d&apos;ESBORRAR %1 REGISTRES
+        <translation>Ets a punt d&apos;ESBORRAR %1 REGISTRES
 N&apos;estàs segur?</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="50"/>
         <location filename="../views/DuplicatesView.cpp" line="50"/>
         <source>MARK NOT DUPLICATE</source>
-        <translation type="unfinished">MARCA NO DUPLICATS</translation>
+        <translation>MARCA NO DUPLICATS</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="51"/>
         <location filename="../views/DuplicatesView.cpp" line="51"/>
         <source>You&apos;re about to mark %1 records as not duplicate.
 Are you sure?</source>
-        <translation type="unfinished">Ets a punt de marcar %1 registres com a no duplicats
+        <translation>Ets a punt de marcar %1 registres com a no duplicats
 N&apos;estàs segur?</translation>
     </message>
     <message>
@@ -800,7 +800,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/DuplicatesView.cpp" line="101"/>
         <location filename="../views/DuplicatesView.cpp" line="116"/>
         <source>Database error</source>
-        <translation type="unfinished">Error a la base de dades</translation>
+        <translation>Error a la base de dades</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="89"/>
@@ -808,61 +808,61 @@ N&apos;estàs segur?</translation>
         <location filename="../views/DuplicatesView.cpp" line="89"/>
         <location filename="../views/DuplicatesView.cpp" line="105"/>
         <source>Database success</source>
-        <translation type="unfinished">Operació correcte a la base de dades</translation>
+        <translation>Operació correcte a la base de dades</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="90"/>
         <location filename="../views/DuplicatesView.cpp" line="90"/>
         <source>A total of %1 rows deleted.</source>
-        <translation type="unfinished">S&apos;ha esborrat un total de %1 registres.</translation>
+        <translation>S&apos;ha esborrat un total de %1 registres.</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="106"/>
         <location filename="../views/DuplicatesView.cpp" line="106"/>
         <source>A total of %1 rows marked as not duplicate.</source>
-        <translation type="unfinished">S&apos;ha marcat com a no duplicats un total de %1 registres</translation>
+        <translation>S&apos;ha marcat com a no duplicats un total de %1 registres</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="122"/>
         <location filename="../views/DuplicatesView.cpp" line="122"/>
         <source>Database</source>
-        <translation type="unfinished">Base de dades</translation>
+        <translation>Base de dades</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="123"/>
         <location filename="../views/DuplicatesView.cpp" line="123"/>
         <source>No duplicate rows found.</source>
-        <translation type="unfinished">No s&apos;han tobat files duplicades.</translation>
+        <translation>No s&apos;han tobat files duplicades.</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="132"/>
         <location filename="../views/DuplicatesView.cpp" line="132"/>
         <source>Duplicate rows: %1</source>
-        <translation type="unfinished">Files duplicades: %1</translation>
+        <translation>Files duplicades: %1</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="138"/>
         <location filename="../views/DuplicatesView.cpp" line="138"/>
         <source>Bank</source>
-        <translation type="unfinished">Banc</translation>
+        <translation>Banc</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="141"/>
         <location filename="../views/DuplicatesView.cpp" line="141"/>
         <source>Date</source>
-        <translation type="unfinished">Data</translation>
+        <translation>Data</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="144"/>
         <location filename="../views/DuplicatesView.cpp" line="144"/>
         <source>Description</source>
-        <translation type="unfinished">Descripció</translation>
+        <translation>Descripció</translation>
     </message>
     <message>
         <location filename="../views/DuplicatesView.cpp" line="147"/>
         <location filename="../views/DuplicatesView.cpp" line="147"/>
         <source>Amount</source>
-        <translation type="unfinished">Quantitat</translation>
+        <translation>Quantitat</translation>
     </message>
 </context>
 <context>
