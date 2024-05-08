@@ -75,7 +75,8 @@ void SqlCommandView::fillResultTable(QList<QSqlRecord> records,
   }
 }
 void SqlCommandView::on_backupButton_clicked() {
-  QString filePath = QFileDialog::getExistingDirectory(this, tr("Open File"), ".");
+  QString filePath =
+      QFileDialog::getExistingDirectory(this, tr("Open File"), ".");
 
   if (filePath.isEmpty()) {
     return;
@@ -83,6 +84,7 @@ void SqlCommandView::on_backupButton_clicked() {
 
   QString fileName =
       filePath.append("/")
+          .append("wmm-")
           .append(QDate::currentDate().toString(Qt::DateFormat::ISODate))
           .append("-")
           .append(QTime::currentTime().toString())
@@ -115,8 +117,8 @@ void SqlCommandView::on_restoreButton_clicked() {
     return;
   }
 
-  QString fileName =
-      QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Sql Files (*.sql)"));
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
+                                                  tr("Sql Files (*.sql)"));
 
   if (fileName.isEmpty()) {
     return;
