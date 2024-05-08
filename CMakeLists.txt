@@ -43,6 +43,9 @@ set(PROJECT_SOURCES
     views/SqlCommandView.h
     views/SqlCommandView.cpp
     views/SqlCommandView.ui
+    views/DuplicatesView.h
+    views/DuplicatesView.cpp
+    views/DuplicatesView.ui
     ${TS_FILES}
 )
 

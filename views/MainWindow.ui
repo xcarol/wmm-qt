@@ -37,6 +37,7 @@
     </property>
     <addaction name="actionImport"/>
     <addaction name="actionCategorize"/>
+    <addaction name="actionDuplicates"/>
     <addaction name="actionBrowse"/>
     <addaction name="actionSql_Command"/>
    </widget>
@@ -67,6 +68,11 @@
   <action name="actionSql_Command">
    <property name="text">
     <string>Sql Command</string>
+   </property>
+  </action>
+  <action name="actionDuplicates">
+   <property name="text">
+    <string>Duplicates</string>
    </property>
   </action>
  </widget>

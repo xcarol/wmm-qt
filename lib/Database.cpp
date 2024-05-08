@@ -178,14 +178,35 @@ bool Database::storeRow(QString bank, QString date, QString description,
   return false;
 }
 
-ulong Database::updateRowsCategory(QString regexp, QString category) {
+ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
   ulong updatedRows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryUpdateRowsCategory)
-                              .arg(regexp.length() ? regexp : ".*")
+    QString queryString = QString(queryUpdateRowsCategoryWithDescriptionRegex)
+                              .arg(descriptionRegex.length() ? descriptionRegex : ".*")
                               .arg(category.left(CATEGORY_LENGHT));
+
+    if (query.exec(queryString)) {
+      updatedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return updatedRows;
+}
+
+ulong Database::updateRowsCategory(QList<int> rowIds, QString category) {
+  ulong updatedRows;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryUpdateRowsCategoryWithIds)
+                              .arg(category.left(CATEGORY_LENGHT))
+                              .arg(rowsToSqlList(rowIds));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();

@@ -109,81 +109,20 @@
     <item row="1" column="0">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QTableWidget" name="searchResultsTable"/>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
-        <item>
-         <widget class="QLabel" name="duplicateRowsLabel">
-          <property name="text">
-           <string>Duplicate rows</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="searchDuplicateButton">
-          <property name="text">
-           <string>Search duplicates</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QTableWidget" name="duplicateRowsTable">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
+       <widget class="QTableWidget" name="searchResultsTable">
         <property name="selectionBehavior">
          <enum>QAbstractItemView::SelectRows</enum>
         </property>
        </widget>
       </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="markNotDuplicatesButton">
-          <property name="text">
-           <string>Mark selected as NOT duplicate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="deleteDuplicatesButton">
-          <property name="text">
-           <string>Delete selected</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
      </layout>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="numRowsLabel">
+      <property name="text">
+       <string>Uncategorized rows:</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
