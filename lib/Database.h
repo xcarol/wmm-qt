@@ -40,6 +40,8 @@ private:
               "NOT NULL AND "
               "TRIM(category) <> ''");
 
+  QString queryFilterNames = "SELECT DISTINCT filter FROM filters";
+
   QString queryUncategorizedRows = QString(
       "SELECT id, bank, date, description, category, amount FROM transactions "
       "WHERE (TRIM(category) = '' OR category IS NULL)");
@@ -133,6 +135,7 @@ public:
   QStringList getBankNames();
   QStringList getCategoryNames();
   QStringList getColumnNames();
+  QStringList getFilterNames(QString category);
   QList<QStringList> getUncategorizedRows(QString filter = QString(),
                                           QProgressDialog *dialog = NULL);
   QList<QStringList>

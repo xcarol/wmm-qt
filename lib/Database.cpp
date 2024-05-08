@@ -183,9 +183,10 @@ ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryUpdateRowsCategoryWithDescriptionRegex)
-                              .arg(descriptionRegex.length() ? descriptionRegex : ".*")
-                              .arg(category.left(CATEGORY_LENGHT));
+    QString queryString =
+        QString(queryUpdateRowsCategoryWithDescriptionRegex)
+            .arg(descriptionRegex.length() ? descriptionRegex : ".*")
+            .arg(category.left(CATEGORY_LENGHT));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
@@ -284,6 +285,26 @@ QStringList Database::getColumnNames() {
   return names;
 }
 
+QStringList Database::getFilterNames(QString category) {
+  QStringList filterNames;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(queryFilterNames)) {
+      while (query.next()) {
+        filterNames.append(query.value("filter").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return filterNames;
+}
+
 QList<QStringList> Database::getUncategorizedRows(QString filter,
                                                   QProgressDialog *dialog) {
   QList<QStringList> rows;
@@ -380,7 +401,6 @@ QList<QStringList> Database::getDuplicateRows() {
 
   return result;
 }
-
 
 QStringList Database::getYears(bool ascending) {
   QStringList years;

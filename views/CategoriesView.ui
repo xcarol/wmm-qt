@@ -27,7 +27,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="categorysList"/>
+         <widget class="QListWidget" name="categorysList">
+          <property name="selectionMode">
+           <enum>QAbstractItemView::MultiSelection</enum>
+          </property>
+          <property name="sortingEnabled">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -88,7 +95,11 @@
        </layout>
       </item>
       <item>
-       <widget class="QListWidget" name="filterList"/>
+       <widget class="QListWidget" name="filterList">
+        <property name="selectionMode">
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
