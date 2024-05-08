@@ -15,6 +15,17 @@ public:
     explicit CategoriesView(QWidget *parent = nullptr);
     ~CategoriesView();
 
+private slots:
+    void on_helpButton_clicked();
+
+    void on_newFilterButton_clicked();
+
+    void on_newCategoryButton_clicked();
+
+    void on_deleteCategoriesButton_clicked();
+
+    void on_deleteFiltersButton_clicked();
+
 private:
     Ui::CategoriesView *ui;
 };
