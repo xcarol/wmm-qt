@@ -46,6 +46,9 @@ set(PROJECT_SOURCES
     views/DuplicatesView.h
     views/DuplicatesView.cpp
     views/DuplicatesView.ui
+    views/CategoriesView.h
+    views/CategoriesView.cpp
+    views/CategoriesView.ui
     ${TS_FILES}
 )
 
