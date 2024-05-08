@@ -43,6 +43,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="newCategoryButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Add new category</string>
             </property>
@@ -52,6 +55,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="deleteCategoriesButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Delete selected categories</string>
           </property>
@@ -108,6 +114,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="newFilterButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Add new filter</string>
           </property>
@@ -117,6 +126,9 @@
       </item>
       <item>
        <widget class="QPushButton" name="deleteFiltersButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>Delete selected filters</string>
         </property>

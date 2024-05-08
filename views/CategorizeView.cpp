@@ -13,7 +13,6 @@
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
-  ui->updateButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
 
   QSettings settings = QSettings("com.xicra", "wmm");
