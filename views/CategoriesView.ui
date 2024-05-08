@@ -29,7 +29,7 @@
         <item>
          <widget class="QListWidget" name="categorysList">
           <property name="selectionMode">
-           <enum>QAbstractItemView::MultiSelection</enum>
+           <enum>QAbstractItemView::ExtendedSelection</enum>
           </property>
           <property name="sortingEnabled">
            <bool>true</bool>
@@ -103,7 +103,7 @@
       <item>
        <widget class="QListWidget" name="filterList">
         <property name="selectionMode">
-         <enum>QAbstractItemView::MultiSelection</enum>
+         <enum>QAbstractItemView::ExtendedSelection</enum>
         </property>
        </widget>
       </item>

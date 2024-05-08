@@ -291,7 +291,7 @@ QStringList Database::getFilterNames(QString category) {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
 
-    if (query.exec(queryFilterNames)) {
+    if (query.exec(QString(queryFilterNames).arg(category))) {
       while (query.next()) {
         filterNames.append(query.value("filter").toString());
       }
@@ -303,6 +303,26 @@ QStringList Database::getFilterNames(QString category) {
   }
 
   return filterNames;
+}
+
+QStringList Database::getDescriptionsByCategory(QString category) {
+  QStringList descriptions;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(QString(queryDescriptions).arg(category))) {
+      while (query.next()) {
+        descriptions.append(query.value("description").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return descriptions;
 }
 
 QList<QStringList> Database::getUncategorizedRows(QString filter,
