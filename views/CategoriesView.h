@@ -2,6 +2,7 @@
 #define CATEGORIESVIEW_H
 
 #include <QMainWindow>
+#include <QListWidgetItem>
 
 namespace Ui {
 class CategoriesView;
@@ -24,8 +25,10 @@ private slots:
   void on_deleteCategoriesButton_clicked();
   void on_deleteFiltersButton_clicked();
   void on_categorysList_currentRowChanged(int currentRow);
+  void on_categorysList_itemClicked(QListWidgetItem *item);
   void on_categorysList_itemSelectionChanged();
 
+  void deleteCategories();
   void loadCategories();
   void loadFilters(QString category);
   void clearFilters();

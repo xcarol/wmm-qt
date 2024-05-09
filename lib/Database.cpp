@@ -117,6 +117,39 @@ QList<QStringList> Database::getBalance(QString queryBalance,
   return balances;
 }
 
+QString Database::categoriesToSqlList(QStringList categories) {
+  QString sqlFilters;
+
+  foreach (QString category, categories) {
+    sqlFilters.append(QString("'%1',")
+                          .arg(category.replace(quote, escapedQuote)));
+  }
+
+  return sqlFilters.removeLast();
+}
+
+QString Database::filterListToSqlList(QString category, QStringList filters) {
+  QString sqlFilters;
+
+  foreach (QString filter, filters) {
+    sqlFilters.append(QString("('%1','%2'),")
+                          .arg(category.replace(quote, escapedQuote))
+                          .arg(filter.replace(quote, escapedQuote)));
+  }
+
+  return sqlFilters.removeLast();
+}
+
+QString Database::rowsToSqlList(QList<int> rows) {
+  QString ids;
+
+  foreach (int row, rows) {
+    ids.append(QString::number(row)).append(",");
+  }
+
+  return ids.removeLast();
+}
+
 QString Database::unifyDateToStore(QString date) {
   QDate ymd = QDate::fromString(
       QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
@@ -133,30 +166,6 @@ QString Database::unifyDateToStore(QString date) {
   }
 
   return QString(tr("%1 invalid date")).arg(date);
-}
-
-QString Database::rowsToSqlList(QList<int> rows) {
-  QString ids;
-
-  foreach (int row, rows) {
-    ids.append(QString::number(row)).append(",");
-  }
-
-  return ids.removeLast();
-}
-
-QString Database::filterListToSqlList(QString category, QStringList filters) {
-  QString sqlFilters;
-  QString quote = "'";
-  QString escapedQuote = "''";
-
-  foreach (QString filter, filters) {
-    sqlFilters.append(QString("('%1','%2'),")
-                          .arg(category.replace(quote, escapedQuote))
-                          .arg(filter.replace(quote, escapedQuote)));
-  }
-
-  return sqlFilters.removeLast();
 }
 
 bool Database::checkConnection() {
@@ -192,8 +201,8 @@ bool Database::storeRow(QString bank, QString date, QString description,
   return false;
 }
 
-ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
-  ulong updatedRows;
+int Database::updateRowsCategory(QString descriptionRegex, QString category) {
+  int updatedRows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
@@ -214,8 +223,8 @@ ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
   return updatedRows;
 }
 
-ulong Database::updateRowsCategory(QList<int> rowIds, QString category) {
-  ulong updatedRows;
+int Database::updateRowsCategory(QList<int> rowIds, QString category) {
+  int updatedRows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
@@ -528,12 +537,32 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   return result;
 }
 
+int Database::deleteCategories(QStringList categories) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryDeleteCategories).arg(categoriesToSqlList(categories));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
 int Database::updateCategoryFilters(QString category, QStringList filters) {
   int affectedRows = 0;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryDeleteCategoryFilters).arg(category);
+    QString queryString = QString(queryDeleteFilters).arg(category);
 
     if (!query.exec(queryString)) {
       lastError = query.lastError().databaseText();

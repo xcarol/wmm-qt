@@ -6,6 +6,7 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
+#include <qcontainerfwd.h>
 
 #define HOSTNAME "hostname"
 #define PORT "port"
@@ -29,6 +30,9 @@ class Database : public QObject {
   Q_OBJECT
 
 private:
+  QString quote = "'";
+  QString escapedQuote = "''";
+
   QString queryInsertRow = QString("INSERT INTO transactions (bank, date, "
                                    "description, amount) VALUES (:bank, "
                                    ":date, :description, :amount)");
@@ -93,7 +97,9 @@ private:
 
   QString queryAddCategoryFilters = QString("INSERT INTO filters (category, filter) VALUES %1");
 
-  QString queryDeleteCategoryFilters = QString("DELETE FROM filters WHERE category = '%1'");
+  QString queryDeleteFilters = QString("DELETE FROM filters WHERE category = '%1'");
+
+  QString queryDeleteCategories = QString("DELETE FROM filters WHERE category IN (%1)");
 
 private:
   QString lastError;
@@ -113,9 +119,10 @@ private:
   QList<QStringList> getBalance(QString queryBalance, QStringList entites,
                                 QDate initialDate, QDate finalDate);
 
-  QString unifyDateToStore(QString);
-  QString rowsToSqlList(QList<int> rows);
+  QString categoriesToSqlList(QStringList categories);
   QString filterListToSqlList(QString category, QStringList filters);
+  QString rowsToSqlList(QList<int> rows);
+  QString unifyDateToStore(QString);
 
 public:
   explicit Database(QObject *parent = nullptr);
@@ -137,8 +144,8 @@ public:
 
   bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
-  ulong updateRowsCategory(QString descriptionRegex, QString category);
-  ulong updateRowsCategory(QList<int> rowIds, QString category);
+  int updateRowsCategory(QString descriptionRegex, QString category);
+  int updateRowsCategory(QList<int> rowIds, QString category);
   QStringList getBankNames();
   QStringList getCategoryNames();
   QStringList getColumnNames();
@@ -160,6 +167,7 @@ public:
   int deleteRows(QList<int> rows);
   int markAsNotDuplicateRows(QList<int> rows);
   QList<QSqlRecord> execCommand(QString queryString);
+  int deleteCategories(QStringList categories);
   int updateCategoryFilters(QString category, QStringList filters);
 
   bool backup(QString fileName);

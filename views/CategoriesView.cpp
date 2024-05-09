@@ -1,5 +1,6 @@
 #include <QDesktopServices>
 #include <QUrl>
+#include <QMessageBox>
 
 #include "../lib/Database.h"
 #include "CategoriesView.h"
@@ -22,10 +23,7 @@ void CategoriesView::on_newFilterButton_clicked() {}
 void CategoriesView::on_newCategoryButton_clicked() {}
 
 void CategoriesView::on_deleteCategoriesButton_clicked() {
-  QList<QListWidgetItem *> items = ui->categorysList->selectedItems();
-  foreach (QListWidgetItem *item, items) {
-    qDebug() << item->text();
-  }
+  deleteCategories();
 }
 
 void CategoriesView::on_deleteFiltersButton_clicked() {}
@@ -34,12 +32,39 @@ void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
   loadFilters(ui->categorysList->currentItem()->text());
 }
 
+void CategoriesView::on_categorysList_itemClicked(QListWidgetItem *item) {
+  ui->deleteCategoriesButton->setEnabled(
+      ui->categorysList->selectedItems().length());
+}
+
 void CategoriesView::on_categorysList_itemSelectionChanged() {
   int selectedItems = ui->categorysList->selectedItems().length();
-  if (selectedItems == 1) {
-    ui->deleteCategoriesButton->setEnabled(true);
-  } else if (selectedItems > 1) {
+
+  if (selectedItems > 1) {
     clearFilters();
+  }
+}
+
+void CategoriesView::deleteCategories() {
+  QStringList categories;
+  QList<QListWidgetItem *> items = ui->categorysList->selectedItems();
+
+  foreach (QListWidgetItem *item, items) {
+    categories.append(item->text());
+  }
+
+  Database database = Database();
+
+  int deletedRows = database.deleteCategories(categories);
+
+  if (deletedRows != categories.length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 categories deleted")).arg(deletedRows))
+        .exec();
   }
 }
 
