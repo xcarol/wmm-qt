@@ -1,6 +1,6 @@
 #include <QDesktopServices>
-#include <QUrl>
 #include <QMessageBox>
+#include <QUrl>
 
 #include "../lib/Database.h"
 #include "CategoriesView.h"
@@ -22,9 +22,7 @@ void CategoriesView::on_newFilterButton_clicked() {}
 
 void CategoriesView::on_newCategoryButton_clicked() {}
 
-void CategoriesView::on_deleteCategoriesButton_clicked() {
-  deleteCategories();
-}
+void CategoriesView::on_deleteCategoriesButton_clicked() { deleteCategories(); }
 
 void CategoriesView::on_deleteFiltersButton_clicked() {}
 
@@ -54,18 +52,34 @@ void CategoriesView::deleteCategories() {
   }
 
   Database database = Database();
+  QString sqlError;
 
   int deletedRows = database.deleteCategories(categories);
-
-  if (deletedRows != categories.length()) {
+  sqlError = database.getLastErrorText();
+  if (!sqlError.isEmpty()) {
     QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
                 QString(database.getLastErrorText()))
         .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 categories deleted")).arg(deletedRows))
-        .exec();
+    return;
   }
+
+  int updatedRows = database.resetRowsCategories(categories);
+  sqlError = database.getLastErrorText();
+  if (!sqlError.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+
+  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+              QString(tr("A total of %1 categories deleted.\n"
+                         "A total of %2 filters deleted.\n"
+                         "A total of %3 transactions updated."))
+                  .arg(categories.length())
+                  .arg(deletedRows)
+                  .arg(updatedRows))
+      .exec();
 }
 
 void CategoriesView::loadCategories() {
