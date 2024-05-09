@@ -91,6 +91,10 @@ private:
 
   QString queryYears = QString("SELECT DISTINCT YEAR(date) FROM transactions");
 
+  QString queryAddCategoryFilters = QString("INSERT INTO filters (category, filter) VALUES %1");
+
+  QString queryDeleteCategoryFilters = QString("DELETE FROM filters WHERE category = '%1'");
+
 private:
   QString lastError;
   QString hostname;
@@ -111,6 +115,7 @@ private:
 
   QString unifyDateToStore(QString);
   QString rowsToSqlList(QList<int> rows);
+  QString filterListToSqlList(QString category, QStringList filters);
 
 public:
   explicit Database(QObject *parent = nullptr);
@@ -155,6 +160,7 @@ public:
   int deleteRows(QList<int> rows);
   int markAsNotDuplicateRows(QList<int> rows);
   QList<QSqlRecord> execCommand(QString queryString);
+  int updateCategoryFilters(QString category, QStringList filters);
 
   bool backup(QString fileName);
   bool restore(QString fileName);

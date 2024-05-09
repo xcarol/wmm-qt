@@ -21,13 +21,26 @@ void CategoriesView::on_newFilterButton_clicked() {}
 
 void CategoriesView::on_newCategoryButton_clicked() {}
 
-void CategoriesView::on_deleteCategoriesButton_clicked() {}
+void CategoriesView::on_deleteCategoriesButton_clicked() {
+  QList<QListWidgetItem *> items = ui->categorysList->selectedItems();
+  foreach (QListWidgetItem *item, items) {
+    qDebug() << item->text();
+  }
+}
 
 void CategoriesView::on_deleteFiltersButton_clicked() {}
 
 void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
-  QListWidgetItem *item = ui->categorysList->currentItem();
-  loadFilters(item->text());
+  loadFilters(ui->categorysList->currentItem()->text());
+}
+
+void CategoriesView::on_categorysList_itemSelectionChanged() {
+  int selectedItems = ui->categorysList->selectedItems().length();
+  if (selectedItems == 1) {
+    ui->deleteCategoriesButton->setEnabled(true);
+  } else if (selectedItems > 1) {
+    clearFilters();
+  }
 }
 
 void CategoriesView::loadCategories() {
@@ -45,15 +58,16 @@ void CategoriesView::loadCategories() {
   }
 }
 
+void CategoriesView::clearFilters() { ui->filterList->clear(); }
+
 void CategoriesView::loadFilters(QString category) {
   Database database = Database();
   QStringList filters = database.getFilterNames(category);
 
-  ui->filterList->clear();
-
+  clearFilters();
   if (filters.isEmpty()) {
-    //TODO: Ask user if he wants to add descriptions to filters table 
     filters = database.getDescriptionsByCategory(category);
+    database.updateCategoryFilters(category, filters);
   }
 
   foreach (QString filter, filters) {

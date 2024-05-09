@@ -24,9 +24,11 @@ private slots:
   void on_deleteCategoriesButton_clicked();
   void on_deleteFiltersButton_clicked();
   void on_categorysList_currentRowChanged(int currentRow);
+  void on_categorysList_itemSelectionChanged();
 
   void loadCategories();
   void loadFilters(QString category);
+  void clearFilters();
 
   private:
   Ui::CategoriesView *ui;
