@@ -121,8 +121,8 @@ QString Database::categoriesToSqlList(QStringList categories) {
   QString sqlFilters;
 
   foreach (QString category, categories) {
-    sqlFilters.append(QString("'%1',")
-                          .arg(category.replace(quote, escapedQuote)));
+    sqlFilters.append(
+        QString("'%1',").arg(category.replace(quote, escapedQuote)));
   }
 
   return sqlFilters.removeLast();
@@ -555,6 +555,25 @@ int Database::deleteCategories(QStringList categories) {
   }
 
   return affectedRows;
+}
+
+int Database::resetRowsCategories(QStringList categories) {
+  int resetRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryResetRowsCategories).arg(categoriesToSqlList(categories));
+
+    if (query.exec(queryString)) {
+      resetRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return resetRows;
 }
 
 int Database::updateCategoryFilters(QString category, QStringList filters) {

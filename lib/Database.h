@@ -101,6 +101,8 @@ private:
 
   QString queryDeleteCategories = QString("DELETE FROM filters WHERE category IN (%1)");
 
+  QString queryResetRowsCategories = QString("UPDATE transactions SET category = '' WHERE category in (%1)");
+
 private:
   QString lastError;
   QString hostname;
@@ -168,6 +170,7 @@ public:
   int markAsNotDuplicateRows(QList<int> rows);
   QList<QSqlRecord> execCommand(QString queryString);
   int deleteCategories(QStringList categories);
+  int resetRowsCategories(QStringList categories);
   int updateCategoryFilters(QString category, QStringList filters);
 
   bool backup(QString fileName);

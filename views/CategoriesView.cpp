@@ -27,7 +27,9 @@ void CategoriesView::on_deleteCategoriesButton_clicked() { deleteCategories(); }
 void CategoriesView::on_deleteFiltersButton_clicked() {}
 
 void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
-  loadFilters(ui->categorysList->currentItem()->text());
+  if (currentRow >= 0) {
+    loadFilters(ui->categorysList->currentItem()->text());
+  }
 }
 
 void CategoriesView::on_categorysList_itemClicked(QListWidgetItem *item) {
@@ -47,8 +49,36 @@ void CategoriesView::deleteCategories() {
   QStringList categories;
   QList<QListWidgetItem *> items = ui->categorysList->selectedItems();
 
+  std::function<QString(QStringList)> categoriesAsList =
+      [](QStringList categories) -> QString {
+    QString list;
+    foreach (QString category, categories) {
+      list.append("- ").append(category).append("\n");
+    }
+    return list;
+  };
+
   foreach (QListWidgetItem *item, items) {
     categories.append(item->text());
+  }
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
+      QString(tr("You're about to delete the following categories"
+                 ":\n%2\n\nAre you sure?"))
+          .arg(categoriesAsList(categories)));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
+      QString(tr("It will also delete the filters of the selected categories.\n"
+                 "And it will also remove this categories from the "
+                 "corresponding transactions."
+                 "\n\nAre you really really sure?")));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
   }
 
   Database database = Database();
@@ -80,6 +110,8 @@ void CategoriesView::deleteCategories() {
                   .arg(deletedRows)
                   .arg(updatedRows))
       .exec();
+
+  loadCategories();
 }
 
 void CategoriesView::loadCategories() {
