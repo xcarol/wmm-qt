@@ -14,17 +14,13 @@ CategoriesView::CategoriesView(QWidget *parent)
 
 CategoriesView::~CategoriesView() { delete ui; }
 
-void CategoriesView::on_helpButton_clicked() {
+void CategoriesView::on_helpButton_triggered(QAction *arg1) {
   QDesktopServices::openUrl(QUrl(regexpHelpUrl));
 }
 
-void CategoriesView::on_newFilterButton_clicked() {}
-
-void CategoriesView::on_newCategoryButton_clicked() {}
-
 void CategoriesView::on_deleteCategoriesButton_clicked() { deleteCategories(); }
 
-void CategoriesView::on_deleteFiltersButton_clicked() {}
+void CategoriesView::on_deleteFiltersButton_clicked() { deleteFilters(); }
 
 void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
   if (currentRow >= 0) {
@@ -42,6 +38,57 @@ void CategoriesView::on_categorysList_itemSelectionChanged() {
 
   if (selectedItems > 1) {
     clearFilters();
+  }
+}
+
+void CategoriesView::on_filterList_itemClicked(QListWidgetItem *item) {
+  ui->deleteFiltersButton->setEnabled(ui->filterList->selectedItems().length());
+}
+
+void CategoriesView::on_newCategoryButton_clicked() { addCategory(); }
+
+void CategoriesView::on_newFilterButton_clicked() { addFilter(); }
+
+void CategoriesView::on_newCategoryEdit_textChanged(const QString &arg1) {
+  ui->newCategoryButton->setEnabled(arg1.length() > 0);
+}
+
+void CategoriesView::on_newCategoryEdit_returnPressed() { addCategory(); }
+
+void CategoriesView::on_newFilterEdit_textChanged(const QString &arg1) {
+  QList<QListWidgetItem *> selectedCategories =
+      ui->categorysList->selectedItems();
+  ui->newFilterButton->setEnabled(arg1.length() > 0 &&
+                                  selectedCategories.length() == 1);
+}
+
+void CategoriesView::on_newFilterEdit_returnPressed() { addFilter(); }
+
+void CategoriesView::addCategory() {
+  QString category = ui->newCategoryEdit->text();
+  if (category.length()) {
+    ui->categorysList->addItem(category);
+  }
+}
+
+void CategoriesView::addFilter() {
+  QString category = ui->categorysList->currentItem()->text();
+  QString filter = ui->newFilterEdit->text();
+
+  if (category.length() && filter.length()) {
+    Database database = Database();
+
+    database.addFilter(category, filter);
+
+    QString error = database.getLastErrorText();
+    if (!error.isEmpty()) {
+      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                  QString(database.getLastErrorText()))
+          .exec();
+      return;
+    }
+
+    loadFilters(category);
   }
 }
 
@@ -114,7 +161,7 @@ void CategoriesView::deleteCategories() {
   loadCategories();
 }
 
-void CategoriesView::loadCategories() {
+void CategoriesView::loadCategories(int selectRow) {
   Database database = Database();
   QStringList categories = database.getCategoryNames();
 
@@ -125,11 +172,50 @@ void CategoriesView::loadCategories() {
   }
 
   if (categories.length() > 0) {
-    ui->categorysList->setCurrentRow(0);
+    int row = 0;
+
+    if (selectRow < categories.length()) {
+      row = selectRow;
+    }
+    
+    ui->categorysList->setCurrentRow(row);
   }
 }
 
-void CategoriesView::clearFilters() { ui->filterList->clear(); }
+void CategoriesView::deleteFilters() {
+  QStringList filters;
+  QList<QListWidgetItem *> items = ui->filterList->selectedItems();
+
+  foreach (QListWidgetItem *item, items) {
+    filters.append(item->text());
+  }
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
+      QString(tr("You're about to delete %1 filters.\nAre you sure?"))
+          .arg(filters.length()));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  Database database = Database();
+  QString sqlError;
+
+  int deletedRows = database.deleteFilters(filters);
+  sqlError = database.getLastErrorText();
+  if (!sqlError.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+
+  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+              QString(tr("A total of %1 filters deleted.")).arg(deletedRows))
+      .exec();
+
+  loadCategories(ui->categorysList->currentRow());
+}
 
 void CategoriesView::loadFilters(QString category) {
   Database database = Database();
@@ -144,4 +230,9 @@ void CategoriesView::loadFilters(QString category) {
   foreach (QString filter, filters) {
     ui->filterList->addItem(filter);
   }
+}
+
+void CategoriesView::clearFilters() {
+  ui->filterList->clear();
+  ui->newFilterEdit->clear();
 }

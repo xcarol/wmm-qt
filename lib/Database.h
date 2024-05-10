@@ -97,11 +97,15 @@ private:
 
   QString queryAddCategoryFilters = QString("INSERT INTO filters (category, filter) VALUES %1");
 
-  QString queryDeleteFilters = QString("DELETE FROM filters WHERE category = '%1'");
+  QString queryDeleteCategoryFilters = QString("DELETE FROM filters WHERE category = '%1'");
 
   QString queryDeleteCategories = QString("DELETE FROM filters WHERE category IN (%1)");
 
+  QString queryDeleteFilters = QString("DELETE FROM filters WHERE filter IN (%1)");
+
   QString queryResetRowsCategories = QString("UPDATE transactions SET category = '' WHERE category in (%1)");
+
+  QString queryAddFilter = QString("INSERT INTO filters (category, filter) VALUES ('%1', '%2')");
 
 private:
   QString lastError;
@@ -121,7 +125,7 @@ private:
   QList<QStringList> getBalance(QString queryBalance, QStringList entites,
                                 QDate initialDate, QDate finalDate);
 
-  QString categoriesToSqlList(QStringList categories);
+  QString stringListToSqlList(QStringList list);
   QString filterListToSqlList(QString category, QStringList filters);
   QString rowsToSqlList(QList<int> rows);
   QString unifyDateToStore(QString);
@@ -166,10 +170,12 @@ public:
   QList<QStringList> getDuplicateRows();
   QStringList getYears(bool ascending = true);
 
+  bool addFilter(QString category, QString filter);
   int deleteRows(QList<int> rows);
   int markAsNotDuplicateRows(QList<int> rows);
   QList<QSqlRecord> execCommand(QString queryString);
   int deleteCategories(QStringList categories);
+  int deleteFilters(QStringList filters);
   int resetRowsCategories(QStringList categories);
   int updateCategoryFilters(QString category, QStringList filters);
 

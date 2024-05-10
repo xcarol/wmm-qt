@@ -117,15 +117,15 @@ QList<QStringList> Database::getBalance(QString queryBalance,
   return balances;
 }
 
-QString Database::categoriesToSqlList(QStringList categories) {
-  QString sqlFilters;
+QString Database::stringListToSqlList(QStringList stringList) {
+  QString sqlList;
 
-  foreach (QString category, categories) {
-    sqlFilters.append(
-        QString("'%1',").arg(category.replace(quote, escapedQuote)));
+  foreach (QString string, stringList) {
+    sqlList.append(
+        QString("'%1',").arg(string.replace(quote, escapedQuote)));
   }
 
-  return sqlFilters.removeLast();
+  return sqlList.removeLast();
 }
 
 QString Database::filterListToSqlList(QString category, QStringList filters) {
@@ -470,6 +470,23 @@ QStringList Database::getYears(bool ascending) {
   return years;
 }
 
+bool Database::addFilter(QString category, QString filter) {
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryAddFilter).arg(category).arg(filter);
+
+    if (query.exec(queryString)) {
+      return true;
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return false;
+}
+
 int Database::deleteRows(QList<int> rows) {
   int affectedRows = 0;
 
@@ -543,7 +560,27 @@ int Database::deleteCategories(QStringList categories) {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
     QString queryString =
-        QString(queryDeleteCategories).arg(categoriesToSqlList(categories));
+        QString(queryDeleteCategories).arg(stringListToSqlList(categories));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
+int Database::deleteFilters(QStringList filters) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryDeleteFilters).arg(stringListToSqlList(filters));
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
@@ -562,7 +599,8 @@ int Database::resetRowsCategories(QStringList categories) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryResetRowsCategories).arg(categoriesToSqlList(categories));
+    QString queryString =
+        QString(queryResetRowsCategories).arg(stringListToSqlList(categories));
 
     if (query.exec(queryString)) {
       resetRows = query.numRowsAffected();
@@ -581,7 +619,7 @@ int Database::updateCategoryFilters(QString category, QStringList filters) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryDeleteFilters).arg(category);
+    QString queryString = QString(queryDeleteCategoryFilters).arg(category);
 
     if (!query.exec(queryString)) {
       lastError = query.lastError().databaseText();
