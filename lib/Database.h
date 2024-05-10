@@ -44,7 +44,7 @@ private:
               "NOT NULL AND "
               "TRIM(category) <> ''");
 
-  QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE category='%1' ORDER BY filter DESC";
+  QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE category='%1' ORDER BY filter ASC";
 
   QString queryDescriptions = "SELECT DISTINCT description FROM transactions WHERE category='%1' ORDER BY description ASC";
 

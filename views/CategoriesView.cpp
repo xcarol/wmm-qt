@@ -14,8 +14,35 @@ CategoriesView::CategoriesView(QWidget *parent)
 
 CategoriesView::~CategoriesView() { delete ui; }
 
-void CategoriesView::on_helpButton_triggered(QAction *arg1) {
-  QDesktopServices::openUrl(QUrl(regexpHelpUrl));
+void CategoriesView::on_applyButton_clicked() {
+  QString category = ui->categorysList->currentItem()->text();
+  QString filter = ui->filterList->currentItem()->text();
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("UPDATE")),
+      QString(tr("You're about to apply category %1 to the transactions which "
+                 "description meets the %2 RegEx"
+                 "\nAre you sure?"))
+          .arg(category)
+          .arg(filter));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  Database database = Database();
+  int updatedRows = database.updateRowsCategory(filter, category);
+  QString sqlError = database.getLastErrorText();
+  if (!sqlError.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(sqlError))
+        .exec();
+    return;
+  }
+
+  QMessageBox(
+      QMessageBox::Icon::Information, QString(tr("Database success")),
+      QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
+      .exec();
 }
 
 void CategoriesView::on_deleteCategoriesButton_clicked() { deleteCategories(); }
@@ -42,7 +69,13 @@ void CategoriesView::on_categorysList_itemSelectionChanged() {
 }
 
 void CategoriesView::on_filterList_itemClicked(QListWidgetItem *item) {
-  ui->deleteFiltersButton->setEnabled(ui->filterList->selectedItems().length());
+  int selectedFilters = ui->filterList->selectedItems().length();
+  ui->deleteFiltersButton->setEnabled(selectedFilters);
+  ui->applyButton->setEnabled(selectedFilters == 1);
+}
+
+void CategoriesView::on_helpButton_triggered(QAction *arg1) {
+  QDesktopServices::openUrl(QUrl(regexpHelpUrl));
 }
 
 void CategoriesView::on_newCategoryButton_clicked() { addCategory(); }
@@ -177,7 +210,7 @@ void CategoriesView::loadCategories(int selectRow) {
     if (selectRow < categories.length()) {
       row = selectRow;
     }
-    
+
     ui->categorysList->setCurrentRow(row);
   }
 }
