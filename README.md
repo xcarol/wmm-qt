@@ -61,3 +61,15 @@ Use the _lupdate_ and _lrelease_ tools to update the language files.
 When using the vscode CMake extension, it provides an easy way to run them both from its _Project outline_ view.  
 
 Use _linguist_ tool from the command line to translate the literals.  
+
+## Application Guide
+
+### Duplicates
+
+What are duplicate transactions?
+
+When you import new transactions, some of the first ones might already be in the database because they were the last transactions from the previous import. In this case, when searching for duplicates, you can manually delete the duplicated transactions.
+
+Another scenario for finding duplicates is when you see two identical transactions, but they are actually different.
+
+Since bank transactions may not include a timestamp, only the date appears in the transaction details. Imagine buying a €1 drink in the morning and the same drink at the same store for the same price in the evening. You'd see a duplicate transaction that's a false positive. In this case, you can mark them as non-duplicates. The next time you search for duplicates, they won't appear, but they will still be counted as separate transactions.
