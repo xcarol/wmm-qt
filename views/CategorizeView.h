@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableWidget>
+#include <qcontainerfwd.h>
 
 #define DATABASE_TABLE_ID_FIELD 0
 #define DATABASE_TABLE_BANK_FIELD 1
@@ -51,6 +52,7 @@ private:
   QList<int> getSelectedRowsHeaders(QTableWidget *tableWidget);
   void searchUncategorizedRows();
   void setFilter(QString filter);
+  void addFiltersToDatabase(QString category, QStringList filters);
   void updateUncategorizedRows(QList<int> rowsIds);
   void updateUpdateButtonState();
   void updateView();

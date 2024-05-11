@@ -53,23 +53,36 @@ void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
 }
 
 void CategorizeView::on_updateButton_clicked() {
-  QList<int> selectedRows = getSelectedRowsHeaders(ui->searchResultsTable);
+  QList<int> selectedRowsIds = getSelectedRowsHeaders(ui->searchResultsTable);
+  QList<int> selectedRows = getSelectedRows(ui->searchResultsTable);
+  QStringList selectedRowsDescriptions;
 
-  if (selectedRows.length() == 0) {
-    selectedRows = getAllRowsHeaders(ui->searchResultsTable);
+  for (int row : selectedRows) {
+    QTableWidgetItem *item = ui->searchResultsTable->item(row, 0);
+    selectedRowsDescriptions.append(item->text());
+  }
+
+  if (selectedRowsIds.length() == 0) {
+    selectedRowsIds = getAllRowsHeaders(ui->searchResultsTable);
   }
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("Update")),
       QString(tr("You're about to update %1 records "
                  "with the category: %2\nAre you sure?"))
-          .arg(selectedRows.length())
+          .arg(selectedRowsIds.length())
           .arg(categoryName));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }
 
-  updateUncategorizedRows(selectedRows);
+  updateUncategorizedRows(selectedRowsIds);
+
+  if (selectedRowsDescriptions.isEmpty()) {
+    addFiltersToDatabase(categoryName, QStringList(appliedFilter));
+  } else {
+    addFiltersToDatabase(categoryName, selectedRowsDescriptions);
+  }
 }
 
 void CategorizeView::addHeadersToSearchResultsTable(QStringList headers) {
@@ -237,6 +250,11 @@ void CategorizeView::setFilter(QString filter) {
     settings.setValue("filters", filters);
     ui->filterEdit->addItem(appliedFilter);
   }
+}
+
+void CategorizeView::addFiltersToDatabase(QString category, QStringList filters) {
+  Database database = Database();
+  database.addFilters(category, filters);
 }
 
 void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {

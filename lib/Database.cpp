@@ -487,6 +487,26 @@ bool Database::addFilter(QString category, QString filter) {
   return false;
 }
 
+bool Database::addFilters(QString category, QStringList filters) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryAddCategoryFilters)
+                      .arg(filterListToSqlList(category, filters));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
 int Database::deleteRows(QList<int> rows) {
   int affectedRows = 0;
 

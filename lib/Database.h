@@ -171,6 +171,7 @@ public:
   QStringList getYears(bool ascending = true);
 
   bool addFilter(QString category, QString filter);
+  bool addFilters(QString category, QStringList filters);
   int deleteRows(QList<int> rows);
   int markAsNotDuplicateRows(QList<int> rows);
   QList<QSqlRecord> execCommand(QString queryString);
