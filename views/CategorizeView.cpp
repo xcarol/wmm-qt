@@ -48,7 +48,6 @@ void CategorizeView::on_searchButton_clicked() {
 }
 
 void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
-  int enable = getSelectedRowsHeaders(ui->searchResultsTable).length() > 0;
   updateUpdateButtonState();
 }
 
