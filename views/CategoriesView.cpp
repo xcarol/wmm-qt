@@ -20,8 +20,8 @@ void CategoriesView::on_applyButton_clicked() {
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("UPDATE")),
-      QString(tr("You're about to apply category %1 to the transactions which "
-                 "description meets the %2 RegEx"
+      QString(tr("You're about to apply category '%1' to the transactions which "
+                 "description meets the '%2' RegEx"
                  "\nAre you sure?"))
           .arg(category)
           .arg(filter));
