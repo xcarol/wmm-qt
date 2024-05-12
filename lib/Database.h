@@ -107,6 +107,10 @@ private:
 
   QString queryAddFilter = QString("INSERT INTO filters (category, filter) VALUES ('%1', '%2')");
 
+  QString queryRenameRowsCategory = QString("UPDATE transactions SET category = '%2' WHERE category = '%1'");
+
+  QString queryRenameCategoryFilters = QString("UPDATE filters SET category = '%2' WHERE category = '%1'");
+
 private:
   QString lastError;
   QString hostname;
@@ -179,6 +183,7 @@ public:
   int deleteFilters(QStringList filters);
   int resetRowsCategories(QStringList categories);
   int updateCategoryFilters(QString category, QStringList filters);
+  bool renameCategory(QString category, QString newName);
 
   bool backup(QString fileName);
   bool restore(QString fileName);

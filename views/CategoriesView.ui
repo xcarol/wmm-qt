@@ -54,6 +54,26 @@
          </layout>
         </item>
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <widget class="QLineEdit" name="renameCurrentEdit"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="renameNewEdit"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="renameButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Rename category</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <widget class="QPushButton" name="deleteCategoriesButton">
           <property name="enabled">
            <bool>false</bool>

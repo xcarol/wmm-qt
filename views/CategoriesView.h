@@ -33,14 +33,21 @@ private slots:
   void on_newCategoryEdit_returnPressed();
   void on_newFilterEdit_textChanged(const QString &arg1);
   void on_newFilterEdit_returnPressed();
+  void on_renameButton_clicked();
 
   void addCategory();
   void addFilter();
-  void deleteCategories();
-  void loadCategories(int selectRow = 0);
-  void deleteFilters();
-  void loadFilters(QString category);
   void clearFilters();
+  void deleteCategories();
+  void deleteFilters();
+  void loadCategories(int selectRow = 0);
+  void loadFilters(QString category);
+  void renameCategory(QString category, QString newName);
+  void updateRenameButton();
+
+  void on_renameCurrentEdit_textChanged(const QString &arg1);
+
+  void on_renameNewEdit_textChanged(const QString &arg1);
 
   private:
   Ui::CategoriesView *ui;

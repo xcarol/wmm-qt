@@ -20,9 +20,10 @@ void CategoriesView::on_applyButton_clicked() {
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("UPDATE")),
-      QString(tr("You're about to apply category '%1' to the transactions which "
-                 "description meets the '%2' RegEx"
-                 "\nAre you sure?"))
+      QString(
+          tr("You're about to apply category '%1' to the transactions which "
+             "description meets the '%2' RegEx"
+             "\nAre you sure?"))
           .arg(category)
           .arg(filter));
   if (res == QMessageBox::StandardButton::No) {
@@ -56,8 +57,14 @@ void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
 }
 
 void CategoriesView::on_categorysList_itemClicked(QListWidgetItem *item) {
-  ui->deleteCategoriesButton->setEnabled(
-      ui->categorysList->selectedItems().length());
+  int selectedItems = ui->categorysList->selectedItems().length();
+
+  ui->deleteCategoriesButton->setEnabled(selectedItems > 0);
+  ui->renameCurrentEdit->setText(
+      selectedItems == 1 ? ui->categorysList->currentItem()->text() : "");
+  ui->renameNewEdit->clear();
+
+  updateRenameButton();
 }
 
 void CategoriesView::on_categorysList_itemSelectionChanged() {
@@ -97,6 +104,18 @@ void CategoriesView::on_newFilterEdit_textChanged(const QString &arg1) {
 
 void CategoriesView::on_newFilterEdit_returnPressed() { addFilter(); }
 
+void CategoriesView::on_renameButton_clicked() {
+  renameCategory(ui->renameCurrentEdit->text(), ui->renameNewEdit->text());
+}
+
+void CategoriesView::on_renameCurrentEdit_textChanged(const QString &arg1) {
+  updateRenameButton();
+}
+
+void CategoriesView::on_renameNewEdit_textChanged(const QString &arg1) {
+  updateRenameButton();
+}
+
 void CategoriesView::addCategory() {
   QString category = ui->newCategoryEdit->text();
   if (category.length()) {
@@ -123,6 +142,11 @@ void CategoriesView::addFilter() {
 
     loadFilters(category);
   }
+}
+
+void CategoriesView::clearFilters() {
+  ui->filterList->clear();
+  ui->newFilterEdit->clear();
 }
 
 void CategoriesView::deleteCategories() {
@@ -194,27 +218,6 @@ void CategoriesView::deleteCategories() {
   loadCategories();
 }
 
-void CategoriesView::loadCategories(int selectRow) {
-  Database database = Database();
-  QStringList categories = database.getCategoryNames();
-
-  ui->categorysList->clear();
-
-  foreach (QString category, categories) {
-    ui->categorysList->addItem(category);
-  }
-
-  if (categories.length() > 0) {
-    int row = 0;
-
-    if (selectRow < categories.length()) {
-      row = selectRow;
-    }
-
-    ui->categorysList->setCurrentRow(row);
-  }
-}
-
 void CategoriesView::deleteFilters() {
   QStringList filters;
   QList<QListWidgetItem *> items = ui->filterList->selectedItems();
@@ -250,6 +253,27 @@ void CategoriesView::deleteFilters() {
   loadCategories(ui->categorysList->currentRow());
 }
 
+void CategoriesView::loadCategories(int selectRow) {
+  Database database = Database();
+  QStringList categories = database.getCategoryNames();
+
+  ui->categorysList->clear();
+
+  foreach (QString category, categories) {
+    ui->categorysList->addItem(category);
+  }
+
+  if (categories.length() > 0) {
+    int row = 0;
+
+    if (selectRow < categories.length()) {
+      row = selectRow;
+    }
+
+    ui->categorysList->setCurrentRow(row);
+  }
+}
+
 void CategoriesView::loadFilters(QString category) {
   Database database = Database();
   QStringList filters = database.getFilterNames(category);
@@ -265,7 +289,24 @@ void CategoriesView::loadFilters(QString category) {
   }
 }
 
-void CategoriesView::clearFilters() {
-  ui->filterList->clear();
-  ui->newFilterEdit->clear();
+void CategoriesView::renameCategory(QString category, QString newName) {
+  Database database = Database();
+
+  database.renameCategory(category, newName);
+
+  QString error = database.getLastErrorText();
+  if (!error.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+
+  loadCategories();
+}
+
+void CategoriesView::updateRenameButton() {
+  ui->renameButton->setEnabled(ui->renameCurrentEdit->text().isEmpty() ==
+                                   false &&
+                               ui->renameNewEdit->text().isEmpty() == false);
 }

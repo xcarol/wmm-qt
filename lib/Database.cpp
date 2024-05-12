@@ -121,8 +121,7 @@ QString Database::stringListToSqlList(QStringList stringList) {
   QString sqlList;
 
   foreach (QString string, stringList) {
-    sqlList.append(
-        QString("'%1',").arg(string.replace(quote, escapedQuote)));
+    sqlList.append(QString("'%1',").arg(string.replace(quote, escapedQuote)));
   }
 
   return sqlList.removeLast();
@@ -493,7 +492,7 @@ bool Database::addFilters(QString category, QStringList filters) {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
     QString queryString = QString(queryAddCategoryFilters)
-                      .arg(filterListToSqlList(category, filters));
+                              .arg(filterListToSqlList(category, filters));
 
     if (query.exec(queryString)) {
       affectedRows = query.numRowsAffected();
@@ -612,6 +611,31 @@ int Database::deleteFilters(QStringList filters) {
   }
 
   return affectedRows;
+}
+
+bool Database::renameCategory(QString category, QString newName) {
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryRenameRowsCategory).arg(category).arg(newName);
+
+    if (query.exec(queryString) == false) {
+      lastError = query.lastError().databaseText();
+      return false;
+    }
+
+    queryString =
+        QString(queryRenameCategoryFilters).arg(category).arg(newName);
+
+    if (query.exec(queryString) == false) {
+      lastError = query.lastError().databaseText();
+      return false;
+    }
+
+    closeDatabase();
+  }
+
+  return true;
 }
 
 int Database::resetRowsCategories(QStringList categories) {
