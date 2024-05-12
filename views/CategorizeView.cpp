@@ -13,7 +13,6 @@
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
-  ui->updateButton->setEnabled(false);
   ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
 
   QSettings settings = QSettings("com.xicra", "wmm");
@@ -49,28 +48,45 @@ void CategorizeView::on_searchButton_clicked() {
 }
 
 void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
-  int enable = getSelectedRowsHeaders(ui->searchResultsTable).length() > 0;
   updateUpdateButtonState();
 }
 
 void CategorizeView::on_updateButton_clicked() {
-  QList<int> selectedRows = getSelectedRowsHeaders(ui->searchResultsTable);
+  QList<int> selectedRowsIds = getSelectedRowsHeaders(ui->searchResultsTable);
+  QList<int> selectedRows = getSelectedRows(ui->searchResultsTable);
+  QStringList selectedRowsDescriptions;
+  QString category = categoryName;
+  QString filter = appliedFilter;
 
-  if (selectedRows.length() == 0) {
-    selectedRows = getAllRowsHeaders(ui->searchResultsTable);
+  for (int row : selectedRows) {
+    QLabel *item = (QLabel *)ui->searchResultsTable->cellWidget(
+        row, SEARCH_TABLE_DESCRIPTION_COLUMN);
+    if (item) {
+      selectedRowsDescriptions.append(item->text());
+    }
+  }
+
+  if (selectedRowsIds.length() == 0) {
+    selectedRowsIds = getAllRowsHeaders(ui->searchResultsTable);
   }
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("Update")),
       QString(tr("You're about to update %1 records "
                  "with the category: %2\nAre you sure?"))
-          .arg(selectedRows.length())
-          .arg(categoryName));
+          .arg(selectedRowsIds.length())
+          .arg(category));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }
 
-  updateUncategorizedRows(selectedRows);
+  updateUncategorizedRows(selectedRowsIds);
+
+  if (selectedRowsDescriptions.isEmpty()) {
+    addFiltersToDatabase(category, QStringList(filter));
+  } else {
+    addFiltersToDatabase(category, selectedRowsDescriptions);
+  }
 }
 
 void CategorizeView::addHeadersToSearchResultsTable(QStringList headers) {
@@ -238,6 +254,12 @@ void CategorizeView::setFilter(QString filter) {
     settings.setValue("filters", filters);
     ui->filterEdit->addItem(appliedFilter);
   }
+}
+
+void CategorizeView::addFiltersToDatabase(QString category,
+                                          QStringList filters) {
+  Database database = Database();
+  database.addFilters(category, filters);
 }
 
 void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {

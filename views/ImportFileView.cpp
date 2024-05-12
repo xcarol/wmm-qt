@@ -12,7 +12,6 @@
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
   ui->setupUi(this);
-  ui->ImportButton->setEnabled(false);
   ui->filePreviewTable->horizontalHeader()->setStretchLastSection(true);
 }
 

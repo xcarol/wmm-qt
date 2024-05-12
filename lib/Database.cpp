@@ -117,6 +117,38 @@ QList<QStringList> Database::getBalance(QString queryBalance,
   return balances;
 }
 
+QString Database::stringListToSqlList(QStringList stringList) {
+  QString sqlList;
+
+  foreach (QString string, stringList) {
+    sqlList.append(QString("'%1',").arg(string.replace(quote, escapedQuote)));
+  }
+
+  return sqlList.removeLast();
+}
+
+QString Database::filterListToSqlList(QString category, QStringList filters) {
+  QString sqlFilters;
+
+  foreach (QString filter, filters) {
+    sqlFilters.append(QString("('%1','%2'),")
+                          .arg(category.replace(quote, escapedQuote))
+                          .arg(filter.replace(quote, escapedQuote)));
+  }
+
+  return sqlFilters.removeLast();
+}
+
+QString Database::rowsToSqlList(QList<int> rows) {
+  QString ids;
+
+  foreach (int row, rows) {
+    ids.append(QString::number(row)).append(",");
+  }
+
+  return ids.removeLast();
+}
+
 QString Database::unifyDateToStore(QString date) {
   QDate ymd = QDate::fromString(
       QString(date).replace(QRegularExpression("/"), "-"), "yyyy-MM-dd");
@@ -133,16 +165,6 @@ QString Database::unifyDateToStore(QString date) {
   }
 
   return QString(tr("%1 invalid date")).arg(date);
-}
-
-QString Database::rowsToSqlList(QList<int> rows) {
-  QString ids;
-
-  foreach (int row, rows) {
-    ids.append(QString::number(row)).append(",");
-  }
-
-  return ids.removeLast();
 }
 
 bool Database::checkConnection() {
@@ -178,14 +200,15 @@ bool Database::storeRow(QString bank, QString date, QString description,
   return false;
 }
 
-ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
-  ulong updatedRows;
+int Database::updateRowsCategory(QString descriptionRegex, QString category) {
+  int updatedRows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryUpdateRowsCategoryWithDescriptionRegex)
-                              .arg(descriptionRegex.length() ? descriptionRegex : ".*")
-                              .arg(category.left(CATEGORY_LENGHT));
+    QString queryString =
+        QString(queryUpdateRowsCategoryWithDescriptionRegex)
+            .arg(descriptionRegex.length() ? descriptionRegex : ".*")
+            .arg(category.left(CATEGORY_LENGHT));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
@@ -199,8 +222,8 @@ ulong Database::updateRowsCategory(QString descriptionRegex, QString category) {
   return updatedRows;
 }
 
-ulong Database::updateRowsCategory(QList<int> rowIds, QString category) {
-  ulong updatedRows;
+int Database::updateRowsCategory(QList<int> rowIds, QString category) {
+  int updatedRows;
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
@@ -282,6 +305,46 @@ QStringList Database::getColumnNames() {
   }
 
   return names;
+}
+
+QStringList Database::getFilterNames(QString category) {
+  QStringList filterNames;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(QString(queryFilterNames).arg(category))) {
+      while (query.next()) {
+        filterNames.append(query.value("filter").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return filterNames;
+}
+
+QStringList Database::getDescriptionsByCategory(QString category) {
+  QStringList descriptions;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(QString(queryDescriptions).arg(category))) {
+      while (query.next()) {
+        descriptions.append(query.value("description").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return descriptions;
 }
 
 QList<QStringList> Database::getUncategorizedRows(QString filter,
@@ -381,7 +444,6 @@ QList<QStringList> Database::getDuplicateRows() {
   return result;
 }
 
-
 QStringList Database::getYears(bool ascending) {
   QStringList years;
 
@@ -405,6 +467,43 @@ QStringList Database::getYears(bool ascending) {
   }
 
   return years;
+}
+
+bool Database::addFilter(QString category, QString filter) {
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryAddFilter).arg(category).arg(filter);
+
+    if (query.exec(queryString)) {
+      return true;
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return false;
+}
+
+bool Database::addFilters(QString category, QStringList filters) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryAddCategoryFilters)
+                              .arg(filterListToSqlList(category, filters));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
 }
 
 int Database::deleteRows(QList<int> rows) {
@@ -472,6 +571,118 @@ QList<QSqlRecord> Database::execCommand(QString queryString) {
   }
 
   return result;
+}
+
+int Database::deleteCategories(QStringList categories) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryDeleteCategories).arg(stringListToSqlList(categories));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
+int Database::deleteFilters(QStringList filters) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryDeleteFilters).arg(stringListToSqlList(filters));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
+}
+
+bool Database::renameCategory(QString category, QString newName) {
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryRenameRowsCategory).arg(category).arg(newName);
+
+    if (query.exec(queryString) == false) {
+      lastError = query.lastError().databaseText();
+      return false;
+    }
+
+    queryString =
+        QString(queryRenameCategoryFilters).arg(category).arg(newName);
+
+    if (query.exec(queryString) == false) {
+      lastError = query.lastError().databaseText();
+      return false;
+    }
+
+    closeDatabase();
+  }
+
+  return true;
+}
+
+int Database::resetRowsCategories(QStringList categories) {
+  int resetRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryResetRowsCategories).arg(stringListToSqlList(categories));
+
+    if (query.exec(queryString)) {
+      resetRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return resetRows;
+}
+
+int Database::updateCategoryFilters(QString category, QStringList filters) {
+  int affectedRows = 0;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString = QString(queryDeleteCategoryFilters).arg(category);
+
+    if (!query.exec(queryString)) {
+      lastError = query.lastError().databaseText();
+      return affectedRows;
+    }
+
+    queryString = QString(queryAddCategoryFilters)
+                      .arg(filterListToSqlList(category, filters));
+
+    if (query.exec(queryString)) {
+      affectedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return affectedRows;
 }
 
 bool Database::backup(QString fileName) {

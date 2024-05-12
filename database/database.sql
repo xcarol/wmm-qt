@@ -42,6 +42,19 @@ CREATE TABLE `transactions` (
   KEY `amount` (`amount`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+DROP TABLE IF EXISTS `filters`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `filters` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `category` varchar(200) NOT NULL,
+  `filter` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_category_filter` (`category`, `filter`)
+  KEY `category` (`category`),
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

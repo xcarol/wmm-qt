@@ -37,6 +37,8 @@ private slots:
 
   void on_actionDuplicates_triggered();
 
+  void on_actionCategories_triggered();
+
   signals:
   void statusBarUpdated(const QString &message);
 

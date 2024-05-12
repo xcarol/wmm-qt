@@ -6,6 +6,7 @@
 #include "DuplicatesView.h"
 #include "ImportFileView.h"
 #include "SqlCommandView.h"
+#include "CategoriesView.h"
 #include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -71,5 +72,11 @@ void MainWindow::on_actionDuplicates_triggered()
 {
   settings.setValue(CURRENT_VIEW, DUPLICATES_VIEW);
   setCentralWidget(new DuplicatesView());
+}
+
+
+void MainWindow::on_actionCategories_triggered()
+{
+  setCentralWidget(new CategoriesView());
 }
 

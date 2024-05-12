@@ -30,6 +30,7 @@
      <string>Settings</string>
     </property>
     <addaction name="actionDatabase"/>
+    <addaction name="actionCategories"/>
    </widget>
    <widget class="QMenu" name="menuViews">
     <property name="title">
@@ -73,6 +74,11 @@
   <action name="actionDuplicates">
    <property name="text">
     <string>Duplicates</string>
+   </property>
+  </action>
+  <action name="actionCategories">
+   <property name="text">
+    <string>Categories</string>
    </property>
   </action>
  </widget>

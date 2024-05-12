@@ -13,9 +13,6 @@
 DuplicatesView::DuplicatesView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DuplicatesView) {
   ui->setupUi(this);
-  ui->deleteDuplicatesButton->setEnabled(false);
-  ui->markNotDuplicatesButton->setEnabled(false);
-  ui->duplicateRowsTable->horizontalHeader()->setStretchLastSection(true);
 }
 
 DuplicatesView::~DuplicatesView() { delete ui; }
