@@ -12,28 +12,28 @@ TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
 TransactionsTable::~TransactionsTable() {}
 
 void TransactionsTable::setHeaders(QStringList headers) {
-  setColumnCount(SEARCH_TABLE_COLUMN_COUNT);
+  setColumnCount(Table::TotalColumns);
 
   setHorizontalHeaderItem(
-      SEARCH_TABLE_BANK_COLUMN,
+      Table::BankColumn,
       new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_BANK_FIELD).toUpper())));
+          QString(headers.at(Database::BankField).toUpper())));
   setHorizontalHeaderItem(
-      SEARCH_TABLE_DATE_COLUMN,
+      Table::DateColumn,
       new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_DATE_FIELD).toUpper())));
+          QString(headers.at(Database::DateField).toUpper())));
   setHorizontalHeaderItem(
-      SEARCH_TABLE_DESCRIPTION_COLUMN,
+      Table::DescriptionColumn,
       new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_DESCRIPTION_FIELD).toUpper())));
+          QString(headers.at(Database::DescriptionField).toUpper())));
   setHorizontalHeaderItem(
-      SEARCH_TABLE_CATEGORY_COLUMN,
+      Table::CategoryColumn,
       new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_CATEGORY_FIELD).toUpper())));
+          QString(headers.at(Database::CategoryField).toUpper())));
   setHorizontalHeaderItem(
-      SEARCH_TABLE_AMOUNT_COLUMN,
+      Table::AmountColumn,
       new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_AMOUNT_FIELD).toUpper())));
+          QString(headers.at(Database::AmountField).toUpper())));
 }
 
 void TransactionsTable::addTransaction(int row, QStringList fields) {
@@ -42,30 +42,30 @@ void TransactionsTable::addTransaction(int row, QStringList fields) {
   QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
 
   setVerticalHeaderItem(
-      row, new QTableWidgetItem(fields.at(DATABASE_TABLE_ID_FIELD)));
+      row, new QTableWidgetItem(fields.at(Database::IdField)));
 
-  value = fields.at(DATABASE_TABLE_BANK_FIELD);
+  value = fields.at(Database::BankField);
   label = new QLabel(value);
-  setCellWidget(row, SEARCH_TABLE_BANK_COLUMN, label);
+  setCellWidget(row, Table::BankColumn, label);
 
-  value = fields.at(DATABASE_TABLE_DATE_FIELD);
+  value = fields.at(Database::DateField);
   label = new QLabel(
       QDate::fromString(value, Qt::DateFormat::ISODate).toString(dateFormat));
   label->setAlignment(Qt::AlignCenter);
-  setCellWidget(row, SEARCH_TABLE_DATE_COLUMN, label);
+  setCellWidget(row, Table::DateColumn, label);
 
-  value = fields.at(DATABASE_TABLE_DESCRIPTION_FIELD);
+  value = fields.at(Database::DescriptionField);
   label = new QLabel(value);
-  setCellWidget(row, SEARCH_TABLE_DESCRIPTION_COLUMN, label);
+  setCellWidget(row, Table::DescriptionColumn, label);
 
-  value = fields.at(DATABASE_TABLE_CATEGORY_FIELD);
+  value = fields.at(Database::CategoryField);
   label = new QLabel(value);
-  setCellWidget(row, SEARCH_TABLE_CATEGORY_COLUMN, label);
+  setCellWidget(row, Table::CategoryColumn, label);
 
-  value = fields.at(DATABASE_TABLE_AMOUNT_FIELD);
+  value = fields.at(Database::AmountField);
   label = new QLabel(QString::number(value.toDouble()));
   label->setAlignment(Qt::AlignRight);
-  setCellWidget(row, SEARCH_TABLE_AMOUNT_COLUMN, label);
+  setCellWidget(row, Table::AmountColumn, label);
 }
 
 QList<int> TransactionsTable::getAllTransactionIDs() {
@@ -108,7 +108,7 @@ QStringList TransactionsTable::getSelectedTransactionDescriptions() {
   QStringList descriptions;
 
   for (int row : getSelectedTransactions()) {
-    QLabel *item = (QLabel *)cellWidget(row, SEARCH_TABLE_DESCRIPTION_COLUMN);
+    QLabel *item = (QLabel *)cellWidget(row, Table::DescriptionColumn);
     if (item) {
       descriptions.append(item->text());
     }

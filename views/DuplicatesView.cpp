@@ -18,7 +18,7 @@ DuplicatesView::DuplicatesView(QWidget *parent)
 DuplicatesView::~DuplicatesView() { delete ui; }
 
 void DuplicatesView::on_deleteDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders(ui->duplicateRowsTable);
+  QList<int> selectedIds = ui->duplicateRowsTable->getSelectedTransactionIDs();
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("DELETE")),
@@ -34,13 +34,13 @@ void DuplicatesView::on_deleteDuplicatesButton_clicked() {
 }
 
 void DuplicatesView::on_duplicateRowsTable_itemSelectionChanged() {
-  int enable = getSelectedRowsHeaders(ui->duplicateRowsTable).length() > 0;
+  int enable = ui->duplicateRowsTable->getSelectedTransactionIDs().length() > 0;
   ui->deleteDuplicatesButton->setEnabled(enable);
   ui->markNotDuplicatesButton->setEnabled(enable);
 }
 
 void DuplicatesView::on_markNotDuplicatesButton_clicked() {
-  QList<int> selectedIds = getSelectedRowsHeaders(ui->duplicateRowsTable);
+  QList<int> selectedIds = ui->duplicateRowsTable->getSelectedTransactionIDs();
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(),
@@ -58,19 +58,6 @@ void DuplicatesView::on_markNotDuplicatesButton_clicked() {
 
 void DuplicatesView::on_searchDuplicateButton_clicked() {
   updateDuplicatesTable();
-}
-
-QList<int> DuplicatesView::getSelectedRowsHeaders(QTableWidget *tableWidget) {
-  QList<int> ids;
-
-  foreach (QTableWidgetSelectionRange range, tableWidget->selectedRanges()) {
-    for (int row = range.topRow(); row <= range.bottomRow(); row++) {
-      QTableWidgetItem *item = tableWidget->verticalHeaderItem(row);
-      ids.append(item->text().toInt());
-    }
-  }
-
-  return ids;
 }
 
 void DuplicatesView::deleteDuplicateRows(QList<int> ids) {
@@ -127,7 +114,7 @@ void DuplicatesView::updateDuplicatesTable() {
 
   ui->duplicateRowsLabel->setText(
       QString(tr("Duplicate rows: %1")).arg(numberOfRows));
-  ui->duplicateRowsTable->clear();
+  ui->duplicateRowsTable->clearTransactions();
   ui->duplicateRowsTable->setRowCount(numberOfRows);
   ui->duplicateRowsTable->setColumnCount(numberOfColumns);
 

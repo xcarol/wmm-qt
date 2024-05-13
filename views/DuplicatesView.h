@@ -2,7 +2,6 @@
 #define DUPLICATESVIEW_H
 
 #include <QMainWindow>
-#include <QTableWidget>
 
 namespace Ui {
 class DuplicatesView;
@@ -27,7 +26,6 @@ private:
   QString categoryName;
   QString appliedFilter;
 
-  QList<int> getSelectedRowsHeaders(QTableWidget *tableWidget);
   void deleteDuplicateRows(QList<int> ids);
   void markDuplicateRows(QList<int> ids);
   void updateDuplicatesTable();

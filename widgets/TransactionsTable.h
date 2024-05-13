@@ -4,25 +4,33 @@
 #include <QWidget>
 #include <QTableWidget>
 
-#define DATABASE_TABLE_ID_FIELD 0
-#define DATABASE_TABLE_BANK_FIELD 1
-#define DATABASE_TABLE_DATE_FIELD 2
-#define DATABASE_TABLE_DESCRIPTION_FIELD 3
-#define DATABASE_TABLE_CATEGORY_FIELD 4
-#define DATABASE_TABLE_AMOUNT_FIELD 5
-
-#define SEARCH_TABLE_BANK_COLUMN 0
-#define SEARCH_TABLE_DATE_COLUMN 1
-#define SEARCH_TABLE_DESCRIPTION_COLUMN 2
-#define SEARCH_TABLE_CATEGORY_COLUMN 3
-#define SEARCH_TABLE_AMOUNT_COLUMN 4
-#define SEARCH_TABLE_COLUMN_COUNT 5
-
 class TransactionsTable : public QTableWidget
 {
     Q_OBJECT
 
+private:
+
+    enum Database {
+        IdField = 0,
+        BankField = 1,
+        DateField = 2,
+        DescriptionField = 3,
+        CategoryField = 4,
+        AmountField = 5,
+        TotalFields = 6,
+    };
+
+    enum Table {
+        BankColumn = 0,
+        DateColumn = 1,
+        DescriptionColumn = 2,
+        CategoryColumn = 3,
+        AmountColumn = 4,
+        TotalColumns = 5,
+    };
+
 public:
+
     explicit TransactionsTable(QWidget *parent = nullptr);
     ~TransactionsTable();
 
