@@ -26,7 +26,6 @@ public:
     explicit TransactionsTable(QWidget *parent = nullptr);
     ~TransactionsTable();
 
-    void setSize();
     void setHeaders(QStringList headers);
     void addTransaction(int row, QStringList fields);
 
