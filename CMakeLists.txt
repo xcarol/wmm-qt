@@ -49,6 +49,8 @@ set(PROJECT_SOURCES
     views/CategoriesView.h
     views/CategoriesView.cpp
     views/CategoriesView.ui
+    widgets/TransactionsTable.h
+    widgets/TransactionsTable.cpp
     ${TS_FILES}
 )
 

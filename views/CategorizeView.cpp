@@ -13,7 +13,6 @@
 CategorizeView::CategorizeView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::CategorizeView) {
   ui->setupUi(this);
-  ui->searchResultsTable->horizontalHeader()->setStretchLastSection(true);
 
   QSettings settings = QSettings("com.xicra", "wmm");
   QStringList filters = settings.value("filters").toStringList();
@@ -52,135 +51,45 @@ void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
 }
 
 void CategorizeView::on_updateButton_clicked() {
-  QList<int> selectedRowsIds = getSelectedRowsHeaders(ui->searchResultsTable);
-  QList<int> selectedRows = getSelectedRows(ui->searchResultsTable);
-  QStringList selectedRowsDescriptions;
+  QList<int> selectedTransactionsId =
+      ui->searchResultsTable->getSelectedTransactionIDs();
+  QList<int> selectedTransactions =
+      ui->searchResultsTable->getSelectedTransactions();
+  QStringList selectedTransactionsDescription =
+      ui->searchResultsTable->getSelectedTransactionDescriptions();
   QString category = categoryName;
   QString filter = appliedFilter;
 
-  for (int row : selectedRows) {
-    QLabel *item = (QLabel *)ui->searchResultsTable->cellWidget(
-        row, SEARCH_TABLE_DESCRIPTION_COLUMN);
-    if (item) {
-      selectedRowsDescriptions.append(item->text());
-    }
-  }
-
-  if (selectedRowsIds.length() == 0) {
-    selectedRowsIds = getAllRowsHeaders(ui->searchResultsTable);
+  if (selectedTransactionsId.length() == 0) {
+    selectedTransactionsId = ui->searchResultsTable->getAllTransactionIDs();
   }
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("Update")),
       QString(tr("You're about to update %1 records "
                  "with the category: %2\nAre you sure?"))
-          .arg(selectedRowsIds.length())
+          .arg(selectedTransactionsId.length())
           .arg(category));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }
 
-  updateUncategorizedRows(selectedRowsIds);
+  updateUncategorizedRows(selectedTransactionsId);
 
-  if (selectedRowsDescriptions.isEmpty()) {
+  if (selectedTransactionsDescription.isEmpty()) {
     addFiltersToDatabase(category, QStringList(filter));
   } else {
-    addFiltersToDatabase(category, selectedRowsDescriptions);
+    addFiltersToDatabase(category, selectedTransactionsDescription);
   }
 }
 
 void CategorizeView::addHeadersToSearchResultsTable(QStringList headers) {
-  ui->searchResultsTable->setHorizontalHeaderItem(
-      SEARCH_TABLE_BANK_COLUMN,
-      new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_BANK_FIELD).toUpper())));
-  ui->searchResultsTable->setHorizontalHeaderItem(
-      SEARCH_TABLE_DATE_COLUMN,
-      new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_DATE_FIELD).toUpper())));
-  ui->searchResultsTable->setHorizontalHeaderItem(
-      SEARCH_TABLE_DESCRIPTION_COLUMN,
-      new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_DESCRIPTION_FIELD).toUpper())));
-  ui->searchResultsTable->setHorizontalHeaderItem(
-      SEARCH_TABLE_CATEGORY_COLUMN,
-      new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_CATEGORY_FIELD).toUpper())));
-  ui->searchResultsTable->setHorizontalHeaderItem(
-      SEARCH_TABLE_AMOUNT_COLUMN,
-      new QTableWidgetItem(
-          QString(headers.at(DATABASE_TABLE_AMOUNT_FIELD).toUpper())));
+  ui->searchResultsTable->setHeaders(headers);
 }
 
 void CategorizeView::addRowToSearchResultsTable(int row,
                                                 QStringList rowFields) {
-  QString value;
-  QLabel *label;
-  QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
-
-  ui->searchResultsTable->setVerticalHeaderItem(
-      row, new QTableWidgetItem(rowFields.at(DATABASE_TABLE_ID_FIELD)));
-
-  value = rowFields.at(DATABASE_TABLE_BANK_FIELD);
-  label = new QLabel(value);
-  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_BANK_COLUMN, label);
-
-  value = rowFields.at(DATABASE_TABLE_DATE_FIELD);
-  label = new QLabel(
-      QDate::fromString(value, Qt::DateFormat::ISODate).toString(dateFormat));
-  label->setAlignment(Qt::AlignCenter);
-  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_DATE_COLUMN, label);
-
-  value = rowFields.at(DATABASE_TABLE_DESCRIPTION_FIELD);
-  label = new QLabel(value);
-  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_DESCRIPTION_COLUMN,
-                                        label);
-
-  value = rowFields.at(DATABASE_TABLE_CATEGORY_FIELD);
-  label = new QLabel(value);
-  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_CATEGORY_COLUMN,
-                                        label);
-
-  value = rowFields.at(DATABASE_TABLE_AMOUNT_FIELD);
-  label = new QLabel(QString::number(value.toDouble()));
-  label->setAlignment(Qt::AlignRight);
-  ui->searchResultsTable->setCellWidget(row, SEARCH_TABLE_AMOUNT_COLUMN, label);
-}
-
-QList<int> CategorizeView::getAllRowsHeaders(QTableWidget *tableWidget) {
-  QList<int> ids;
-
-  for (int row = 0; row < tableWidget->rowCount(); row++) {
-    QTableWidgetItem *item = tableWidget->verticalHeaderItem(row);
-    ids.append(item->text().toInt());
-  }
-
-  return ids;
-}
-
-QList<int> CategorizeView::getSelectedRows(QTableWidget *tableWidget) {
-  QList<int> rows;
-
-  foreach (QTableWidgetSelectionRange range, tableWidget->selectedRanges()) {
-    for (int row = range.topRow(); row <= range.bottomRow(); row++) {
-      rows.append(row);
-    }
-  }
-
-  return rows;
-}
-
-QList<int> CategorizeView::getSelectedRowsHeaders(QTableWidget *tableWidget) {
-  QList<int> ids;
-
-  foreach (QTableWidgetSelectionRange range, tableWidget->selectedRanges()) {
-    for (int row = range.topRow(); row <= range.bottomRow(); row++) {
-      QTableWidgetItem *item = tableWidget->verticalHeaderItem(row);
-      ids.append(item->text().toInt());
-    }
-  }
-
-  return ids;
+  ui->searchResultsTable->addTransaction(row, rowFields);
 }
 
 void CategorizeView::searchUncategorizedRows() {
@@ -190,13 +99,9 @@ void CategorizeView::searchUncategorizedRows() {
   ui->categoryComboBox->addItem("");
   ui->categoryComboBox->addItems(database.getCategoryNames());
 
-  ui->searchResultsTable->clear();
-  ui->searchResultsTable->setRowCount(0);
-  ui->searchResultsTable->setColumnCount(0);
+  ui->searchResultsTable->clearTransactions();
 
   setFilter(appliedFilter);
-
-  QStringList labels = database.getColumnNames();
 
   QProgressDialog progress = QProgressDialog(
       QString(tr("Searching for rows with filter %1")).arg(appliedFilter),
@@ -206,6 +111,8 @@ void CategorizeView::searchUncategorizedRows() {
 
   QList<QStringList> uncategorizedRows =
       database.getUncategorizedRows(appliedFilter, &progress);
+
+  QStringList labels = database.getColumnNames();
 
   if (labels.length() == 0 || uncategorizedRows.length() == 0) {
     progress.cancel();
@@ -223,7 +130,6 @@ void CategorizeView::searchUncategorizedRows() {
   ui->numRowsLabel->setText(
       QString(tr("Uncategorized rows: %1")).arg(QString::number(numberOfRows)));
   ui->searchResultsTable->setRowCount(numberOfRows);
-  ui->searchResultsTable->setColumnCount(SEARCH_TABLE_COLUMN_COUNT);
 
   addHeadersToSearchResultsTable(labels);
 
@@ -287,19 +193,6 @@ void CategorizeView::updateUpdateButtonState() {
 
 void CategorizeView::updateView() {
   ui->categoryComboBox->clearEditText();
-
-  QList<QTableWidgetSelectionRange> ranges =
-      ui->searchResultsTable->selectedRanges();
-
-  if (ranges.isEmpty()) {
-    ui->filterEdit->clearEditText();
-    ui->searchResultsTable->clear();
-    ui->searchResultsTable->setColumnCount(0);
-    ui->searchResultsTable->setRowCount(0);
-  } else {
-    while (!ranges.isEmpty()) {
-      ui->searchResultsTable->removeRow(ranges.at(0).topRow());
-      ranges = ui->searchResultsTable->selectedRanges();
-    }
-  }
+  ui->filterEdit->clearEditText();
+  ui->searchResultsTable->removeSelectedTransactions();
 }
