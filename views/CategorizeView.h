@@ -2,7 +2,6 @@
 #define CATEGORIZEVIEW_H
 
 #include <QMainWindow>
-#include <QTableWidget>
 
 namespace Ui {
 class CategorizeView;
@@ -32,7 +31,6 @@ private:
 
   void addHeadersToSearchResultsTable(QStringList headers);
   void addRowToSearchResultsTable(int row, QStringList rowFields);
-  QList<int> getAllRowsHeaders(QTableWidget *tableWidget);
   void searchUncategorizedRows();
   void setFilter(QString filter);
   void addFiltersToDatabase(QString category, QStringList filters);
