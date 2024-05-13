@@ -6,6 +6,7 @@
 TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
   horizontalHeader()->setStretchLastSection(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
+  setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 TransactionsTable::~TransactionsTable() {}
