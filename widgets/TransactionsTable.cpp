@@ -7,14 +7,20 @@ TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
   horizontalHeader()->setStretchLastSection(true);
   setSelectionBehavior(QAbstractItemView::SelectRows);
   setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+  connect(horizontalHeader(), &QHeaderView::sectionResized, this,
+          &TransactionsTable::on_headerResized);
 }
 
 TransactionsTable::~TransactionsTable() {}
 
-void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers) {
-  setColumnCount(headers.length());
+void TransactionsTable::on_headerResized() { saveColumnsWidths(); }
 
+void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers,
+                                   QString viewName) {
   int columnCount = 0;
+
+  setColumnCount(headers.length());
 
   if (headers.contains(Table::BankColumn)) {
     setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
@@ -36,6 +42,11 @@ void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers) {
     setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
                                                Database::AmountField)));
   }
+
+  if (!viewName.isEmpty()) {
+    tableName = viewName;
+    restoreColumnsWidths(tableName);
+  }
 }
 
 void TransactionsTable::addTransaction(
@@ -44,11 +55,13 @@ void TransactionsTable::addTransaction(
   int fieldPosition = 0;
 
   if (fields.at(0) == Database::IdField) {
-    setVerticalHeaderItem(row, new QTableWidgetItem(values.at(fieldPosition++)));
+    setVerticalHeaderItem(row,
+                          new QTableWidgetItem(values.at(fieldPosition++)));
   }
 
   QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
-  for (int column = 0; fieldPosition < fields.length(); fieldPosition++, column++) {
+  for (int column = 0; fieldPosition < fields.length();
+       fieldPosition++, column++) {
     QLabel *label;
     QString value = values.at(fieldPosition);
 
@@ -114,6 +127,31 @@ QStringList TransactionsTable::getSelectedTransactionDescriptions() {
   }
 
   return descriptions;
+}
+
+void TransactionsTable::saveColumnsWidths() {
+  if (tableName.isEmpty()) {
+    return;
+  }
+
+  for (int column = 0; column < columnCount(); column++) {
+    qDebug() << QString(settingTemplate).arg(tableName).arg(column);
+    qDebug() << columnWidth(column);
+    settings.setValue(QString(settingTemplate).arg(tableName).arg(column), columnWidth(column));
+  }
+}
+
+void TransactionsTable::restoreColumnsWidths(QString tableName) {
+  for (int column = 0; column < columnCount(); column++) {
+    int width =
+        settings.value(QString(settingTemplate).arg(tableName).arg(column), "0")
+            .toInt();
+    qDebug() << QString(settingTemplate).arg(tableName).arg(column);
+    qDebug() << width;
+    if (width) {
+      setColumnWidth(column, width);
+    }
+  }
 }
 
 void TransactionsTable::clearTransactions() {

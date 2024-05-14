@@ -126,7 +126,7 @@ void CategorizeView::searchUncategorizedRows() {
       TransactionsTable::Table::DescriptionColumn,
       TransactionsTable::Table::CategoryColumn,
       TransactionsTable::Table::AmountColumn,
-  });
+  }, "CategorizeView");
 
   progress.reset();
   progress.setMaximum(numberOfRows);

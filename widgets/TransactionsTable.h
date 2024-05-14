@@ -1,56 +1,62 @@
 #ifndef TRANSACTIONSTABLE_H
 #define TRANSACTIONSTABLE_H
 
-#include <QWidget>
+#include <QSettings>
 #include <QTableWidget>
+#include <QWidget>
 
-class TransactionsTable : public QTableWidget
-{
-    Q_OBJECT
+class TransactionsTable : public QTableWidget {
+  Q_OBJECT
+
+private:
+    QString settingTemplate = QString("%1_column_%2");
+  QString tableName = QString("");
+  QSettings settings = QSettings("com.xicra", "wmm");
+  void restoreColumnsWidths(QString tableName);
+  void saveColumnsWidths();
 
 public:
+  enum Database {
+    IdField = 0,
+    BankField = 1,
+    DateField = 2,
+    DescriptionField = 3,
+    CategoryField = 4,
+    AmountField = 5,
+    TotalFields = 6,
+  };
 
-    enum Database {
-        IdField = 0,
-        BankField = 1,
-        DateField = 2,
-        DescriptionField = 3,
-        CategoryField = 4,
-        AmountField = 5,
-        TotalFields = 6,
-    };
+  enum Table {
+    BankColumn = 0,
+    DateColumn = 1,
+    DescriptionColumn = 2,
+    CategoryColumn = 3,
+    AmountColumn = 4,
+    TotalColumns = 5,
+  };
 
-    enum Table {
-        BankColumn = 0,
-        DateColumn = 1,
-        DescriptionColumn = 2,
-        CategoryColumn = 3,
-        AmountColumn = 4,
-        TotalColumns = 5,
-    };
+  QStringList FieldNames = {"Id",           tr("Bank"),
+                            tr("Date"),     tr("Description"),
+                            tr("Category"), tr("Amount")};
 
-    QStringList FieldNames = {
-        "Id",
-        tr("Bank"),
-        tr("Date"),
-        tr("Description"),
-        tr("Category"),
-        tr("Amount")
-    };
+  explicit TransactionsTable(QWidget *parent = nullptr);
+  ~TransactionsTable();
 
-    explicit TransactionsTable(QWidget *parent = nullptr);
-    ~TransactionsTable();
+  void on_headerClicked(int index);
+  void on_headerResized();
 
-    void setHeaders(QList<TransactionsTable::Table> headers);
-    void addTransaction(int row, QList<TransactionsTable::Database> fields, QStringList values);
+  void setHeaders(QList<TransactionsTable::Table> headers,
+                  QString viewName = QString(""));
+  void addTransaction(int row, QList<TransactionsTable::Database> fields,
+                      QStringList values);
 
-    QList<int> getAllTransactionIDs();
-    QList<int> getSelectedTransactions();
-    QList<int> getSelectedTransactionIDs();
-    QStringList getSelectedTransactionDescriptions();
-    
-    void clearTransactions();
-    void removeSelectedTransactions();
+  QList<int> getAllTransactionIDs();
+  QList<int> getSelectedTransactions();
+  QList<int> getSelectedTransactionIDs();
+  QStringList getSelectedTransactionDescriptions();
+
+  void clearTransactions();
+  void removeSelectedTransactions();
 };
 
 #endif // TRANSACTIONSTABLE_H

@@ -122,7 +122,7 @@ void DuplicatesView::updateDuplicatesTable() {
       TransactionsTable::Table::DateColumn,
       TransactionsTable::Table::DescriptionColumn,
       TransactionsTable::Table::AmountColumn,
-  });
+  }, "DuplicatesView");
 
   for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
     ui->duplicateRowsTable->addTransaction(
