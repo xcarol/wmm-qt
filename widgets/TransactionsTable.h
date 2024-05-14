@@ -9,9 +9,18 @@ class TransactionsTable : public QTableWidget {
   Q_OBJECT
 
 private:
-    QString settingTemplate = QString("%1_column_%2");
+  QString sortSymbolsRegexp = " (▲|▼)$";
+  QString sortSymbolDown = " ▼";
+  QString sortSymbolUp = " ▲";
+  
+  bool resizeNastyReentering = false;
+  int sortedColumn = -1;
+  Qt::SortOrder sortOrder = Qt::SortOrder::AscendingOrder;
+  QString settingTemplate = QString("%1_column_%2");
   QString tableName = QString("");
   QSettings settings = QSettings("com.xicra", "wmm");
+  void sortByColumn(int column);
+  void sortHeaders(int column, Qt::SortOrder order);
   void restoreColumnsWidths(QString tableName);
   void saveColumnsWidths();
 

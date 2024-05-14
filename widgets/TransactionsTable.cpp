@@ -8,11 +8,16 @@ TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
   setSelectionBehavior(QAbstractItemView::SelectRows);
   setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+  connect(horizontalHeader(), &QHeaderView::sectionClicked, this,
+          &TransactionsTable::on_headerClicked);
+
   connect(horizontalHeader(), &QHeaderView::sectionResized, this,
           &TransactionsTable::on_headerResized);
 }
 
 TransactionsTable::~TransactionsTable() {}
+
+void TransactionsTable::on_headerClicked(int index) { sortByColumn(index); }
 
 void TransactionsTable::on_headerResized() { saveColumnsWidths(); }
 
@@ -62,21 +67,22 @@ void TransactionsTable::addTransaction(
   QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
   for (int column = 0; fieldPosition < fields.length();
        fieldPosition++, column++) {
-    QLabel *label;
     QString value = values.at(fieldPosition);
+    QTableWidgetItem *item;
 
     if (fields.at(fieldPosition) == Database::DateField) {
-      label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
-                             .toString(dateFormat));
-      label->setAlignment(Qt::AlignCenter);
+      item =
+          new QTableWidgetItem(QDate::fromString(value, Qt::DateFormat::ISODate)
+                                   .toString(dateFormat));
+      item->setTextAlignment(Qt::AlignCenter);
     } else if (fields.at(fieldPosition) == Database::AmountField) {
-      label = new QLabel(QString::number(value.toDouble()));
-      label->setAlignment(Qt::AlignRight);
+      item = new QTableWidgetItem(QString::number(value.toDouble()));
+      item->setTextAlignment(Qt::AlignRight);
     } else {
-      label = new QLabel(value);
+      item = new QTableWidgetItem(value);
     }
 
-    setCellWidget(row, column, label);
+    setItem(row, column, item);
   }
 }
 
@@ -129,29 +135,68 @@ QStringList TransactionsTable::getSelectedTransactionDescriptions() {
   return descriptions;
 }
 
-void TransactionsTable::saveColumnsWidths() {
-  if (tableName.isEmpty()) {
-    return;
+void TransactionsTable::sortByColumn(int column) {
+  Qt::SortOrder order = Qt::SortOrder::DescendingOrder;
+
+  if (column == sortedColumn) {
+    order = sortOrder == Qt::SortOrder::AscendingOrder
+                ? Qt::SortOrder::DescendingOrder
+                : Qt::SortOrder::AscendingOrder;
   }
 
+  sortedColumn = column;
+  sortOrder = order;
+
+  sortItems(sortedColumn, order);
+  sortHeaders(column, sortOrder);
+}
+
+void TransactionsTable::sortHeaders(int sortedColumn, Qt::SortOrder order) {
   for (int column = 0; column < columnCount(); column++) {
-    qDebug() << QString(settingTemplate).arg(tableName).arg(column);
-    qDebug() << columnWidth(column);
-    settings.setValue(QString(settingTemplate).arg(tableName).arg(column), columnWidth(column));
+    QString currentLabel = horizontalHeaderItem(column)->text();
+    QString newLabel = currentLabel.remove(QRegularExpression(sortSymbolsRegexp));
+
+    if (column == sortedColumn) {
+      newLabel.append(sortOrder == Qt::SortOrder::AscendingOrder
+                              ? sortSymbolUp
+                              : sortSymbolDown);
+    }
+
+
+    horizontalHeaderItem(column)->setText(newLabel);
   }
 }
 
+void TransactionsTable::saveColumnsWidths() {
+
+  if (tableName.isEmpty()) {
+    return;
+  }
+  if (resizeNastyReentering) {
+    return;
+  }
+  resizeNastyReentering = true;
+  for (int column = 0; column < columnCount(); column++) {
+    settings.setValue(QString(settingTemplate).arg(tableName).arg(column),
+                      columnWidth(column));
+  }
+  resizeNastyReentering = false;
+}
+
 void TransactionsTable::restoreColumnsWidths(QString tableName) {
+  if (resizeNastyReentering) {
+    return;
+  }
+  resizeNastyReentering = true;
   for (int column = 0; column < columnCount(); column++) {
     int width =
         settings.value(QString(settingTemplate).arg(tableName).arg(column), "0")
             .toInt();
-    qDebug() << QString(settingTemplate).arg(tableName).arg(column);
-    qDebug() << width;
     if (width) {
       setColumnWidth(column, width);
     }
   }
+  resizeNastyReentering = false;
 }
 
 void TransactionsTable::clearTransactions() {
