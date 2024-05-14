@@ -122,10 +122,13 @@
         <location filename="../views/BrowseDataView.cpp" line="73"/>
         <location filename="../views/BrowseDataView.cpp" line="28"/>
         <location filename="../views/BrowseDataView.cpp" line="73"/>
+        <location filename="../views/BrowseDataView.cpp" line="28"/>
+        <location filename="../views/BrowseDataView.cpp" line="73"/>
         <source>Database error</source>
         <translation>Error en la base de datos</translation>
     </message>
     <message>
+        <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
@@ -162,6 +165,9 @@
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
+        <location filename="../views/BrowseDataView.cpp" line="85"/>
+        <location filename="../views/BrowseDataView.cpp" line="36"/>
+        <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <location filename="../views/BrowseDataView.cpp" line="36"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
@@ -280,6 +286,8 @@
         <location filename="../views/BrowseDataView.cpp" line="85"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="85"/>
+        <location filename="../views/BrowseDataView.cpp" line="83"/>
+        <location filename="../views/BrowseDataView.cpp" line="85"/>
         <source>Category</source>
         <translation>Categoría</translation>
     </message>
@@ -305,10 +313,13 @@
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
         <location filename="../views/BrowseDataView.cpp" line="83"/>
+        <location filename="../views/BrowseDataView.cpp" line="83"/>
         <source>Month average</source>
         <translation>Media mensual</translation>
     </message>
     <message>
+        <location filename="../views/BrowseDataView.cpp" line="54"/>
+        <location filename="../views/BrowseDataView.cpp" line="119"/>
         <location filename="../views/BrowseDataView.cpp" line="54"/>
         <location filename="../views/BrowseDataView.cpp" line="119"/>
         <location filename="../views/BrowseDataView.cpp" line="54"/>
@@ -375,25 +386,30 @@
         <translation>Añade una categoría</translation>
     </message>
     <message>
-        <location filename="../views/CategoriesView.ui" line="62"/>
+        <location filename="../views/CategoriesView.ui" line="70"/>
+        <source>Rename category</source>
+        <translation>Renombra la categoría</translation>
+    </message>
+    <message>
+        <location filename="../views/CategoriesView.ui" line="82"/>
         <location filename="../views/CategoriesView.ui" line="62"/>
         <source>Delete selected categories</source>
         <translation>Elimina las categorías seleccionadas</translation>
     </message>
     <message>
-        <location filename="../views/CategoriesView.ui" line="77"/>
+        <location filename="../views/CategoriesView.ui" line="97"/>
         <location filename="../views/CategoriesView.ui" line="77"/>
         <source>Filters</source>
         <translation>Filtros</translation>
     </message>
     <message>
-        <location filename="../views/CategoriesView.ui" line="97"/>
+        <location filename="../views/CategoriesView.ui" line="117"/>
         <location filename="../views/CategoriesView.ui" line="97"/>
         <source>MySql REGEXP</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../views/CategoriesView.ui" line="104"/>
+        <location filename="../views/CategoriesView.ui" line="124"/>
         <location filename="../views/CategoriesView.ui" line="104"/>
         <source>?</source>
         <translation></translation>
@@ -409,19 +425,20 @@
         <translation>Ayuda</translation>
     </message>
     <message>
-        <location filename="../views/CategoriesView.ui" line="128"/>
+        <location filename="../views/CategoriesView.ui" line="148"/>
         <location filename="../views/CategoriesView.ui" line="128"/>
         <source>Add new filter</source>
         <translation>Añade un filtro</translation>
     </message>
     <message>
+        <location filename="../views/CategoriesView.ui" line="162"/>
         <location filename="../views/CategoriesView.ui" line="142"/>
         <source>Apply filter</source>
         <translation>Aplica el filrto</translation>
     </message>
     <message>
+        <location filename="../views/CategoriesView.ui" line="172"/>
         <location filename="../views/CategoriesView.ui" line="152"/>
-        <location filename="../views/CategoriesView.ui" line="140"/>
         <source>Delete selected filters</source>
         <translation>Elimina los filtros seleccionados</translation>
     </message>
@@ -439,6 +456,12 @@
         <location filename="../views/CategoriesView.cpp" line="170"/>
         <location filename="../views/CategoriesView.cpp" line="179"/>
         <location filename="../views/CategoriesView.cpp" line="240"/>
+        <location filename="../views/CategoriesView.cpp" line="37"/>
+        <location filename="../views/CategoriesView.cpp" line="137"/>
+        <location filename="../views/CategoriesView.cpp" line="194"/>
+        <location filename="../views/CategoriesView.cpp" line="203"/>
+        <location filename="../views/CategoriesView.cpp" line="243"/>
+        <location filename="../views/CategoriesView.cpp" line="299"/>
         <source>Database error</source>
         <translation>Error en la base de datos</translation>
     </message>
@@ -452,6 +475,9 @@
         <location filename="../views/CategoriesView.cpp" line="146"/>
         <location filename="../views/CategoriesView.cpp" line="155"/>
         <location filename="../views/CategoriesView.cpp" line="227"/>
+        <location filename="../views/CategoriesView.cpp" line="170"/>
+        <location filename="../views/CategoriesView.cpp" line="179"/>
+        <location filename="../views/CategoriesView.cpp" line="230"/>
         <source>DELETE</source>
         <translation>BORRADO</translation>
     </message>
@@ -459,6 +485,7 @@
         <location filename="../views/CategoriesView.cpp" line="114"/>
         <location filename="../views/CategoriesView.cpp" line="114"/>
         <location filename="../views/CategoriesView.cpp" line="147"/>
+        <location filename="../views/CategoriesView.cpp" line="171"/>
         <source>You&apos;re about to delete the following categories:
 %2
 
@@ -472,6 +499,7 @@ Are you sure?</source>
         <location filename="../views/CategoriesView.cpp" line="123"/>
         <location filename="../views/CategoriesView.cpp" line="123"/>
         <location filename="../views/CategoriesView.cpp" line="156"/>
+        <location filename="../views/CategoriesView.cpp" line="180"/>
         <source>It will also delete the filters of the selected categories.
 And it will also remove this categories from the corresponding transactions.
 
@@ -489,6 +517,9 @@ Y también eliminará las categorias de las transacciones correspondientes.
         <location filename="../views/CategoriesView.cpp" line="43"/>
         <location filename="../views/CategoriesView.cpp" line="185"/>
         <location filename="../views/CategoriesView.cpp" line="246"/>
+        <location filename="../views/CategoriesView.cpp" line="44"/>
+        <location filename="../views/CategoriesView.cpp" line="209"/>
+        <location filename="../views/CategoriesView.cpp" line="249"/>
         <source>Database success</source>
         <translation>Exito en la base de datos</translation>
     </message>
@@ -496,6 +527,7 @@ Y también eliminará las categorias de las transacciones correspondientes.
         <location filename="../views/CategoriesView.cpp" line="153"/>
         <location filename="../views/CategoriesView.cpp" line="153"/>
         <location filename="../views/CategoriesView.cpp" line="186"/>
+        <location filename="../views/CategoriesView.cpp" line="210"/>
         <source>A total of %1 categories deleted.
 A total of %2 filters deleted.
 A total of %3 transactions updated.</source>
@@ -507,6 +539,7 @@ Un total de %3 transacciones actualizadas.</translation>
         <location filename="../views/CategoriesView.cpp" line="195"/>
         <location filename="../views/CategoriesView.cpp" line="195"/>
         <location filename="../views/CategoriesView.cpp" line="228"/>
+        <location filename="../views/CategoriesView.cpp" line="231"/>
         <source>You&apos;re about to delete %1 filters.
 Are you sure?</source>
         <translation>Estás a punto de BORRAR %1 FILTROS
@@ -516,16 +549,19 @@ Are you sure?</source>
         <location filename="../views/CategoriesView.cpp" line="214"/>
         <location filename="../views/CategoriesView.cpp" line="214"/>
         <location filename="../views/CategoriesView.cpp" line="247"/>
+        <location filename="../views/CategoriesView.cpp" line="250"/>
         <source>A total of %1 filters deleted.</source>
         <translation>Un total de %1 filtros borrados.</translation>
     </message>
     <message>
+        <location filename="../views/CategoriesView.cpp" line="22"/>
         <location filename="../views/CategoriesView.cpp" line="22"/>
         <source>UPDATE</source>
         <translation>ACTUALIZA</translation>
     </message>
     <message>
         <location filename="../views/CategoriesView.cpp" line="23"/>
+        <location filename="../views/CategoriesView.cpp" line="24"/>
         <source>You&apos;re about to apply category &apos;%1&apos; to the transactions which description meets the &apos;%2&apos; RegEx
 Are you sure?</source>
         <translation>Estás a punto de aplicar la categoría &apos;%1&apos; a las transacciones en las que la descripción coincida con la expresión regular &apos;%2&apos;
@@ -533,6 +569,7 @@ Are you sure?</source>
     </message>
     <message>
         <location filename="../views/CategoriesView.cpp" line="44"/>
+        <location filename="../views/CategoriesView.cpp" line="45"/>
         <source>A total of %1 transactions updated.</source>
         <translation>Un total de %1 transacciones actualizadas.</translation>
     </message>
@@ -566,12 +603,12 @@ Are you sure?</source>
     <message>
         <location filename="../views/CategorizeView.ui" line="99"/>
         <location filename="../views/CategorizeView.ui" line="99"/>
-        <location filename="../views/CategorizeView.cpp" line="63"/>
+        <location filename="../views/CategorizeView.cpp" line="68"/>
         <source>Update</source>
         <translation>Actualizar</translation>
     </message>
     <message>
-        <location filename="../views/CategorizeView.ui" line="123"/>
+        <location filename="../views/CategorizeView.ui" line="119"/>
         <location filename="../views/CategorizeView.ui" line="123"/>
         <source>Uncategorized rows:</source>
         <translation>Filas sin categorizar:</translation>
@@ -618,6 +655,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="185"/>
         <location filename="../views/CategorizeView.cpp" line="185"/>
         <location filename="../views/CategorizeView.cpp" line="185"/>
+        <location filename="../views/CategorizeView.cpp" line="98"/>
         <source>Searching for rows with filter %1</source>
         <translation>Buscando filas con el filtro %1</translation>
     </message>
@@ -640,6 +678,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="186"/>
         <location filename="../views/CategorizeView.cpp" line="186"/>
         <location filename="../views/CategorizeView.cpp" line="186"/>
+        <location filename="../views/CategorizeView.cpp" line="99"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -662,6 +701,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="188"/>
         <location filename="../views/CategorizeView.cpp" line="188"/>
         <location filename="../views/CategorizeView.cpp" line="188"/>
+        <location filename="../views/CategorizeView.cpp" line="101"/>
         <source>Search...</source>
         <translation>Buscar...</translation>
     </message>
@@ -711,6 +751,8 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="248"/>
         <location filename="../views/CategorizeView.cpp" line="197"/>
         <location filename="../views/CategorizeView.cpp" line="248"/>
+        <location filename="../views/CategorizeView.cpp" line="110"/>
+        <location filename="../views/CategorizeView.cpp" line="182"/>
         <source>Database error</source>
         <translation>Error en la base de datos</translation>
     </message>
@@ -733,6 +775,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="218"/>
         <location filename="../views/CategorizeView.cpp" line="218"/>
         <location filename="../views/CategorizeView.cpp" line="218"/>
+        <location filename="../views/CategorizeView.cpp" line="136"/>
         <source>Processing %1 of %2 rows found.</source>
         <translation>Procesando %1 de %2 filas encontradas.</translation>
     </message>
@@ -755,6 +798,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="64"/>
         <location filename="../views/CategorizeView.cpp" line="64"/>
         <location filename="../views/CategorizeView.cpp" line="64"/>
+        <location filename="../views/CategorizeView.cpp" line="69"/>
         <source>You&apos;re about to update %1 records with the category: %2
 Are you sure?</source>
         <translation>Estás a punto de actualizar %1 registros con la categoría: %2
@@ -783,6 +827,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="252"/>
         <location filename="../views/CategorizeView.cpp" line="252"/>
         <location filename="../views/CategorizeView.cpp" line="252"/>
+        <location filename="../views/CategorizeView.cpp" line="186"/>
         <source>Database success</source>
         <translation>Exito en la base de datos</translation>
     </message>
@@ -805,6 +850,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="253"/>
         <location filename="../views/CategorizeView.cpp" line="253"/>
         <location filename="../views/CategorizeView.cpp" line="253"/>
+        <location filename="../views/CategorizeView.cpp" line="187"/>
         <source>A total of %1 rows updated</source>
         <translation>Un total de %1 registros actualizados</translation>
     </message>
@@ -925,6 +971,7 @@ Are you sure?</source>
         <location filename="../views/CategorizeView.cpp" line="207"/>
         <location filename="../views/CategorizeView.cpp" line="207"/>
         <location filename="../views/CategorizeView.cpp" line="207"/>
+        <location filename="../views/CategorizeView.cpp" line="120"/>
         <source>Uncategorized rows: %1</source>
         <translation>Filas sin categorizar: %1</translation>
     </message>
@@ -950,6 +997,7 @@ Are you sure?</source>
         <location filename="../lib/Database.cpp" line="168"/>
         <location filename="../lib/Database.cpp" line="168"/>
         <location filename="../lib/Database.cpp" line="168"/>
+        <location filename="../lib/Database.cpp" line="167"/>
         <source>%1 invalid date</source>
         <translation>%1 fecha inválida</translation>
     </message>
@@ -1017,10 +1065,12 @@ Are you sure?</source>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
+        <location filename="../dialogs/DatabaseSettings.cpp" line="50"/>
         <source>Database connection problem</source>
         <translation>Problema de conexión a la base de datos</translation>
     </message>
     <message>
+        <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="51"/>
@@ -1061,10 +1111,12 @@ Are you sure?</source>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
+        <location filename="../dialogs/DatabaseSettings.cpp" line="65"/>
         <source>Database connection</source>
         <translation>Conexión a la base de datos</translation>
     </message>
     <message>
+        <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
         <location filename="../dialogs/DatabaseSettings.cpp" line="66"/>
@@ -1108,13 +1160,13 @@ Are you sure?</source>
         <translation>Busca duplicados</translation>
     </message>
     <message>
-        <location filename="../views/DuplicatesView.ui" line="83"/>
+        <location filename="../views/DuplicatesView.ui" line="73"/>
         <location filename="../views/DuplicatesView.ui" line="83"/>
         <source>Mark selected as NOT duplicate</source>
         <translation>Marca las seleccionadas com NO duplicadas</translation>
     </message>
     <message>
-        <location filename="../views/DuplicatesView.ui" line="93"/>
+        <location filename="../views/DuplicatesView.ui" line="83"/>
         <location filename="../views/DuplicatesView.ui" line="93"/>
         <source>Delete selected</source>
         <translation>Elimina las seleccionadas</translation>
@@ -1128,6 +1180,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="24"/>
         <location filename="../views/DuplicatesView.cpp" line="24"/>
         <location filename="../views/DuplicatesView.cpp" line="24"/>
+        <location filename="../views/DuplicatesView.cpp" line="24"/>
         <source>DELETE</source>
         <translation>BORRADO</translation>
     </message>
@@ -1137,6 +1190,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="28"/>
         <location filename="../views/DuplicatesView.cpp" line="28"/>
         <location filename="../views/DuplicatesView.cpp" line="28"/>
+        <location filename="../views/DuplicatesView.cpp" line="25"/>
         <location filename="../views/DuplicatesView.cpp" line="25"/>
         <location filename="../views/DuplicatesView.cpp" line="25"/>
         <location filename="../views/DuplicatesView.cpp" line="25"/>
@@ -1154,6 +1208,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="47"/>
         <location filename="../views/DuplicatesView.cpp" line="47"/>
         <location filename="../views/DuplicatesView.cpp" line="47"/>
+        <location filename="../views/DuplicatesView.cpp" line="47"/>
         <source>MARK NOT DUPLICATE</source>
         <translation>MARCA COMO NO DUPLICADO</translation>
     </message>
@@ -1163,6 +1218,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="51"/>
         <location filename="../views/DuplicatesView.cpp" line="51"/>
         <location filename="../views/DuplicatesView.cpp" line="51"/>
+        <location filename="../views/DuplicatesView.cpp" line="48"/>
         <location filename="../views/DuplicatesView.cpp" line="48"/>
         <location filename="../views/DuplicatesView.cpp" line="48"/>
         <location filename="../views/DuplicatesView.cpp" line="48"/>
@@ -1196,6 +1252,9 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="82"/>
         <location filename="../views/DuplicatesView.cpp" line="98"/>
         <location filename="../views/DuplicatesView.cpp" line="113"/>
+        <location filename="../views/DuplicatesView.cpp" line="69"/>
+        <location filename="../views/DuplicatesView.cpp" line="85"/>
+        <location filename="../views/DuplicatesView.cpp" line="100"/>
         <source>Database error</source>
         <translation>Error en la base de datos</translation>
     </message>
@@ -1216,6 +1275,8 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="102"/>
         <location filename="../views/DuplicatesView.cpp" line="86"/>
         <location filename="../views/DuplicatesView.cpp" line="102"/>
+        <location filename="../views/DuplicatesView.cpp" line="73"/>
+        <location filename="../views/DuplicatesView.cpp" line="89"/>
         <source>Database success</source>
         <translation>Exito en la base de datos</translation>
     </message>
@@ -1228,6 +1289,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="87"/>
         <location filename="../views/DuplicatesView.cpp" line="87"/>
         <location filename="../views/DuplicatesView.cpp" line="87"/>
+        <location filename="../views/DuplicatesView.cpp" line="74"/>
         <source>A total of %1 rows deleted.</source>
         <translation>Se ha borrado un total de %1 registros.</translation>
     </message>
@@ -1240,6 +1302,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="103"/>
         <location filename="../views/DuplicatesView.cpp" line="103"/>
         <location filename="../views/DuplicatesView.cpp" line="103"/>
+        <location filename="../views/DuplicatesView.cpp" line="90"/>
         <source>A total of %1 rows marked as not duplicate.</source>
         <translation>Se ha marcado como no duplicado un total de %1 registros.</translation>
     </message>
@@ -1252,6 +1315,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="119"/>
         <location filename="../views/DuplicatesView.cpp" line="119"/>
         <location filename="../views/DuplicatesView.cpp" line="119"/>
+        <location filename="../views/DuplicatesView.cpp" line="106"/>
         <source>Database</source>
         <translation>Base de datos</translation>
     </message>
@@ -1264,6 +1328,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="120"/>
         <location filename="../views/DuplicatesView.cpp" line="120"/>
         <location filename="../views/DuplicatesView.cpp" line="120"/>
+        <location filename="../views/DuplicatesView.cpp" line="107"/>
         <source>No duplicate rows found.</source>
         <translation>No se han encontrado filas duplicadas.</translation>
     </message>
@@ -1276,6 +1341,7 @@ Are you sure?</source>
         <location filename="../views/DuplicatesView.cpp" line="129"/>
         <location filename="../views/DuplicatesView.cpp" line="129"/>
         <location filename="../views/DuplicatesView.cpp" line="129"/>
+        <location filename="../views/DuplicatesView.cpp" line="116"/>
         <source>Duplicate rows: %1</source>
         <translation>Filas duplicadas: %1</translation>
     </message>
@@ -1404,6 +1470,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="98"/>
         <location filename="../views/ImportFileView.cpp" line="98"/>
         <location filename="../views/ImportFileView.cpp" line="98"/>
+        <location filename="../views/ImportFileView.cpp" line="98"/>
         <source>Csv Files (*.csv)</source>
         <translation>Archivos Csv (*.csv)</translation>
     </message>
@@ -1423,6 +1490,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="110"/>
         <location filename="../views/ImportFileView.cpp" line="110"/>
         <location filename="../views/ImportFileView.cpp" line="110"/>
+        <location filename="../views/ImportFileView.cpp" line="109"/>
         <location filename="../views/ImportFileView.cpp" line="109"/>
         <location filename="../views/ImportFileView.cpp" line="109"/>
         <location filename="../views/ImportFileView.cpp" line="109"/>
@@ -1466,6 +1534,8 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="188"/>
         <location filename="../views/ImportFileView.cpp" line="126"/>
         <location filename="../views/ImportFileView.cpp" line="188"/>
+        <location filename="../views/ImportFileView.cpp" line="126"/>
+        <location filename="../views/ImportFileView.cpp" line="188"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -1485,6 +1555,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="130"/>
         <location filename="../views/ImportFileView.cpp" line="130"/>
         <location filename="../views/ImportFileView.cpp" line="130"/>
+        <location filename="../views/ImportFileView.cpp" line="129"/>
         <location filename="../views/ImportFileView.cpp" line="129"/>
         <location filename="../views/ImportFileView.cpp" line="129"/>
         <location filename="../views/ImportFileView.cpp" line="129"/>
@@ -1510,6 +1581,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="157"/>
         <location filename="../views/ImportFileView.cpp" line="157"/>
         <location filename="../views/ImportFileView.cpp" line="157"/>
+        <location filename="../views/ImportFileView.cpp" line="157"/>
         <source>%1 of %2 rows stored...</source>
         <translation>%1 de %2 registros guardados...</translation>
     </message>
@@ -1529,6 +1601,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="169"/>
         <location filename="../views/ImportFileView.cpp" line="169"/>
         <location filename="../views/ImportFileView.cpp" line="169"/>
+        <location filename="../views/ImportFileView.cpp" line="168"/>
         <location filename="../views/ImportFileView.cpp" line="168"/>
         <location filename="../views/ImportFileView.cpp" line="168"/>
         <location filename="../views/ImportFileView.cpp" line="168"/>
@@ -1572,6 +1645,8 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="179"/>
         <location filename="../views/ImportFileView.cpp" line="169"/>
         <location filename="../views/ImportFileView.cpp" line="179"/>
+        <location filename="../views/ImportFileView.cpp" line="169"/>
+        <location filename="../views/ImportFileView.cpp" line="179"/>
         <source>A total of %1 from %2 rows imported</source>
         <translation>Se han importando %1 filas de un total de %2</translation>
     </message>
@@ -1591,6 +1666,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="175"/>
         <location filename="../views/ImportFileView.cpp" line="175"/>
         <location filename="../views/ImportFileView.cpp" line="175"/>
+        <location filename="../views/ImportFileView.cpp" line="174"/>
         <location filename="../views/ImportFileView.cpp" line="174"/>
         <location filename="../views/ImportFileView.cpp" line="174"/>
         <location filename="../views/ImportFileView.cpp" line="174"/>
@@ -1616,6 +1692,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="178"/>
         <location filename="../views/ImportFileView.cpp" line="178"/>
         <location filename="../views/ImportFileView.cpp" line="178"/>
+        <location filename="../views/ImportFileView.cpp" line="178"/>
         <source>Database success</source>
         <translation>Exito en la base de datos</translation>
     </message>
@@ -1635,6 +1712,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="192"/>
         <location filename="../views/ImportFileView.cpp" line="192"/>
         <location filename="../views/ImportFileView.cpp" line="192"/>
+        <location filename="../views/ImportFileView.cpp" line="191"/>
         <location filename="../views/ImportFileView.cpp" line="191"/>
         <location filename="../views/ImportFileView.cpp" line="191"/>
         <location filename="../views/ImportFileView.cpp" line="191"/>
@@ -1660,6 +1738,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="217"/>
         <location filename="../views/ImportFileView.cpp" line="217"/>
         <location filename="../views/ImportFileView.cpp" line="217"/>
+        <location filename="../views/ImportFileView.cpp" line="217"/>
         <source>Check file cancelled</source>
         <translation>Comprobación del archivo cancelada</translation>
     </message>
@@ -1679,6 +1758,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="219"/>
         <location filename="../views/ImportFileView.cpp" line="219"/>
         <location filename="../views/ImportFileView.cpp" line="219"/>
+        <location filename="../views/ImportFileView.cpp" line="218"/>
         <location filename="../views/ImportFileView.cpp" line="218"/>
         <location filename="../views/ImportFileView.cpp" line="218"/>
         <location filename="../views/ImportFileView.cpp" line="218"/>
@@ -1704,6 +1784,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="222"/>
         <location filename="../views/ImportFileView.cpp" line="222"/>
         <location filename="../views/ImportFileView.cpp" line="222"/>
+        <location filename="../views/ImportFileView.cpp" line="222"/>
         <source>Check file error</source>
         <translation>Error en la comprobación del archivo</translation>
     </message>
@@ -1723,6 +1804,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="224"/>
         <location filename="../views/ImportFileView.cpp" line="224"/>
         <location filename="../views/ImportFileView.cpp" line="224"/>
+        <location filename="../views/ImportFileView.cpp" line="223"/>
         <location filename="../views/ImportFileView.cpp" line="223"/>
         <location filename="../views/ImportFileView.cpp" line="223"/>
         <location filename="../views/ImportFileView.cpp" line="223"/>
@@ -1748,6 +1830,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="229"/>
         <location filename="../views/ImportFileView.cpp" line="229"/>
         <location filename="../views/ImportFileView.cpp" line="229"/>
+        <location filename="../views/ImportFileView.cpp" line="229"/>
         <source>Check success</source>
         <translation>Comprobación correcte</translation>
     </message>
@@ -1767,6 +1850,7 @@ Are you sure?</source>
         <location filename="../views/ImportFileView.cpp" line="231"/>
         <location filename="../views/ImportFileView.cpp" line="231"/>
         <location filename="../views/ImportFileView.cpp" line="231"/>
+        <location filename="../views/ImportFileView.cpp" line="230"/>
         <location filename="../views/ImportFileView.cpp" line="230"/>
         <location filename="../views/ImportFileView.cpp" line="230"/>
         <location filename="../views/ImportFileView.cpp" line="230"/>
@@ -1901,6 +1985,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
+        <location filename="../views/SqlCommandView.cpp" line="19"/>
         <source>Executing query...</source>
         <translation>Ejecutando la query...</translation>
     </message>
@@ -1923,10 +2008,12 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
         <location filename="../views/SqlCommandView.cpp" line="19"/>
+        <location filename="../views/SqlCommandView.cpp" line="19"/>
         <source>Cancel</source>
         <translation>Cancela</translation>
     </message>
     <message>
+        <location filename="../views/SqlCommandView.cpp" line="32"/>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
         <location filename="../views/SqlCommandView.cpp" line="32"/>
@@ -2003,6 +2090,9 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="36"/>
         <location filename="../views/SqlCommandView.cpp" line="98"/>
         <location filename="../views/SqlCommandView.cpp" line="132"/>
+        <location filename="../views/SqlCommandView.cpp" line="36"/>
+        <location filename="../views/SqlCommandView.cpp" line="98"/>
+        <location filename="../views/SqlCommandView.cpp" line="132"/>
         <source>Database error</source>
         <translation>Error en la base de datos</translation>
     </message>
@@ -2033,6 +2123,8 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
         <location filename="../views/SqlCommandView.cpp" line="78"/>
         <location filename="../views/SqlCommandView.cpp" line="119"/>
+        <location filename="../views/SqlCommandView.cpp" line="79"/>
+        <location filename="../views/SqlCommandView.cpp" line="120"/>
         <location filename="../views/SqlCommandView.cpp" line="79"/>
         <location filename="../views/SqlCommandView.cpp" line="120"/>
         <location filename="../views/SqlCommandView.cpp" line="79"/>
@@ -2083,6 +2175,8 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="139"/>
         <location filename="../views/SqlCommandView.cpp" line="105"/>
         <location filename="../views/SqlCommandView.cpp" line="139"/>
+        <location filename="../views/SqlCommandView.cpp" line="105"/>
+        <location filename="../views/SqlCommandView.cpp" line="139"/>
         <source>Database Success</source>
         <translation>Exito en la base de datos</translation>
     </message>
@@ -2100,6 +2194,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
         <location filename="../views/SqlCommandView.cpp" line="104"/>
+        <location filename="../views/SqlCommandView.cpp" line="106"/>
         <location filename="../views/SqlCommandView.cpp" line="106"/>
         <location filename="../views/SqlCommandView.cpp" line="106"/>
         <location filename="../views/SqlCommandView.cpp" line="106"/>
@@ -2127,6 +2222,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="112"/>
         <location filename="../views/SqlCommandView.cpp" line="112"/>
         <location filename="../views/SqlCommandView.cpp" line="112"/>
+        <location filename="../views/SqlCommandView.cpp" line="112"/>
         <source>Database restore</source>
         <translation>Restauración de la base de datos</translation>
     </message>
@@ -2144,6 +2240,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
         <location filename="../views/SqlCommandView.cpp" line="111"/>
+        <location filename="../views/SqlCommandView.cpp" line="113"/>
         <location filename="../views/SqlCommandView.cpp" line="113"/>
         <location filename="../views/SqlCommandView.cpp" line="113"/>
         <location filename="../views/SqlCommandView.cpp" line="113"/>
@@ -2171,6 +2268,7 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="121"/>
         <location filename="../views/SqlCommandView.cpp" line="121"/>
         <location filename="../views/SqlCommandView.cpp" line="121"/>
+        <location filename="../views/SqlCommandView.cpp" line="121"/>
         <source>Sql Files (*.sql)</source>
         <translation>Archivos Sql (*.sql)</translation>
     </message>
@@ -2193,8 +2291,37 @@ Are you sure?</source>
         <location filename="../views/SqlCommandView.cpp" line="140"/>
         <location filename="../views/SqlCommandView.cpp" line="140"/>
         <location filename="../views/SqlCommandView.cpp" line="140"/>
+        <location filename="../views/SqlCommandView.cpp" line="140"/>
         <source>Database restore from file: %1</source>
         <translation>Base de datos restaurada desde el archivo: %1</translation>
+    </message>
+</context>
+<context>
+    <name>TransactionsTable</name>
+    <message>
+        <location filename="../widgets/TransactionsTable.h" line="34"/>
+        <source>Bank</source>
+        <translation>Banco</translation>
+    </message>
+    <message>
+        <location filename="../widgets/TransactionsTable.h" line="35"/>
+        <source>Date</source>
+        <translation>Fecha</translation>
+    </message>
+    <message>
+        <location filename="../widgets/TransactionsTable.h" line="36"/>
+        <source>Description</source>
+        <translation>Descripción</translation>
+    </message>
+    <message>
+        <location filename="../widgets/TransactionsTable.h" line="37"/>
+        <source>Category</source>
+        <translation>Categoría</translation>
+    </message>
+    <message>
+        <location filename="../widgets/TransactionsTable.h" line="38"/>
+        <source>Amount</source>
+        <translation>Cantidad</translation>
     </message>
 </context>
 </TS>
