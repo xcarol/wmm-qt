@@ -83,15 +83,6 @@ void CategorizeView::on_updateButton_clicked() {
   }
 }
 
-void CategorizeView::addHeadersToSearchResultsTable(QStringList headers) {
-  ui->searchResultsTable->setHeaders(headers);
-}
-
-void CategorizeView::addRowToSearchResultsTable(int row,
-                                                QStringList rowFields) {
-  ui->searchResultsTable->addTransaction(row, rowFields);
-}
-
 void CategorizeView::searchUncategorizedRows() {
   Database database = Database();
 
@@ -112,9 +103,7 @@ void CategorizeView::searchUncategorizedRows() {
   QList<QStringList> uncategorizedRows =
       database.getUncategorizedRows(appliedFilter, &progress);
 
-  QStringList labels = database.getColumnNames();
-
-  if (labels.length() == 0 || uncategorizedRows.length() == 0) {
+  if (uncategorizedRows.length() == 0) {
     progress.cancel();
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
@@ -131,7 +120,13 @@ void CategorizeView::searchUncategorizedRows() {
       QString(tr("Uncategorized rows: %1")).arg(QString::number(numberOfRows)));
   ui->searchResultsTable->setRowCount(numberOfRows);
 
-  addHeadersToSearchResultsTable(labels);
+  ui->searchResultsTable->setHeaders({
+      TransactionsTable::Table::BankColumn,
+      TransactionsTable::Table::DateColumn,
+      TransactionsTable::Table::DescriptionColumn,
+      TransactionsTable::Table::CategoryColumn,
+      TransactionsTable::Table::AmountColumn,
+  });
 
   progress.reset();
   progress.setMaximum(numberOfRows);
@@ -142,7 +137,17 @@ void CategorizeView::searchUncategorizedRows() {
                               .arg(rowCount)
                               .arg(numberOfRows));
 
-    addRowToSearchResultsTable(rowCount, uncategorizedRows.at(rowCount));
+    ui->searchResultsTable->addTransaction(
+        rowCount,
+        {
+            TransactionsTable::Database::IdField,
+            TransactionsTable::Database::BankField,
+            TransactionsTable::Database::DateField,
+            TransactionsTable::Database::DescriptionField,
+            TransactionsTable::Database::CategoryField,
+            TransactionsTable::Database::AmountField,
+        },
+        uncategorizedRows.at(rowCount));
 
     progress.setValue(rowCount);
 

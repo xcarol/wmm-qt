@@ -1,7 +1,7 @@
-#include <QDate>
-#include <QLabel>
-#include <QHeaderView>
 #include "TransactionsTable.h"
+#include <QDate>
+#include <QHeaderView>
+#include <QLabel>
 
 TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
   horizontalHeader()->setStretchLastSection(true);
@@ -11,61 +11,60 @@ TransactionsTable::TransactionsTable(QWidget *parent) : QTableWidget(parent) {
 
 TransactionsTable::~TransactionsTable() {}
 
-void TransactionsTable::setHeaders(QStringList headers) {
-  setColumnCount(Table::TotalColumns);
+void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers) {
+  setColumnCount(headers.length());
 
-  setHorizontalHeaderItem(
-      Table::BankColumn,
-      new QTableWidgetItem(
-          QString(headers.at(Database::BankField).toUpper())));
-  setHorizontalHeaderItem(
-      Table::DateColumn,
-      new QTableWidgetItem(
-          QString(headers.at(Database::DateField).toUpper())));
-  setHorizontalHeaderItem(
-      Table::DescriptionColumn,
-      new QTableWidgetItem(
-          QString(headers.at(Database::DescriptionField).toUpper())));
-  setHorizontalHeaderItem(
-      Table::CategoryColumn,
-      new QTableWidgetItem(
-          QString(headers.at(Database::CategoryField).toUpper())));
-  setHorizontalHeaderItem(
-      Table::AmountColumn,
-      new QTableWidgetItem(
-          QString(headers.at(Database::AmountField).toUpper())));
+  int columnCount = 0;
+
+  if (headers.contains(Table::BankColumn)) {
+    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
+                                               Database::BankField)));
+  }
+  if (headers.contains(Table::DateColumn)) {
+    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
+                                               Database::DateField)));
+  }
+  if (headers.contains(Table::DescriptionColumn)) {
+    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
+                                               Database::DescriptionField)));
+  }
+  if (headers.contains(Table::CategoryColumn)) {
+    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
+                                               Database::CategoryField)));
+  }
+  if (headers.contains(Table::AmountColumn)) {
+    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
+                                               Database::AmountField)));
+  }
 }
 
-void TransactionsTable::addTransaction(int row, QStringList fields) {
-  QString value;
-  QLabel *label;
+void TransactionsTable::addTransaction(
+    int row, QList<TransactionsTable::Database> fields, QStringList values) {
+
+  int fieldPosition = 0;
+
+  if (fields.at(0) == Database::IdField) {
+    setVerticalHeaderItem(row, new QTableWidgetItem(values.at(fieldPosition++)));
+  }
+
   QString dateFormat = QLocale().dateFormat(QLocale::ShortFormat);
+  for (int column = 0; fieldPosition < fields.length(); fieldPosition++, column++) {
+    QLabel *label;
+    QString value = values.at(fieldPosition);
 
-  setVerticalHeaderItem(
-      row, new QTableWidgetItem(fields.at(Database::IdField)));
+    if (fields.at(fieldPosition) == Database::DateField) {
+      label = new QLabel(QDate::fromString(value, Qt::DateFormat::ISODate)
+                             .toString(dateFormat));
+      label->setAlignment(Qt::AlignCenter);
+    } else if (fields.at(fieldPosition) == Database::AmountField) {
+      label = new QLabel(QString::number(value.toDouble()));
+      label->setAlignment(Qt::AlignRight);
+    } else {
+      label = new QLabel(value);
+    }
 
-  value = fields.at(Database::BankField);
-  label = new QLabel(value);
-  setCellWidget(row, Table::BankColumn, label);
-
-  value = fields.at(Database::DateField);
-  label = new QLabel(
-      QDate::fromString(value, Qt::DateFormat::ISODate).toString(dateFormat));
-  label->setAlignment(Qt::AlignCenter);
-  setCellWidget(row, Table::DateColumn, label);
-
-  value = fields.at(Database::DescriptionField);
-  label = new QLabel(value);
-  setCellWidget(row, Table::DescriptionColumn, label);
-
-  value = fields.at(Database::CategoryField);
-  label = new QLabel(value);
-  setCellWidget(row, Table::CategoryColumn, label);
-
-  value = fields.at(Database::AmountField);
-  label = new QLabel(QString::number(value.toDouble()));
-  label->setAlignment(Qt::AlignRight);
-  setCellWidget(row, Table::AmountColumn, label);
+    setCellWidget(row, column, label);
+  }
 }
 
 QList<int> TransactionsTable::getAllTransactionIDs() {

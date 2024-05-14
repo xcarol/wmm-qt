@@ -8,7 +8,7 @@ class TransactionsTable : public QTableWidget
 {
     Q_OBJECT
 
-private:
+public:
 
     enum Database {
         IdField = 0,
@@ -29,13 +29,20 @@ private:
         TotalColumns = 5,
     };
 
-public:
+    QStringList FieldNames = {
+        "Id",
+        tr("Bank"),
+        tr("Date"),
+        tr("Description"),
+        tr("Category"),
+        tr("Amount")
+    };
 
     explicit TransactionsTable(QWidget *parent = nullptr);
     ~TransactionsTable();
 
-    void setHeaders(QStringList headers);
-    void addTransaction(int row, QStringList fields);
+    void setHeaders(QList<TransactionsTable::Table> headers);
+    void addTransaction(int row, QList<TransactionsTable::Database> fields, QStringList values);
 
     QList<int> getAllTransactionIDs();
     QList<int> getSelectedTransactions();

@@ -116,33 +116,25 @@ void DuplicatesView::updateDuplicatesTable() {
       QString(tr("Duplicate rows: %1")).arg(numberOfRows));
   ui->duplicateRowsTable->clearTransactions();
   ui->duplicateRowsTable->setRowCount(numberOfRows);
-  ui->duplicateRowsTable->setColumnCount(numberOfColumns);
 
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      0, new QTableWidgetItem(QString(tr("Bank"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      1, new QTableWidgetItem(QString(tr("Date"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      2, new QTableWidgetItem(QString(tr("Description"))));
-
-  ui->duplicateRowsTable->setHorizontalHeaderItem(
-      3, new QTableWidgetItem(QString(tr("Amount"))));
+  ui->duplicateRowsTable->setHeaders({
+      TransactionsTable::Table::BankColumn,
+      TransactionsTable::Table::DateColumn,
+      TransactionsTable::Table::DescriptionColumn,
+      TransactionsTable::Table::AmountColumn,
+  });
 
   for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
-
-    ui->duplicateRowsTable->setVerticalHeaderItem(
-        rowCount, new QTableWidgetItem(duplicates.at(rowCount).at(0)));
-
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 0, new QLabel(duplicates.at(rowCount).at(1)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 1, new QLabel(duplicates.at(rowCount).at(2)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 2, new QLabel(duplicates.at(rowCount).at(3)));
-    ui->duplicateRowsTable->setCellWidget(
-        rowCount, 3, new QLabel(duplicates.at(rowCount).at(4)));
+    ui->duplicateRowsTable->addTransaction(
+        rowCount,
+        {
+            TransactionsTable::Database::IdField,
+            TransactionsTable::Database::BankField,
+            TransactionsTable::Database::DateField,
+            TransactionsTable::Database::DescriptionField,
+            TransactionsTable::Database::AmountField,
+        },
+        duplicates.at(rowCount));
   }
 }
 

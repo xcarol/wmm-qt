@@ -29,8 +29,6 @@ private:
   QString categoryName;
   QString appliedFilter;
 
-  void addHeadersToSearchResultsTable(QStringList headers);
-  void addRowToSearchResultsTable(int row, QStringList rowFields);
   void searchUncategorizedRows();
   void setFilter(QString filter);
   void addFiltersToDatabase(QString category, QStringList filters);
