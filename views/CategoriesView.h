@@ -19,7 +19,8 @@ private:
   QString regexpHelpUrl = QString("https://dev.mysql.com/doc/refman/8.0/en/regexp.html");
 
 private slots:
-  void on_applyButton_clicked();
+  void on_applyCategoryButton_clicked();
+  void on_applyFilterButton_clicked();
   void on_deleteCategoriesButton_clicked();
   void on_deleteFiltersButton_clicked();
   void on_categorysList_currentRowChanged(int currentRow);
@@ -39,13 +40,14 @@ private slots:
 
   void addCategory();
   void addFilter();
+  void applyCategory();
   void clearFilters();
   void deleteCategories();
   void deleteFilters();
   void loadCategories(int selectRow = 0);
   void loadFilters(QString category);
   void renameCategory(QString category, QString newName);
-  void updateRenameButton();
+  void updateCategoryButtons();
   void updateFilterButtons();
 
   private:

@@ -14,7 +14,11 @@ CategoriesView::CategoriesView(QWidget *parent)
 
 CategoriesView::~CategoriesView() { delete ui; }
 
-void CategoriesView::on_applyButton_clicked() {
+void CategoriesView::on_applyCategoryButton_clicked() {
+  applyCategory();
+}
+
+void CategoriesView::on_applyFilterButton_clicked() {
   QListWidgetItem *categoryItem = ui->categorysList->currentItem();
   QListWidgetItem *filterItem = ui->filterList->currentItem();
 
@@ -66,12 +70,11 @@ void CategoriesView::on_categorysList_currentRowChanged(int currentRow) {
 void CategoriesView::on_categorysList_itemClicked(QListWidgetItem *item) {
   int selectedItems = ui->categorysList->selectedItems().length();
 
-  ui->deleteCategoriesButton->setEnabled(selectedItems > 0);
   ui->renameCurrentEdit->setText(
       selectedItems == 1 ? ui->categorysList->currentItem()->text() : "");
   ui->renameNewEdit->clear();
 
-  updateRenameButton();
+  updateCategoryButtons();
 }
 
 void CategoriesView::on_categorysList_itemSelectionChanged() {
@@ -101,10 +104,7 @@ void CategoriesView::on_newCategoryEdit_textChanged(const QString &arg1) {
 void CategoriesView::on_newCategoryEdit_returnPressed() { addCategory(); }
 
 void CategoriesView::on_newFilterEdit_textChanged(const QString &arg1) {
-  QList<QListWidgetItem *> selectedCategories =
-      ui->categorysList->selectedItems();
-  ui->newFilterButton->setEnabled(arg1.length() > 0 &&
-                                  selectedCategories.length() == 1);
+  updateFilterButtons();
 }
 
 void CategoriesView::on_newFilterEdit_returnPressed() { addFilter(); }
@@ -114,11 +114,11 @@ void CategoriesView::on_renameButton_clicked() {
 }
 
 void CategoriesView::on_renameCurrentEdit_textChanged(const QString &arg1) {
-  updateRenameButton();
+  updateCategoryButtons();
 }
 
 void CategoriesView::on_renameNewEdit_textChanged(const QString &arg1) {
-  updateRenameButton();
+  updateCategoryButtons();
 }
 
 void CategoriesView::addCategory() {
@@ -147,6 +147,34 @@ void CategoriesView::addFilter() {
 
     loadFilters(category);
   }
+}
+
+void CategoriesView::applyCategory() {
+  QString category = ui->categorysList->currentItem()->text();
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("APPLY")),
+      QString(tr("You're about to apply category '%1' to the uncategorized transactions that match this category filters.\nAre you sure?"))
+          .arg(category));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  Database database = Database();
+  QString sqlError;
+
+  int updatedRows = database.updateRowsCategory(category);
+  sqlError = database.getLastErrorText();
+  if (!sqlError.isEmpty()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+    return;
+  }
+
+  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+              QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
+      .exec();
 }
 
 void CategoriesView::clearFilters() {
@@ -312,14 +340,19 @@ void CategoriesView::renameCategory(QString category, QString newName) {
   loadCategories();
 }
 
-void CategoriesView::updateRenameButton() {
+void CategoriesView::updateCategoryButtons() {
+  int selectedCategories = ui->categorysList->selectedItems().length();
+  ui->applyCategoryButton->setEnabled(selectedCategories == 1);
+  ui->deleteCategoriesButton->setEnabled(selectedCategories);
   ui->renameButton->setEnabled(ui->renameCurrentEdit->text().isEmpty() ==
                                    false &&
-                               ui->renameNewEdit->text().isEmpty() == false);
+                               ui->renameNewEdit->text().isEmpty() == false &&
+                               selectedCategories == 1);
 }
 
 void CategoriesView::updateFilterButtons() {
   int selectedFilters = ui->filterList->selectedItems().length();
   ui->deleteFiltersButton->setEnabled(selectedFilters);
-  ui->applyButton->setEnabled(selectedFilters == 1);
+  ui->applyFilterButton->setEnabled(selectedFilters == 1);
+  ui->newFilterButton->setEnabled(ui->newFilterEdit->text().length() && ui->categorysList->selectedItems().length() == 1);
 }

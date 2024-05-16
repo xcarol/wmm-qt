@@ -5,9 +5,9 @@
 
 #include <QFileDialog>
 #include <QList>
+#include <QLocale>
 #include <QMessageBox>
 #include <QProgressDialog>
-#include <QLocale>
 
 ImportFileView::ImportFileView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::ImportFileView) {
@@ -24,6 +24,39 @@ void ImportFileView::resetView() {
   ui->filePreviewTable->clear();
   ui->banksComboBox->clear();
   ui->ImportButton->setEnabled(false);
+}
+
+void ImportFileView::applyCategories() {
+  Database database = Database();
+  bool wasCancelled = false;
+
+  QStringList categories = database.getCategoryNames();
+  QProgressDialog progress = QProgressDialog(
+      tr("Apply categories progress..."), tr("Cancel"), 0, categories.length());
+
+  foreach (QString category, categories) {
+    progress.setLabelText(
+        QString(tr("Applying category %1...")).arg(category));
+    database.updateRowsCategory(category);
+    if (progress.wasCanceled()) {
+      wasCancelled = true;
+      break;
+    }
+  }
+
+  if (wasCancelled) {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Categorize cancelled")),
+                QString(tr("Categorize process was cancelled. Use 'Categorize' view to check imported transactions.")))
+        .exec();
+  } else if (database.getLastErrorText().length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("All categories applied. Use 'Categorize' view to check imported transactions.")))
+        .exec();
+  }
 }
 
 void ImportFileView::fillHeaders(QList<QStringList> rows) {
@@ -77,6 +110,76 @@ void ImportFileView::formatPreview(QList<QStringList> rows) {
   }
 }
 
+void ImportFileView::importRows() {
+  Database database = Database();
+
+  if (database.checkConnection() == false) {
+    return;
+  }
+
+  QProgressDialog progress =
+      QProgressDialog("", tr("Cancel"), 0, csvFile.rowsCount());
+
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setWindowTitle(tr("Import progress..."));
+
+  bool wasCancelled = false;
+  int storedRows = 0;
+  int rowsToStore = csvFile.rowsCount() - headerRows;
+  for (; storedRows < rowsToStore; storedRows++) {
+    QStringList row = csvFile.getRows(storedRows + headerRows).at(0);
+
+    if (row.length() == 0 || row.length() < csvFile.columnsCount()) {
+      break;
+    }
+
+    QString date = row.at(dateColumn - INDEX_OFFSET);
+    QString description = row.at(descriptionColumn - INDEX_OFFSET);
+
+    bool ok = false;
+    double amount =
+        QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+
+    if (ok == false) {
+      QLocale locale = QLocale("C");
+      amount = locale.toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
+    }
+
+    if (database.storeRow(bankName, date, description, amount) == false) {
+      break;
+    }
+
+    progress.setLabelText(QString(tr("%1 of %2 rows stored..."))
+                              .arg(storedRows)
+                              .arg(rowsToStore));
+    progress.setValue(storedRows);
+    if (progress.wasCanceled()) {
+      wasCancelled = true;
+      break;
+    }
+  }
+
+  progress.cancel();
+
+  if (wasCancelled) {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Import cancelled")),
+                QString(tr("A total of %1 from %2 rows imported"))
+                    .arg(storedRows)
+                    .arg(rowsToStore))
+        .exec();
+  } else if (database.getLastErrorText().length()) {
+    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                QString(database.getLastErrorText()))
+        .exec();
+  } else {
+    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
+                QString(tr("A total of %1 from %2 rows imported"))
+                    .arg(storedRows)
+                    .arg(rowsToStore))
+        .exec();
+  }
+}
+
 void ImportFileView::updatePreview() {
   resetView();
 
@@ -94,8 +197,8 @@ void ImportFileView::updatePreview() {
 }
 
 void ImportFileView::selectImportFile() {
-  QString fileName =
-      QFileDialog::getOpenFileName(this, tr("Open File"), ".", tr("Csv Files (*.csv)"));
+  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
+                                                  tr("Csv Files (*.csv)"));
 
   if (fileName.isEmpty()) {
     return;
@@ -116,71 +219,8 @@ void ImportFileView::selectImportFile() {
 }
 
 void ImportFileView::importSelectedFile() {
-  Database database = Database();
-
-  if (database.checkConnection() == false) {
-    return;
-  }
-
-  QProgressDialog progress =
-      QProgressDialog("", tr("Cancel"), 0, csvFile.rowsCount());
-
-  progress.setWindowModality(Qt::WindowModal);
-  progress.setWindowTitle(tr("Import progress..."));
-
-  bool isCancelled = false;
-  int storedRows = 0;
-  int rowsToStore = csvFile.rowsCount() - headerRows;
-  for (; storedRows < rowsToStore; storedRows++) {
-    QStringList row = csvFile.getRows(storedRows + headerRows).at(0);
-
-    if (row.length() == 0 || row.length() < csvFile.columnsCount()) {
-      break;
-    }
-
-    QString date = row.at(dateColumn - INDEX_OFFSET);
-    QString description = row.at(descriptionColumn - INDEX_OFFSET);
-
-    bool ok = false;
-    double amount = QLocale().toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
-
-    if (ok == false) {
-      QLocale locale = QLocale("C");
-      amount = locale.toDouble(row.at(amountColumn - INDEX_OFFSET), &ok);
-    }
-
-    if (database.storeRow(bankName, date, description, amount) == false) {
-      break;
-    }
-
-    progress.setLabelText(
-        QString(tr("%1 of %2 rows stored...")).arg(storedRows).arg(rowsToStore));
-    progress.setValue(storedRows);
-    if (progress.wasCanceled()) {
-      isCancelled = true;
-      break;
-    }
-  }
-
-  progress.cancel();
-
-  if (isCancelled) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Import cancelled")),
-                QString(tr("A total of %1 from %2 rows imported"))
-                    .arg(storedRows)
-                    .arg(rowsToStore))
-        .exec();
-  } else if (database.getLastErrorText().length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 from %2 rows imported"))
-                    .arg(storedRows)
-                    .arg(rowsToStore))
-        .exec();
-  }
+  importRows();
+  applyCategories();
 }
 
 bool ImportFileView::checkSelectedFile() {

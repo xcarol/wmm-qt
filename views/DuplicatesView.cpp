@@ -95,6 +95,11 @@ void DuplicatesView::markDuplicateRows(QList<int> ids) {
 
 void DuplicatesView::updateDuplicatesTable() {
   Database database = Database();
+
+  ui->duplicateRowsTable->clearTransactions();
+  ui->duplicateRowsLabel->setText(
+      QString(tr("Duplicate rows: 0")));
+
   QList<QStringList> duplicates = database.getDuplicateRows();
   if (database.getLastErrorText().isEmpty() == false) {
     QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
@@ -114,7 +119,6 @@ void DuplicatesView::updateDuplicatesTable() {
 
   ui->duplicateRowsLabel->setText(
       QString(tr("Duplicate rows: %1")).arg(numberOfRows));
-  ui->duplicateRowsTable->clearTransactions();
   ui->duplicateRowsTable->setRowCount(numberOfRows);
 
   ui->duplicateRowsTable->setHeaders({

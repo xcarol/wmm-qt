@@ -200,6 +200,27 @@ bool Database::storeRow(QString bank, QString date, QString description,
   return false;
 }
 
+int Database::updateRowsCategory(QString category) {
+  int updatedRows;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+    QString queryString =
+        QString(queryUpdateRowsCategoryWithAllFilters)
+            .arg(category.left(CATEGORY_LENGHT));
+
+    if (query.exec(queryString)) {
+      updatedRows = query.numRowsAffected();
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return updatedRows;
+}
+
 int Database::updateRowsCategory(QString descriptionRegex, QString category) {
   int updatedRows;
 
@@ -472,7 +493,7 @@ QStringList Database::getYears(bool ascending) {
 bool Database::addFilter(QString category, QString filter) {
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryAddFilter).arg(category).arg(filter);
+    QString queryString = QString(queryAddFilter).arg(category).arg(filter.replace("\\", "\\\\"));
 
     if (query.exec(queryString)) {
       return true;

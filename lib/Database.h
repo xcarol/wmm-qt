@@ -41,12 +41,13 @@ private:
 
   QString queryCategoryNames =
       QString("SELECT DISTINCT category FROM transactions WHERE category IS "
-              "NOT NULL AND "
-              "TRIM(category) <> ''");
+              "NOT NULL AND TRIM(category) <> '' ORDER BY category ASC");
 
-  QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE category='%1' ORDER BY filter ASC";
+  QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE "
+                             "category='%1' ORDER BY filter ASC";
 
-  QString queryDescriptions = "SELECT DISTINCT description FROM transactions WHERE category='%1' ORDER BY description ASC";
+  QString queryDescriptions = "SELECT DISTINCT description FROM transactions "
+                              "WHERE category='%1' ORDER BY description ASC";
 
   QString queryUncategorizedRows = QString(
       "SELECT id, bank, date, description, category, amount FROM transactions "
@@ -56,6 +57,14 @@ private:
       QString(" AND description REGEXP '%1'");
 
   QString queryColumnNames = QString("SELECT * FROM transactions LIMIT 1");
+
+  QString queryUpdateRowsCategoryWithAllFilters =
+      QString("UPDATE transactions AS t"
+              " JOIN filters AS f ON t.description LIKE CONCAT('%', "
+              " REPLACE(f.filter, '%', '\\%'), '%')"
+              " SET t.category = f.category"
+              " WHERE f.category = '%1' AND "
+              " (TRIM(t.category) = '' OR t.category IS NULL)");
 
   QString queryUpdateRowsCategoryWithDescriptionRegex =
       QString("UPDATE transactions SET category = '%2' WHERE description "
@@ -95,21 +104,29 @@ private:
 
   QString queryYears = QString("SELECT DISTINCT YEAR(date) FROM transactions");
 
-  QString queryAddCategoryFilters = QString("INSERT INTO filters (category, filter) VALUES %1");
+  QString queryAddCategoryFilters =
+      QString("INSERT INTO filters (category, filter) VALUES %1");
 
-  QString queryDeleteCategoryFilters = QString("DELETE FROM filters WHERE category = '%1'");
+  QString queryDeleteCategoryFilters =
+      QString("DELETE FROM filters WHERE category = '%1'");
 
-  QString queryDeleteCategories = QString("DELETE FROM filters WHERE category IN (%1)");
+  QString queryDeleteCategories =
+      QString("DELETE FROM filters WHERE category IN (%1)");
 
-  QString queryDeleteFilters = QString("DELETE FROM filters WHERE filter IN (%1)");
+  QString queryDeleteFilters =
+      QString("DELETE FROM filters WHERE filter IN (%1)");
 
-  QString queryResetRowsCategories = QString("UPDATE transactions SET category = '' WHERE category in (%1)");
+  QString queryResetRowsCategories =
+      QString("UPDATE transactions SET category = '' WHERE category in (%1)");
 
-  QString queryAddFilter = QString("INSERT INTO filters (category, filter) VALUES ('%1', '%2')");
+  QString queryAddFilter =
+      QString("INSERT INTO filters (category, filter) VALUES ('%1', '%2')");
 
-  QString queryRenameRowsCategory = QString("UPDATE transactions SET category = '%2' WHERE category = '%1'");
+  QString queryRenameRowsCategory =
+      QString("UPDATE transactions SET category = '%2' WHERE category = '%1'");
 
-  QString queryRenameCategoryFilters = QString("UPDATE filters SET category = '%2' WHERE category = '%1'");
+  QString queryRenameCategoryFilters =
+      QString("UPDATE filters SET category = '%2' WHERE category = '%1'");
 
 private:
   QString lastError;
@@ -154,6 +171,7 @@ public:
 
   bool checkConnection();
   bool storeRow(QString bank, QString date, QString description, double amount);
+  int updateRowsCategory(QString category);
   int updateRowsCategory(QString descriptionRegex, QString category);
   int updateRowsCategory(QList<int> rowIds, QString category);
   QStringList getBankNames();
