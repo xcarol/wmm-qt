@@ -23,6 +23,9 @@ private:
   void sortHeaders(int column, Qt::SortOrder order);
   void restoreColumnsWidths(QString tableName);
   void saveColumnsWidths();
+  void enableNesting();
+  void disableNesting();
+  bool isNesting();
 
 public:
   enum Database {

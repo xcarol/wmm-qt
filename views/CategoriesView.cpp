@@ -15,8 +15,15 @@ CategoriesView::CategoriesView(QWidget *parent)
 CategoriesView::~CategoriesView() { delete ui; }
 
 void CategoriesView::on_applyButton_clicked() {
-  QString category = ui->categorysList->currentItem()->text();
-  QString filter = ui->filterList->currentItem()->text();
+  QListWidgetItem *categoryItem = ui->categorysList->currentItem();
+  QListWidgetItem *filterItem = ui->filterList->currentItem();
+
+  if (categoryItem == NULL || filterItem == NULL) {
+    return;
+  }
+
+  QString category = categoryItem->text();
+  QString filter = filterItem->text();
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("UPDATE")),
@@ -76,9 +83,7 @@ void CategoriesView::on_categorysList_itemSelectionChanged() {
 }
 
 void CategoriesView::on_filterList_itemClicked(QListWidgetItem *item) {
-  int selectedFilters = ui->filterList->selectedItems().length();
-  ui->deleteFiltersButton->setEnabled(selectedFilters);
-  ui->applyButton->setEnabled(selectedFilters == 1);
+  updateFilterButtons();
 }
 
 void CategoriesView::on_helpButton_triggered(QAction *arg1) {
@@ -287,6 +292,8 @@ void CategoriesView::loadFilters(QString category) {
   foreach (QString filter, filters) {
     ui->filterList->addItem(filter);
   }
+
+  updateFilterButtons();
 }
 
 void CategoriesView::renameCategory(QString category, QString newName) {
@@ -309,4 +316,10 @@ void CategoriesView::updateRenameButton() {
   ui->renameButton->setEnabled(ui->renameCurrentEdit->text().isEmpty() ==
                                    false &&
                                ui->renameNewEdit->text().isEmpty() == false);
+}
+
+void CategoriesView::updateFilterButtons() {
+  int selectedFilters = ui->filterList->selectedItems().length();
+  ui->deleteFiltersButton->setEnabled(selectedFilters);
+  ui->applyButton->setEnabled(selectedFilters == 1);
 }
