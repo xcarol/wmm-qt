@@ -2,7 +2,7 @@
 #define CATEGORIESVIEW_H
 
 #include <QMainWindow>
-#include <QListWidgetItem>
+#include <QListWidget>
 
 namespace Ui {
 class CategoriesView;
@@ -34,6 +34,8 @@ private slots:
   void on_newFilterEdit_textChanged(const QString &arg1);
   void on_newFilterEdit_returnPressed();
   void on_renameButton_clicked();
+  void on_renameCurrentEdit_textChanged(const QString &arg1);
+  void on_renameNewEdit_textChanged(const QString &arg1);
 
   void addCategory();
   void addFilter();
@@ -44,10 +46,7 @@ private slots:
   void loadFilters(QString category);
   void renameCategory(QString category, QString newName);
   void updateRenameButton();
-
-  void on_renameCurrentEdit_textChanged(const QString &arg1);
-
-  void on_renameNewEdit_textChanged(const QString &arg1);
+  void updateFilterButtons();
 
   private:
   Ui::CategoriesView *ui;

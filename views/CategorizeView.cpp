@@ -75,12 +75,6 @@ void CategorizeView::on_updateButton_clicked() {
   }
 
   updateUncategorizedRows(selectedTransactionsId);
-
-  if (selectedTransactionsDescription.isEmpty()) {
-    addFiltersToDatabase(category, QStringList(filter));
-  } else {
-    addFiltersToDatabase(category, selectedTransactionsDescription);
-  }
 }
 
 void CategorizeView::searchUncategorizedRows() {

@@ -26,6 +26,7 @@ void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers,
   int columnCount = 0;
 
   setColumnCount(headers.length());
+  disableNesting();
 
   if (headers.contains(Table::BankColumn)) {
     setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
@@ -47,6 +48,8 @@ void TransactionsTable::setHeaders(QList<TransactionsTable::Table> headers,
     setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
                                                Database::AmountField)));
   }
+
+  enableNesting();
 
   if (!viewName.isEmpty()) {
     tableName = viewName;
@@ -154,14 +157,14 @@ void TransactionsTable::sortByColumn(int column) {
 void TransactionsTable::sortHeaders(int sortedColumn, Qt::SortOrder order) {
   for (int column = 0; column < columnCount(); column++) {
     QString currentLabel = horizontalHeaderItem(column)->text();
-    QString newLabel = currentLabel.remove(QRegularExpression(sortSymbolsRegexp));
+    QString newLabel =
+        currentLabel.remove(QRegularExpression(sortSymbolsRegexp));
 
     if (column == sortedColumn) {
       newLabel.append(sortOrder == Qt::SortOrder::AscendingOrder
-                              ? sortSymbolUp
-                              : sortSymbolDown);
+                          ? sortSymbolUp
+                          : sortSymbolDown);
     }
-
 
     horizontalHeaderItem(column)->setText(newLabel);
   }
@@ -169,25 +172,26 @@ void TransactionsTable::sortHeaders(int sortedColumn, Qt::SortOrder order) {
 
 void TransactionsTable::saveColumnsWidths() {
 
-  if (tableName.isEmpty()) {
+  if (tableName.isEmpty() || isNesting()) {
     return;
   }
-  if (resizeNastyReentering) {
-    return;
-  }
-  resizeNastyReentering = true;
+
+  disableNesting();
+
   for (int column = 0; column < columnCount(); column++) {
     settings.setValue(QString(settingTemplate).arg(tableName).arg(column),
                       columnWidth(column));
   }
-  resizeNastyReentering = false;
+  
+  enableNesting();
 }
 
 void TransactionsTable::restoreColumnsWidths(QString tableName) {
-  if (resizeNastyReentering) {
+  if (isNesting()) {
     return;
   }
-  resizeNastyReentering = true;
+
+  disableNesting();
   for (int column = 0; column < columnCount(); column++) {
     int width =
         settings.value(QString(settingTemplate).arg(tableName).arg(column), "0")
@@ -196,8 +200,12 @@ void TransactionsTable::restoreColumnsWidths(QString tableName) {
       setColumnWidth(column, width);
     }
   }
-  resizeNastyReentering = false;
+  enableNesting();
 }
+
+void TransactionsTable::enableNesting() { resizeNastyReentering = false; }
+void TransactionsTable::disableNesting() { resizeNastyReentering = true; }
+bool TransactionsTable::isNesting() { return resizeNastyReentering; }
 
 void TransactionsTable::clearTransactions() {
   clear();
