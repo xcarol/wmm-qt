@@ -83,6 +83,16 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="applyCategoryButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>Apply selected category</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -154,7 +164,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QPushButton" name="applyButton">
+         <widget class="QPushButton" name="applyFilterButton">
           <property name="enabled">
            <bool>false</bool>
           </property>
