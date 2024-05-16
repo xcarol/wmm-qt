@@ -46,9 +46,11 @@ private:
 
   CsvFile csvFile = CsvFile();
 
+  void applyCategories();
   void fillHeaders(QList<QStringList> rows);
   void fillRows(QList<QStringList> rows);
   void formatPreview(QList<QStringList> rows);
+  void importRows();
   void resetView();
   void updatePreview();
   void updateImportButtonState();
