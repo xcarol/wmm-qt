@@ -4,22 +4,39 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlField>
+#include <QSqlRecord>
 
 SqlCommandView::SqlCommandView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::SqlCommandView) {
   ui->setupUi(this);
+  ui->historyComboBox->addItem(QString());
+  ui->historyComboBox->addItems(settings.value(settingsName).toStringList());
 }
 
 SqlCommandView::~SqlCommandView() { delete ui; }
 
+
+void SqlCommandView::on_clearHistoryButton_clicked()
+{
+  settings.setValue(settingsName, QStringList());
+  ui->historyComboBox->clear();
+}
+
 void SqlCommandView::on_execButton_clicked() {
   Database database = Database();
+
+  QString commandFromHistory = ui->sqlCommandEdit->toPlainText();
+  ui->historyComboBox->addItem(commandFromHistory);
+  QStringList sqlCommandHistory = settings.value(settingsName).toStringList();
+  sqlCommandHistory.append(commandFromHistory);
+  settings.setValue(settingsName, sqlCommandHistory);
 
   QProgressDialog progress =
       QProgressDialog(tr("Executing query..."), tr("Cancel"), 0, 100, this);
 
   progress.setWindowModality(Qt::WindowModal);
   progress.setWindowTitle(tr("Sql Command"));
+  progress.show();
 
   QList<QSqlRecord> records =
       database.execCommand(ui->sqlCommandEdit->toPlainText());
@@ -43,6 +60,13 @@ void SqlCommandView::on_execButton_clicked() {
 
   fillResultTable(records,
                   [&progress](int value) { progress.setValue(value); });
+}
+
+
+void SqlCommandView::on_historyComboBox_currentIndexChanged(int index)
+{
+  QString command = ui->historyComboBox->currentText();
+  ui->sqlCommandEdit->setPlainText(command);
 }
 
 void SqlCommandView::fillResultTable(QList<QSqlRecord> records,
@@ -140,3 +164,4 @@ void SqlCommandView::on_restoreButton_clicked() {
               QString(tr("Database restore from file: %1")).arg(fileName))
       .exec();
 }
+
