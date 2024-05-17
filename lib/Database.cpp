@@ -491,9 +491,13 @@ QStringList Database::getYears(bool ascending) {
 }
 
 bool Database::addFilter(QString category, QString filter) {
+  if (filter.trimmed().isEmpty()) {
+    lastError = tr("filter parameter cannot be empty");
+    return false;
+  }
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString = QString(queryAddFilter).arg(category).arg(filter.replace("\\", "\\\\"));
+    QString queryString = QString(queryAddFilter).arg(category).arg(filter);
 
     if (query.exec(queryString)) {
       return true;
