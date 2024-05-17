@@ -695,7 +695,7 @@ N&apos;estàs segur?</translation>
         <location filename="../views/CategoriesView.cpp" line="157"/>
         <source>You&apos;re about to apply category &apos;%1&apos; to the uncategorized transactions that match this category filters.
 Are you sure?</source>
-        <translation>Ets a punt d&apos;aplicar la categoria &apos;%1&apos; a les transaccions sense categoria en les que la descripció contingui &apos;%2&apos;
+        <translation>Esteu a punt d&apos;aplicar la categoria &apos;%1&apos; a les transaccions no categoritzades que coincideixen amb els filtres d&apos;aquesta categoria.
 N&apos;estàs segur?</translation>
     </message>
 </context>
