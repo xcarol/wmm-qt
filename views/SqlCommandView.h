@@ -4,9 +4,7 @@
 #include <QMainWindow>
 #include <QProgressDialog>
 #include <QSqlQuery>
-#include <qcontainerfwd.h>
-#include <qlist.h>
-#include <qsqlrecord.h>
+#include <QSettings>
 
 namespace Ui {
 class SqlCommandView;
@@ -20,14 +18,17 @@ public:
   ~SqlCommandView();
 
 private slots:
+  void on_clearHistoryButton_clicked();
   void on_execButton_clicked();
-
   void on_backupButton_clicked();
-
   void on_restoreButton_clicked();
+  void on_historyComboBox_currentIndexChanged(int index);
 
-private:
+  private:
   Ui::SqlCommandView *ui;
+
+  QString settingsName = "sqlCommandHistory";
+  QSettings settings = QSettings("com.xicra", "wmm");
 
   void fillResultTable(QList<QSqlRecord> records,
                        std::function<void(int)> functionObject);
