@@ -695,7 +695,7 @@ Are you sure?</source>
         <location filename="../views/CategoriesView.cpp" line="157"/>
         <source>You&apos;re about to apply category &apos;%1&apos; to the uncategorized transactions that match this category filters.
 Are you sure?</source>
-        <translation>Estás a punto de aplicar la categoría &apos;%1&apos; a las transacciones sin categoría en las que la descripción contenga &apos;%2&apos;
+        <translation>Está a punto de aplicar la categoría &apos;%1&apos; a las transacciones sin categoría que coinciden con los filtros de esta categoría.
 ¿Estás seguro?</translation>
     </message>
 </context>

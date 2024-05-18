@@ -6,6 +6,7 @@
 #include <QProgressDialog>
 #include <QSettings>
 
+#include "../dialogs/NewCategoryDialog.h"
 #include "../lib/Database.h"
 #include "CategorizeView.h"
 #include "ui_CategorizeView.h"
@@ -26,7 +27,7 @@ CategorizeView::~CategorizeView() { delete ui; }
 
 void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
   categoryName = arg1;
-  updateUpdateButtonState();
+  updateButtonsState();
 }
 
 void CategorizeView::on_filterEdit_currentIndexChanged(int index) {
@@ -43,39 +44,60 @@ void CategorizeView::on_filterEdit_returnPressed() {
 
 void CategorizeView::on_searchButton_clicked() {
   searchUncategorizedRows();
-  updateUpdateButtonState();
+  updateButtonsState();
 }
 
 void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
-  updateUpdateButtonState();
+  updateButtonsState();
 }
 
-void CategorizeView::on_updateButton_clicked() {
-  QList<int> selectedTransactionsId =
-      ui->searchResultsTable->getSelectedTransactionIDs();
-  QList<int> selectedTransactions =
-      ui->searchResultsTable->getSelectedTransactions();
-  QStringList selectedTransactionsDescription =
-      ui->searchResultsTable->getSelectedTransactionDescriptions();
+void CategorizeView::on_addButton_clicked() {
   QString category = categoryName;
-  QString filter = appliedFilter;
+  QString filter = "";
 
-  if (selectedTransactionsId.length() == 0) {
-    selectedTransactionsId = ui->searchResultsTable->getAllTransactionIDs();
+  NewCategoryDialog dialog = NewCategoryDialog(category);
+  if (dialog.exec() == true) {
+    Database database = Database();
+    category = dialog.category;
+    filter = dialog.filter;
+    database.addFilter(category, filter);
+    QString error = database.getLastErrorText();
+    if (!error.isEmpty()) {
+      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                  QString(database.getLastErrorText()))
+          .exec();
+      return;
+    }
+
+    updateSelectedRows();
+
+    QMessageBox::StandardButton res = QMessageBox::question(
+        QApplication::topLevelWidgets().first(), QString(tr("Update")),
+        QString(tr("Do you want to apply category %1 with filter %2 to all "
+                   "uncategorized transactions?"))
+            .arg(category)
+            .arg(filter));
+    if (res == QMessageBox::StandardButton::No) {
+      return;
+    }
+
+    int updatedRows = database.updateRowsCategory(filter, category);
+    QString sqlError = database.getLastErrorText();
+    if (!sqlError.isEmpty()) {
+      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
+                  QString(sqlError))
+          .exec();
+      return;
+    }
+
+    QMessageBox(
+        QMessageBox::Icon::Information, QString(tr("Database success")),
+        QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
+        .exec();
   }
-
-  QMessageBox::StandardButton res = QMessageBox::question(
-      QApplication::topLevelWidgets().first(), QString(tr("Update")),
-      QString(tr("You're about to update %1 records "
-                 "with the category: %2\nAre you sure?"))
-          .arg(selectedTransactionsId.length())
-          .arg(category));
-  if (res == QMessageBox::StandardButton::No) {
-    return;
-  }
-
-  updateUncategorizedRows(selectedTransactionsId);
 }
+
+void CategorizeView::on_updateButton_clicked() { updateSelectedRows(); }
 
 void CategorizeView::searchUncategorizedRows() {
   Database database = Database();
@@ -114,13 +136,15 @@ void CategorizeView::searchUncategorizedRows() {
       QString(tr("Uncategorized rows: %1")).arg(QString::number(numberOfRows)));
   ui->searchResultsTable->setRowCount(numberOfRows);
 
-  ui->searchResultsTable->setHeaders({
-      TransactionsTable::Table::BankColumn,
-      TransactionsTable::Table::DateColumn,
-      TransactionsTable::Table::DescriptionColumn,
-      TransactionsTable::Table::CategoryColumn,
-      TransactionsTable::Table::AmountColumn,
-  }, "CategorizeView");
+  ui->searchResultsTable->setHeaders(
+      {
+          TransactionsTable::Table::BankColumn,
+          TransactionsTable::Table::DateColumn,
+          TransactionsTable::Table::DescriptionColumn,
+          TransactionsTable::Table::CategoryColumn,
+          TransactionsTable::Table::AmountColumn,
+      },
+      "CategorizeView");
 
   progress.reset();
   progress.setMaximum(numberOfRows);
@@ -167,6 +191,27 @@ void CategorizeView::addFiltersToDatabase(QString category,
   database.addFilters(category, filters);
 }
 
+void CategorizeView::updateSelectedRows() {
+  QList<int> selectedTransactionsId =
+      ui->searchResultsTable->getSelectedTransactionIDs();
+
+  if (selectedTransactionsId.length() == 0) {
+    selectedTransactionsId = ui->searchResultsTable->getAllTransactionIDs();
+  }
+
+  QMessageBox::StandardButton res = QMessageBox::question(
+      QApplication::topLevelWidgets().first(), QString(tr("Update")),
+      QString(tr("You're about to update %1 records "
+                 "with the category: %2\nAre you sure?"))
+          .arg(selectedTransactionsId.length())
+          .arg(categoryName));
+  if (res == QMessageBox::StandardButton::No) {
+    return;
+  }
+
+  updateUncategorizedRows(selectedTransactionsId);
+}
+
 void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
   Database database = Database();
 
@@ -185,9 +230,11 @@ void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
   updateView();
 }
 
-void CategorizeView::updateUpdateButtonState() {
-  ui->updateButton->setEnabled(ui->searchResultsTable->rowCount() > 0 &&
-                               categoryName.length() > 0);
+void CategorizeView::updateButtonsState() {
+  bool enabled =
+      ui->searchResultsTable->rowCount() > 0 && categoryName.length() > 0;
+  ui->updateButton->setEnabled(enabled);
+  ui->addButton->setEnabled(enabled);
 }
 
 void CategorizeView::updateView() {

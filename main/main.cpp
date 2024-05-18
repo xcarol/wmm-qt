@@ -2,8 +2,8 @@
 
 #include <QApplication>
 #include <QLocale>
-#include <QTranslator>
 #include <QSettings>
+#include <QTranslator>
 
 int main(int argc, char *argv[]) {
   QApplication application(argc, argv);
@@ -23,14 +23,16 @@ int main(int argc, char *argv[]) {
 
   mainWindow.restoreGeometry(settings.value("geometry").toByteArray());
   mainWindow.restoreState(settings.value("state").toByteArray());
-
-
+  
+  
   mainWindow.show();
 
   int result = application.exec();
 
-  settings.setValue("geometry", mainWindow.saveGeometry());
-  settings.setValue("state", mainWindow.saveState());
+  if (mainWindow.isMaximized() == false) {
+    settings.setValue("geometry", mainWindow.saveGeometry());
+    settings.setValue("state", mainWindow.saveState());
+  }
 
   return result;
 }
