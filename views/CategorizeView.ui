@@ -91,12 +91,22 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
+           <widget class="QPushButton" name="addButton">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>Add with new filter</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="updateButton">
             <property name="enabled">
              <bool>false</bool>
             </property>
             <property name="text">
-             <string>Update</string>
+             <string>Add to selected category</string>
             </property>
            </widget>
           </item>

@@ -21,9 +21,10 @@ private slots:
   void on_filterEdit_returnPressed();
   void on_searchButton_clicked();
   void on_searchResultsTable_itemSelectionChanged();
+  void on_addButton_clicked();
   void on_updateButton_clicked();
 
-private:
+  private:
   Ui::CategorizeView *ui;
 
   QString categoryName;
@@ -32,8 +33,9 @@ private:
   void searchUncategorizedRows();
   void setFilter(QString filter);
   void addFiltersToDatabase(QString category, QStringList filters);
+  void updateSelectedRows();
   void updateUncategorizedRows(QList<int> rowsIds);
-  void updateUpdateButtonState();
+  void updateButtonsState();
   void updateView();
 };
 

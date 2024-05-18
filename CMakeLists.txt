@@ -32,6 +32,9 @@ set(PROJECT_SOURCES
     dialogs/DatabaseSettings.h
     dialogs/DatabaseSettings.cpp
     dialogs/DatabaseSettings.ui
+    dialogs/NewCategoryDialog.h
+    dialogs/NewCategoryDialog.cpp
+    dialogs/NewCategoryDialog.ui
     lib/Database.h
     lib/Database.cpp
     views/CategorizeView.h
