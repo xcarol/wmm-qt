@@ -58,6 +58,8 @@ set(PROJECT_SOURCES
     widgets/BrowseTableWidget.cpp
     widgets/TransactionsTable.h
     widgets/TransactionsTable.cpp
+    widgets/MessageBox.h
+    widgets/MessageBox.cpp
     ${TS_FILES}
 )
 

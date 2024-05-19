@@ -1,7 +1,7 @@
 #include "BrowseDataView.h"
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "ui_BrowseDataView.h"
-#include <QMessageBox>
 
 BrowseDataView::BrowseDataView(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::BrowseDataView) {
@@ -21,9 +21,7 @@ void BrowseDataView::updateBankTable() {
       QDate::fromString(endDate, Qt::DateFormat::ISODate));
 
   if (balances.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
@@ -54,9 +52,7 @@ void BrowseDataView::updateCategoryTable() {
       QDate::fromString(endDate, Qt::DateFormat::ISODate));
 
   if (balances.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 

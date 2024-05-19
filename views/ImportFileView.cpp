@@ -1,6 +1,7 @@
 #include "ImportFileView.h"
 #include "../lib/CsvFile.h"
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "ui_ImportFileView.h"
 
 #include <QFileDialog>
@@ -35,8 +36,7 @@ void ImportFileView::applyCategories() {
       tr("Apply categories progress..."), tr("Cancel"), 0, categories.length());
 
   foreach (QString category, categories) {
-    progress.setLabelText(
-        QString(tr("Applying category %1...")).arg(category));
+    progress.setLabelText(QString(tr("Applying category %1...")).arg(category));
     database.updateRowsCategory(category);
     if (progress.wasCanceled()) {
       wasCancelled = true;
@@ -45,17 +45,17 @@ void ImportFileView::applyCategories() {
   }
 
   if (wasCancelled) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Categorize cancelled")),
-                QString(tr("Categorize process was cancelled. Use 'Categorize' view to check imported transactions.")))
+    QMessageBox(QMessageBox::Icon::Information,
+                QString(tr("Categorize cancelled")),
+                QString(tr("Categorize process was cancelled. Use 'Categorize' "
+                           "view to check imported transactions.")))
         .exec();
   } else if (database.getLastErrorText().length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("All categories applied. Use 'Categorize' view to check imported transactions.")))
-        .exec();
+    MessageBox::DatabaseSuccess(
+        QString(tr("All categories applied. Use 'Categorize' view to check "
+                   "imported transactions.")));
   }
 }
 
@@ -168,15 +168,12 @@ void ImportFileView::importRows() {
                     .arg(rowsToStore))
         .exec();
   } else if (database.getLastErrorText().length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 from %2 rows imported"))
-                    .arg(storedRows)
-                    .arg(rowsToStore))
-        .exec();
+    MessageBox::DatabaseSuccess(
+        QString(tr("A total of %1 from %2 rows imported"))
+            .arg(storedRows)
+            .arg(rowsToStore));
   }
 }
 

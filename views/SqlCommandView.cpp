@@ -1,5 +1,6 @@
 #include "SqlCommandView.h"
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "ui_SqlCommandView.h"
 #include <QFileDialog>
 #include <QMessageBox>
@@ -15,9 +16,7 @@ SqlCommandView::SqlCommandView(QWidget *parent)
 
 SqlCommandView::~SqlCommandView() { delete ui; }
 
-
-void SqlCommandView::on_clearHistoryButton_clicked()
-{
+void SqlCommandView::on_clearHistoryButton_clicked() {
   settings.setValue(settingsName, QStringList());
   ui->historyComboBox->clear();
 }
@@ -50,9 +49,7 @@ void SqlCommandView::on_execButton_clicked() {
 
   QString errorText = database.getLastErrorText();
   if (errorText.isEmpty() == false) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
@@ -62,9 +59,7 @@ void SqlCommandView::on_execButton_clicked() {
                   [&progress](int value) { progress.setValue(value); });
 }
 
-
-void SqlCommandView::on_historyComboBox_currentIndexChanged(int index)
-{
+void SqlCommandView::on_historyComboBox_currentIndexChanged(int index) {
   QString command = ui->historyComboBox->currentText();
   ui->sqlCommandEdit->setPlainText(command);
 }
@@ -119,16 +114,13 @@ void SqlCommandView::on_backupButton_clicked() {
   if (database.backup(fileName) == false) {
     QString errorText = database.getLastErrorText();
     if (errorText.isEmpty() == false) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(database.getLastErrorText()))
-          .exec();
+      MessageBox::DatabaseError(database.getLastErrorText());
     }
     return;
   }
 
-  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database Success")),
-              QString(tr("Database backup created at file: %1")).arg(fileName))
-      .exec();
+  MessageBox::DatabaseSuccess(
+      QString(tr("Database backup created at file: %1")).arg(fileName));
 }
 
 void SqlCommandView::on_restoreButton_clicked() {
@@ -153,15 +145,11 @@ void SqlCommandView::on_restoreButton_clicked() {
   if (database.restore(fileName) == false) {
     QString errorText = database.getLastErrorText();
     if (errorText.isEmpty() == false) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(database.getLastErrorText()))
-          .exec();
+      MessageBox::DatabaseError(database.getLastErrorText());
       return;
     }
   }
 
-  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database Success")),
-              QString(tr("Database restore from file: %1")).arg(fileName))
-      .exec();
+  MessageBox::DatabaseSuccess(
+      QString(tr("Database restore from file: %1")).arg(fileName));
 }
-
