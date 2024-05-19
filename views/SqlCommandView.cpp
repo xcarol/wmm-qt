@@ -124,12 +124,11 @@ void SqlCommandView::on_backupButton_clicked() {
 }
 
 void SqlCommandView::on_restoreButton_clicked() {
-  QMessageBox ready =
-      QMessageBox(QMessageBox::Icon::Question, tr("Database restore"),
-                  tr("Make sure table `wmm` is already created."),
-                  QMessageBox::Yes | QMessageBox::No, this);
+  QMessageBox::StandardButton res =
+      QMessageBox::question(parentWidget(), tr("Database restore"),
+                  tr("Make sure table `wmm` is already created."));
 
-  if (ready.exec() == QMessageBox::No) {
+  if (res == QMessageBox::No) {
     return;
   }
 
