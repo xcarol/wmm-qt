@@ -7,7 +7,6 @@
 #include <QFileDialog>
 #include <QList>
 #include <QLocale>
-#include <QMessageBox>
 #include <QProgressDialog>
 
 ImportFileView::ImportFileView(QWidget *parent)
@@ -45,11 +44,10 @@ void ImportFileView::applyCategories() {
   }
 
   if (wasCancelled) {
-    QMessageBox(QMessageBox::Icon::Information,
-                QString(tr("Categorize cancelled")),
-                QString(tr("Categorize process was cancelled. Use 'Categorize' "
-                           "view to check imported transactions.")))
-        .exec();
+    MessageBox::Information(
+        QString(tr("Categorize cancelled")),
+        QString(tr("Categorize process was cancelled. Use 'Categorize' "
+                   "view to check imported transactions.")));
   } else if (database.getLastErrorText().length()) {
     MessageBox::DatabaseError(database.getLastErrorText());
   } else {
@@ -162,11 +160,10 @@ void ImportFileView::importRows() {
   progress.cancel();
 
   if (wasCancelled) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Import cancelled")),
-                QString(tr("A total of %1 from %2 rows imported"))
-                    .arg(storedRows)
-                    .arg(rowsToStore))
-        .exec();
+    MessageBox::Information(QString(tr("Import cancelled")),
+                            QString(tr("A total of %1 from %2 rows imported"))
+                                .arg(storedRows)
+                                .arg(rowsToStore));
   } else if (database.getLastErrorText().length()) {
     MessageBox::DatabaseError(database.getLastErrorText());
   } else {
@@ -250,24 +247,22 @@ bool ImportFileView::checkSelectedFile() {
   progress.cancel();
 
   if (isCancelled) {
-    QMessageBox(
-        QMessageBox::Icon::Information, QString(tr("Check file cancelled")),
-        QString(tr("Check process cancelled at line %1.")).arg(checkedRows + 1))
-        .exec();
+    MessageBox::Information(QString(tr("Check file cancelled")),
+                            QString(tr("Check process cancelled at line %1."))
+                                .arg(checkedRows + 1));
     return false;
   } else if (checkedRows != rowsToCheck) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Check file error")),
-                QString(tr("Something's wrong at line %1. Row: %2"))
-                    .arg(checkedRows + 1)
-                    .arg(row.length()))
-        .exec();
+    MessageBox::Critical(QString(tr("Check file error")),
+                         QString(tr("Something's wrong at line %1. Row: %2"))
+                             .arg(checkedRows + 1)
+                             .arg(row.length()));
     return false;
   } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Check success")),
-                QString(tr("A total of %1 from %2 rows checked successfully"))
-                    .arg(checkedRows)
-                    .arg(rowsToCheck))
-        .exec();
+    MessageBox::Information(
+        QString(tr("Check success")),
+        QString(tr("A total of %1 from %2 rows checked successfully"))
+            .arg(checkedRows)
+            .arg(rowsToCheck));
     return true;
   }
 }

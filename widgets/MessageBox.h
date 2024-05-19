@@ -11,6 +11,10 @@ public:
 
     static void DatabaseSuccess(QString message);
     static void DatabaseError(QString error);
+
+    static void Information(QString title, QString message);
+    static void Warning(QString title, QString message);
+    static void Critical(QString title, QString message);
 signals:
 };
 
