@@ -66,10 +66,7 @@ void DuplicatesView::deleteDuplicateRows(QList<int> ids) {
 
   ulong updatedRows = database.deleteRows(ids);
 
-  if (updatedRows == ids.length()) {
-    MessageBox::DatabaseSuccess(
-        QString(tr("A total of %1 rows deleted.")).arg(updatedRows));
-  } else {
+  if (updatedRows != ids.length()) {
     MessageBox::DatabaseError(database.getLastErrorText());
   }
 }
@@ -80,9 +77,6 @@ void DuplicatesView::markDuplicateRows(QList<int> ids) {
   ulong updatedRows = database.markAsNotDuplicateRows(ids);
 
   if (updatedRows != ids.length()) {
-    MessageBox::DatabaseSuccess(QString(tr("A total of %1 rows marked as not duplicate."))
-                    .arg(updatedRows));
-  } else{
     MessageBox::DatabaseError(database.getLastErrorText());
   }
 }

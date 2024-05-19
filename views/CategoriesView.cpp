@@ -263,9 +263,6 @@ void CategoriesView::deleteFilters() {
     return;
   }
 
-  MessageBox::DatabaseSuccess(
-      QString(tr("A total of %1 filters deleted.")).arg(deletedRows));
-  
   loadCategories(ui->categorysList->currentRow());
 }
 
