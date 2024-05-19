@@ -3,6 +3,7 @@
 #include <QUrl>
 
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "CategoriesView.h"
 #include "ui_CategoriesView.h"
 
@@ -14,9 +15,7 @@ CategoriesView::CategoriesView(QWidget *parent)
 
 CategoriesView::~CategoriesView() { delete ui; }
 
-void CategoriesView::on_applyCategoryButton_clicked() {
-  applyCategory();
-}
+void CategoriesView::on_applyCategoryButton_clicked() { applyCategory(); }
 
 void CategoriesView::on_applyFilterButton_clicked() {
   QListWidgetItem *categoryItem = ui->categorysList->currentItem();
@@ -44,17 +43,13 @@ void CategoriesView::on_applyFilterButton_clicked() {
   Database database = Database();
   int updatedRows = database.updateRowsCategory(filter, category);
   QString sqlError = database.getLastErrorText();
-  if (!sqlError.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(sqlError))
-        .exec();
-    return;
-  }
 
-  QMessageBox(
-      QMessageBox::Icon::Information, QString(tr("Database success")),
-      QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
-      .exec();
+  if (sqlError.isEmpty()) {
+    MessageBox::DatabaseSuccess(
+        QString(tr("A total of %1 transactions updated.")).arg(updatedRows));
+  } else {
+    MessageBox::DatabaseError(sqlError);
+  }
 }
 
 void CategoriesView::on_deleteCategoriesButton_clicked() { deleteCategories(); }
@@ -139,9 +134,7 @@ void CategoriesView::addFilter() {
 
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(database.getLastErrorText()))
-          .exec();
+      MessageBox::DatabaseError(database.getLastErrorText());
       return;
     }
 
@@ -154,7 +147,9 @@ void CategoriesView::applyCategory() {
 
   QMessageBox::StandardButton res = QMessageBox::question(
       QApplication::topLevelWidgets().first(), QString(tr("APPLY")),
-      QString(tr("You're about to apply category '%1' to the uncategorized transactions that match this category filters.\nAre you sure?"))
+      QString(
+          tr("You're about to apply category '%1' to the uncategorized "
+             "transactions that match this category filters.\nAre you sure?"))
           .arg(category));
   if (res == QMessageBox::StandardButton::No) {
     return;
@@ -165,16 +160,12 @@ void CategoriesView::applyCategory() {
 
   int updatedRows = database.updateRowsCategory(category);
   sqlError = database.getLastErrorText();
-  if (!sqlError.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-    return;
+  if (sqlError.isEmpty()) {
+    MessageBox::DatabaseSuccess(
+        QString(tr("A total of %1 transactions updated.")).arg(updatedRows));
+  } else {
+    MessageBox::DatabaseError(database.getLastErrorText());
   }
-
-  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-              QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
-      .exec();
 }
 
 void CategoriesView::clearFilters() {
@@ -224,29 +215,24 @@ void CategoriesView::deleteCategories() {
   int deletedRows = database.deleteCategories(categories);
   sqlError = database.getLastErrorText();
   if (!sqlError.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
   int updatedRows = database.resetRowsCategories(categories);
   sqlError = database.getLastErrorText();
   if (!sqlError.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
-  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-              QString(tr("A total of %1 categories deleted.\n"
-                         "A total of %2 filters deleted.\n"
-                         "A total of %3 transactions updated."))
-                  .arg(categories.length())
-                  .arg(deletedRows)
-                  .arg(updatedRows))
-      .exec();
+  MessageBox::DatabaseSuccess(
+      QString(tr("A total of %1 categories deleted.\n"
+                 "A total of %2 filters deleted.\n"
+                 "A total of %3 transactions updated."))
+          .arg(categories.length())
+          .arg(deletedRows)
+          .arg(updatedRows));
 
   loadCategories();
 }
@@ -273,15 +259,9 @@ void CategoriesView::deleteFilters() {
   int deletedRows = database.deleteFilters(filters);
   sqlError = database.getLastErrorText();
   if (!sqlError.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
-
-  QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-              QString(tr("A total of %1 filters deleted.")).arg(deletedRows))
-      .exec();
 
   loadCategories(ui->categorysList->currentRow());
 }
@@ -331,9 +311,7 @@ void CategoriesView::renameCategory(QString category, QString newName) {
 
   QString error = database.getLastErrorText();
   if (!error.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
@@ -344,15 +322,16 @@ void CategoriesView::updateCategoryButtons() {
   int selectedCategories = ui->categorysList->selectedItems().length();
   ui->applyCategoryButton->setEnabled(selectedCategories == 1);
   ui->deleteCategoriesButton->setEnabled(selectedCategories);
-  ui->renameButton->setEnabled(ui->renameCurrentEdit->text().isEmpty() ==
-                                   false &&
-                               ui->renameNewEdit->text().isEmpty() == false &&
-                               selectedCategories == 1);
+  ui->renameButton->setEnabled(
+      ui->renameCurrentEdit->text().isEmpty() == false &&
+      ui->renameNewEdit->text().isEmpty() == false && selectedCategories == 1);
 }
 
 void CategoriesView::updateFilterButtons() {
   int selectedFilters = ui->filterList->selectedItems().length();
   ui->deleteFiltersButton->setEnabled(selectedFilters);
   ui->applyFilterButton->setEnabled(selectedFilters == 1);
-  ui->newFilterButton->setEnabled(ui->newFilterEdit->text().length() && ui->categorysList->selectedItems().length() == 1);
+  ui->newFilterButton->setEnabled(ui->newFilterEdit->text().length() &&
+                                  ui->categorysList->selectedItems().length() ==
+                                      1);
 }

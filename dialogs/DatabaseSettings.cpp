@@ -1,7 +1,7 @@
 #include "DatabaseSettings.h"
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "ui_DatabaseSettings.h"
-#include <QMessageBox>
 
 DatabaseSettings::DatabaseSettings(QWidget *parent)
     : QDialog(parent), ui(new Ui::DatabaseSettings) {
@@ -46,10 +46,9 @@ bool DatabaseSettings::checkDatabaseConnection() {
 
   bool success = database.checkConnection();
   if (success == false) {
-    QMessageBox(
-        QMessageBox::Icon::Warning, QString(tr("Database connection problem")),
-        QString(tr("Error %1 accessing database")).arg(database.getLastErrorText()))
-        .exec();
+    MessageBox::Warning(QString(tr("Database connection problem")),
+                        QString(tr("Error %1 accessing database"))
+                            .arg(database.getLastErrorText()));
   }
 
   database.setHostname(currentHostname);
@@ -62,8 +61,7 @@ bool DatabaseSettings::checkDatabaseConnection() {
 
 void DatabaseSettings::on_databaseStatusButton_clicked() {
   if (checkDatabaseConnection()) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database connection")),
-                tr("Connected successfully to de database."))
-        .exec();
+    MessageBox::Information(QString(tr("Database connection")),
+                            tr("Connected successfully to de database."));
   }
 }

@@ -7,6 +7,7 @@
 #include <QSettings>
 
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "DuplicatesView.h"
 #include "ui_DuplicatesView.h"
 
@@ -66,13 +67,7 @@ void DuplicatesView::deleteDuplicateRows(QList<int> ids) {
   ulong updatedRows = database.deleteRows(ids);
 
   if (updatedRows != ids.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 rows deleted.")).arg(updatedRows))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
   }
 }
 
@@ -82,14 +77,7 @@ void DuplicatesView::markDuplicateRows(QList<int> ids) {
   ulong updatedRows = database.markAsNotDuplicateRows(ids);
 
   if (updatedRows != ids.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 rows marked as not duplicate."))
-                    .arg(updatedRows))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
   }
 }
 
@@ -97,20 +85,15 @@ void DuplicatesView::updateDuplicatesTable() {
   Database database = Database();
 
   ui->duplicateRowsTable->clearTransactions();
-  ui->duplicateRowsLabel->setText(
-      QString(tr("Duplicate rows: 0")));
+  ui->duplicateRowsLabel->setText(QString(tr("Duplicate rows: 0")));
 
   QList<QStringList> duplicates = database.getDuplicateRows();
   if (database.getLastErrorText().isEmpty() == false) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
   if (duplicates.isEmpty()) {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database")),
-                QString(tr("No duplicate rows found.")))
-        .exec();
+    MessageBox::DatabaseSuccess(QString(tr("No duplicate rows found.")));
     return;
   }
 
@@ -121,12 +104,14 @@ void DuplicatesView::updateDuplicatesTable() {
       QString(tr("Duplicate rows: %1")).arg(numberOfRows));
   ui->duplicateRowsTable->setRowCount(numberOfRows);
 
-  ui->duplicateRowsTable->setHeaders({
-      TransactionsTable::Table::BankColumn,
-      TransactionsTable::Table::DateColumn,
-      TransactionsTable::Table::DescriptionColumn,
-      TransactionsTable::Table::AmountColumn,
-  }, "DuplicatesView");
+  ui->duplicateRowsTable->setHeaders(
+      {
+          TransactionsTable::Table::BankColumn,
+          TransactionsTable::Table::DateColumn,
+          TransactionsTable::Table::DescriptionColumn,
+          TransactionsTable::Table::AmountColumn,
+      },
+      "DuplicatesView");
 
   for (int rowCount = 0; rowCount < numberOfRows; rowCount++) {
     ui->duplicateRowsTable->addTransaction(
@@ -141,4 +126,3 @@ void DuplicatesView::updateDuplicatesTable() {
         duplicates.at(rowCount));
   }
 }
-

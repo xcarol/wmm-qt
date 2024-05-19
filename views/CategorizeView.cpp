@@ -8,6 +8,7 @@
 
 #include "../dialogs/NewCategoryDialog.h"
 #include "../lib/Database.h"
+#include "../widgets/MessageBox.h"
 #include "CategorizeView.h"
 #include "ui_CategorizeView.h"
 
@@ -63,9 +64,7 @@ void CategorizeView::on_addButton_clicked() {
     database.addFilter(category, filter);
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(database.getLastErrorText()))
-          .exec();
+      MessageBox::DatabaseError(database.getLastErrorText());
       return;
     }
 
@@ -83,17 +82,13 @@ void CategorizeView::on_addButton_clicked() {
 
     int updatedRows = database.updateRowsCategory(filter, category);
     QString sqlError = database.getLastErrorText();
-    if (!sqlError.isEmpty()) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(sqlError))
-          .exec();
-      return;
-    }
 
-    QMessageBox(
-        QMessageBox::Icon::Information, QString(tr("Database success")),
-        QString(tr("A total of %1 transactions updated.")).arg(updatedRows))
-        .exec();
+    if (sqlError.isEmpty()) {
+      MessageBox::DatabaseSuccess(
+          QString(tr("A total of %1 transactions updated.")).arg(updatedRows));
+    } else {
+      MessageBox::DatabaseError(sqlError);
+    }
   }
 }
 
@@ -123,9 +118,7 @@ void CategorizeView::searchUncategorizedRows() {
     progress.cancel();
     QString error = database.getLastErrorText();
     if (!error.isEmpty()) {
-      QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                  QString(database.getLastErrorText()))
-          .exec();
+      MessageBox::DatabaseError(database.getLastErrorText());
     }
     return;
   }
@@ -218,14 +211,12 @@ void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
   ulong updatedRows = database.updateRowsCategory(rowIds, categoryName);
 
   if (updatedRows != rowIds.length()) {
-    QMessageBox(QMessageBox::Icon::Critical, QString(tr("Database error")),
-                QString(database.getLastErrorText()))
-        .exec();
-  } else {
-    QMessageBox(QMessageBox::Icon::Information, QString(tr("Database success")),
-                QString(tr("A total of %1 rows updated")).arg(updatedRows))
-        .exec();
+    MessageBox::DatabaseError(database.getLastErrorText());
+    return;
   }
+
+  MessageBox::DatabaseSuccess(
+      QString(tr("A total of %1 rows updated")).arg(updatedRows));
 
   updateView();
 }
