@@ -16,6 +16,7 @@ private:
   bool resizeNastyReentering = false;
   int sortedColumn = -1;
   Qt::SortOrder sortOrder = Qt::SortOrder::AscendingOrder;
+  QString trimTimeFromDate = QString("T00:00:00.000");
   QString settingTemplate = QString("%1_column_%2");
   QString tableName = QString("");
   QSettings settings = QSettings("com.xicra", "wmm");

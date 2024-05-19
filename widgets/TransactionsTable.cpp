@@ -74,9 +74,7 @@ void TransactionsTable::addTransaction(
     QTableWidgetItem *item;
 
     if (fields.at(fieldPosition) == Database::DateField) {
-      item =
-          new QTableWidgetItem(QDate::fromString(value, Qt::DateFormat::ISODate)
-                                   .toString(dateFormat));
+      item = new QTableWidgetItem(value.remove(trimTimeFromDate));
       item->setTextAlignment(Qt::AlignCenter);
     } else if (fields.at(fieldPosition) == Database::AmountField) {
       item = new QTableWidgetItem(QString::number(value.toDouble()));
@@ -182,7 +180,7 @@ void TransactionsTable::saveColumnsWidths() {
     settings.setValue(QString(settingTemplate).arg(tableName).arg(column),
                       columnWidth(column));
   }
-  
+
   enableNesting();
 }
 
