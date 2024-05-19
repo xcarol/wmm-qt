@@ -28,10 +28,10 @@
     <item row="4" column="0">
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QTableWidget" name="bankTable"/>
+       <widget class="BrowseTableWidget" name="bankTable"/>
       </item>
       <item>
-       <widget class="QTableWidget" name="categoryTable"/>
+       <widget class="BrowseTableWidget" name="categoryTable"/>
       </item>
      </layout>
     </item>
@@ -171,6 +171,13 @@
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>BrowseTableWidget</class>
+   <extends>CustomTableWidget</extends>
+   <header>../../../widgets/BrowseTableWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

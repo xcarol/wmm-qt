@@ -2,31 +2,13 @@
 #define TRANSACTIONSTABLE_H
 
 #include <QSettings>
-#include <QTableWidget>
-#include <QWidget>
+#include "CustomTableWidget.h"
 
-class TransactionsTable : public QTableWidget {
+class TransactionsTable : public CustomTableWidget {
   Q_OBJECT
 
-private:
-  QString sortSymbolsRegexp = " (▲|▼)$";
-  QString sortSymbolDown = " ▼";
-  QString sortSymbolUp = " ▲";
-  
-  bool resizeNastyReentering = false;
-  int sortedColumn = -1;
-  Qt::SortOrder sortOrder = Qt::SortOrder::AscendingOrder;
+private:  
   QString trimTimeFromDate = QString("T00:00:00.000");
-  QString settingTemplate = QString("%1_column_%2");
-  QString tableName = QString("");
-  QSettings settings = QSettings("com.xicra", "wmm");
-  void sortByColumn(int column);
-  void sortHeaders(int column, Qt::SortOrder order);
-  void restoreColumnsWidths(QString tableName);
-  void saveColumnsWidths();
-  void enableNesting();
-  void disableNesting();
-  bool isNesting();
 
 public:
   enum Database {
@@ -54,9 +36,6 @@ public:
 
   explicit TransactionsTable(QWidget *parent = nullptr);
   ~TransactionsTable();
-
-  void on_headerClicked(int index);
-  void on_headerResized();
 
   void setHeaders(QList<TransactionsTable::Table> headers,
                   QString viewName = QString(""));
