@@ -3,14 +3,13 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QLocale>
-#include <qtablewidget.h>
 
 BrowseTableWidget::BrowseTableWidget(QWidget *parent)
     : CustomTableWidget(parent) {}
 
 BrowseTableWidget::~BrowseTableWidget() {}
 
-void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::Table> headers,
+void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::CategoryTable> headers,
                                    QString viewName) {
   int columnCount = 0;
 
@@ -44,15 +43,19 @@ void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::Table> headers,
   }
 }
 
-void BrowseTableWidget::addBank(int row, QString bank, double amount)
+void BrowseTableWidget::addBank(int row, QString bank, double amount, QString date)
 {
     QTableWidgetItem *bankItem = new QTableWidgetItem(bank);
     bankItem->setTextAlignment(Qt::AlignLeft);
     setItem(row, 0, bankItem);
 
+    QTableWidgetItem *dateItem = new QTableWidgetItem(date.remove(trimTimeFromDate));
+    dateItem->setTextAlignment(Qt::AlignRight);
+    setItem(row, 1, dateItem);
+
     QTableWidgetItem *amountItem = new QTableWidgetItem(QString::number(amount));
     amountItem->setTextAlignment(Qt::AlignRight);
-    setItem(row, 1, amountItem);
+    setItem(row, 2, amountItem);
 }
 
 void BrowseTableWidget::addCategory(int row, QString category, double amount,
