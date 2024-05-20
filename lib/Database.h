@@ -6,7 +6,6 @@
 #include <QProgressDialog>
 #include <QSettings>
 #include <QSqlDatabase>
-#include <qcontainerfwd.h>
 
 #define HOSTNAME "hostname"
 #define PORT "port"
@@ -72,9 +71,10 @@ private:
   QString queryUpdateRowsCategoryWithIds =
       QString("UPDATE transactions SET category = '%1' WHERE id IN(%2)");
 
-  QString queryBankBalances = QString(
-      "SELECT SUM(amount) as balance from transactions WHERE bank = '%1' AND "
-      "date >= '%2' AND date <= '%3'");
+  QString queryBankBalances =
+      QString("SELECT SUM(amount) as balance, MAX(date) AS latest_date from "
+              "transactions WHERE bank = '%1' AND "
+              "date >= '%2' AND date <= '%3'");
 
   QString queryCategoryBalances =
       QString("SELECT SUM(amount) as balance from transactions WHERE category "
@@ -182,11 +182,11 @@ public:
                                           QProgressDialog *dialog = NULL);
   QList<QStringList>
   getBanksBalance(QStringList bankNames = QStringList(),
-                  QDate initialDate = QDate::fromString("1970-01-01"),
+                  QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
                   QDate finalDate = QDate::currentDate());
   QList<QStringList>
   getCategoriesBalance(QStringList bankNames = QStringList(),
-                       QDate initialDate = QDate::fromString("1970-01-01"),
+                       QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
                        QDate finalDate = QDate::currentDate());
   QList<QStringList> getDuplicateRows();
   QStringList getYears(bool ascending = true);
