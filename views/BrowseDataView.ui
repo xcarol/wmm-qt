@@ -15,97 +15,13 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QLabel" name="label">
-      <property name="text">
-       <string>Find your money!</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <item>
-       <widget class="BrowseTableWidget" name="bankTable"/>
-      </item>
-      <item>
-       <widget class="BrowseTableWidget" name="categoryTable"/>
-      </item>
-     </layout>
-    </item>
-    <item row="2" column="0">
+    <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_1">
-        <item>
-         <widget class="QLabel" name="label_1">
-          <property name="text">
-           <string>Browse by date period</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Start date</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QDateEdit" name="endDateEdit">
-            <property name="displayFormat">
-             <string>dd/MM/yyyy</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QDateEdit" name="startDateEdit">
-            <property name="displayFormat">
-             <string>dd/MM/yyyy</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="text">
-             <string>End date</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_1">
-          <item>
-           <spacer name="horizontalSpacer_1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="bydateButton">
-            <property name="text">
-             <string>Browse by period</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="1">
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="BrowseTableWidget" name="bankTable" native="true"/>
+        </item>
         <item>
          <widget class="QLabel" name="label_4">
           <property name="sizePolicy">
@@ -115,7 +31,7 @@
            </sizepolicy>
           </property>
           <property name="text">
-           <string>Browse by year</string>
+           <string>Browse categories by year</string>
           </property>
          </widget>
         </item>
@@ -168,13 +84,20 @@
       </item>
      </layout>
     </item>
+    <item row="3" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="BrowseTableWidget" name="categoryTable" native="true"/>
+      </item>
+     </layout>
+    </item>
    </layout>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
    <class>BrowseTableWidget</class>
-   <extends>CustomTableWidget</extends>
+   <extends>QWidget</extends>
    <header>../../../widgets/BrowseTableWidget.h</header>
   </customwidget>
  </customwidgets>
