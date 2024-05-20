@@ -7,9 +7,6 @@
 class TransactionsTable : public CustomTableWidget {
   Q_OBJECT
 
-private:  
-  QString trimTimeFromDate = QString("T00:00:00.000");
-
 public:
   enum Database {
     IdField = 0,
@@ -18,7 +15,6 @@ public:
     DescriptionField = 3,
     CategoryField = 4,
     AmountField = 5,
-    TotalFields = 6,
   };
 
   enum Table {
@@ -27,7 +23,6 @@ public:
     DescriptionColumn = 2,
     CategoryColumn = 3,
     AmountColumn = 4,
-    TotalColumns = 5,
   };
 
   QStringList FieldNames = {"Id",           tr("Bank"),
