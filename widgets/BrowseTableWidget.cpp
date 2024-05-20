@@ -9,7 +9,7 @@ BrowseTableWidget::BrowseTableWidget(QWidget *parent)
 
 BrowseTableWidget::~BrowseTableWidget() {}
 
-void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::CategoryTable> headers,
+void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::Table> headers,
                                    QString viewName) {
   int columnCount = 0;
 
