@@ -14,7 +14,12 @@ class BrowseCategoriesView : public QMainWindow {
 
   QString startDate;
   QString endDate;
-  int averageMonths = 12;
+
+  enum Position {
+    category = 0,
+    amount = 1,
+    date = 2,
+  };
 
 public:
   explicit BrowseCategoriesView(QWidget *parent = nullptr);
@@ -22,14 +27,13 @@ public:
 
 private slots:
   void on_byyearButton_clicked();
-
   void on_yearBox_currentIndexChanged(int index);
 
 private:
   Ui::BrowseCategoriesView *ui;
 
-  void updateCategoryTable();
   void fillYearsCombo();
+  void updateCategoryTable();
 };
 
 #endif // BROWSECATEGORIESVIEW_H
