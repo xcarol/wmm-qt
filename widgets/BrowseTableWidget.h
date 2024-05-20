@@ -21,11 +21,11 @@ public:
   explicit BrowseTableWidget(QWidget *parent = nullptr);
   ~BrowseTableWidget();
 
+  void sortItems(int column, Qt::SortOrder order = Qt::AscendingOrder);
   void setHeaders(QList<BrowseTableWidget::Table> headers,
                   QString viewName = QString(""));
   void addBank(int row, QString bank, double amount, QString date);
   void addCategory(int row, QString category, double amount, int average);
-  void addTotal(double total);
 };
 
 #endif // BROWSETABLEWIDGET_H

@@ -3,6 +3,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QLocale>
+#include <qforeach.h>
 
 BrowseTableWidget::BrowseTableWidget(QWidget *parent)
     : CustomTableWidget(parent) {}
@@ -18,21 +19,9 @@ void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::Table> headers,
 
   disableNesting();
 
-  if (headers.contains(Table::BankColumn)) {
-    setHorizontalHeaderItem(
-        columnCount++, new QTableWidgetItem(FieldNames.at(Table::BankColumn)));
-  }
-  if (headers.contains(Table::CategoryColumn)) {
-    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
-                                               Table::CategoryColumn)));
-  }
-  if (headers.contains(Table::BalanceColumn)) {
-    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
-                                               Table::BalanceColumn)));
-  }
-  if (headers.contains(Table::AverageColumn)) {
-    setHorizontalHeaderItem(columnCount++, new QTableWidgetItem(FieldNames.at(
-                                               Table::AverageColumn)));
+  foreach (int header, headers) {
+    setHorizontalHeaderItem(columnCount++,
+                            new QTableWidgetItem(FieldNames.at(header)));
   }
 
   enableNesting();
@@ -43,19 +32,20 @@ void BrowseTableWidget::setHeaders(QList<BrowseTableWidget::Table> headers,
   }
 }
 
-void BrowseTableWidget::addBank(int row, QString bank, double amount, QString date)
-{
-    QTableWidgetItem *bankItem = new QTableWidgetItem(bank);
-    bankItem->setTextAlignment(Qt::AlignLeft);
-    setItem(row, 0, bankItem);
+void BrowseTableWidget::addBank(int row, QString bank, double amount,
+                                QString date) {
+  QTableWidgetItem *bankItem = new QTableWidgetItem(bank);
+  bankItem->setTextAlignment(Qt::AlignLeft);
+  setItem(row, 0, bankItem);
 
-    QTableWidgetItem *dateItem = new QTableWidgetItem(date.remove(trimTimeFromDate));
-    dateItem->setTextAlignment(Qt::AlignRight);
-    setItem(row, 1, dateItem);
+  QTableWidgetItem *dateItem =
+      new QTableWidgetItem(date.remove(trimTimeFromDate));
+  dateItem->setTextAlignment(Qt::AlignRight);
+  setItem(row, 1, dateItem);
 
-    QTableWidgetItem *amountItem = new QTableWidgetItem(QString::number(amount));
-    amountItem->setTextAlignment(Qt::AlignRight);
-    setItem(row, 2, amountItem);
+  QTableWidgetItem *amountItem = new QTableWidgetItem(QString::number(amount));
+  amountItem->setTextAlignment(Qt::AlignRight);
+  setItem(row, 2, amountItem);
 }
 
 void BrowseTableWidget::addCategory(int row, QString category, double amount,
@@ -75,18 +65,4 @@ void BrowseTableWidget::addCategory(int row, QString category, double amount,
     item->setTextAlignment(Qt::AlignRight);
     setItem(row, 2, item);
   }
-}
-
-void BrowseTableWidget::addTotal(double total) {
-  QTableWidgetItem *item;
-  int row = rowCount();
-
-  setRowCount(row + 1);
-  item = new QTableWidgetItem(tr("Total"));
-  item->setTextAlignment(Qt::AlignLeft);
-  setItem(row, 0, item);
-
-  item = new QTableWidgetItem(QString::number(total));
-  item->setTextAlignment(Qt::AlignRight);
-  setItem(row, 1, item);
 }
