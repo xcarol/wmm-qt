@@ -40,6 +40,12 @@ set(PROJECT_SOURCES
     views/CategorizeView.h
     views/CategorizeView.cpp
     views/CategorizeView.ui
+    views/BrowseBankView.h
+    views/BrowseBankView.cpp
+    views/BrowseBankView.ui
+    views/BrowseCategoriesView.h
+    views/BrowseCategoriesView.cpp
+    views/BrowseCategoriesView.ui
     views/BrowseDataView.h
     views/BrowseDataView.cpp
     views/BrowseDataView.ui

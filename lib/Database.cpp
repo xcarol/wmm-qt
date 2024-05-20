@@ -103,8 +103,18 @@ QList<QStringList> Database::getBalance(QString queryBalance,
 
       if (query.exec(queryString)) {
         if (query.next()) {
-          balances.append(
-              QStringList({entity, query.value("balance").toString()}));
+          QStringList balance = QStringList(entity);
+          QSqlRecord record = query.record();
+
+          if (record.contains("balance")) {
+            balance.append(query.value("balance").toString());
+          }
+
+          if (record.contains("latest_date")) {
+            balance.append(query.value("latest_date").toString());
+          }
+
+          balances.append(balance);
         }
       } else {
         lastError = query.lastError().databaseText();
@@ -205,9 +215,8 @@ int Database::updateRowsCategory(QString category) {
 
   if (openDatabase()) {
     QSqlQuery query = QSqlQuery(sqlDatabase);
-    QString queryString =
-        QString(queryUpdateRowsCategoryWithAllFilters)
-            .arg(category.left(CATEGORY_LENGHT));
+    QString queryString = QString(queryUpdateRowsCategoryWithAllFilters)
+                              .arg(category.left(CATEGORY_LENGHT));
 
     if (query.exec(queryString)) {
       updatedRows = query.numRowsAffected();
