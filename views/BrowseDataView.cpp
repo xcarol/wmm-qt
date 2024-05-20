@@ -16,9 +16,7 @@ void BrowseDataView::updateBankTable() {
   double totalAmount = 0.0;
   Database database = Database();
 
-  QList<QStringList> balances = database.getBanksBalance(
-      QStringList(), QDate::fromString(startDate, Qt::DateFormat::ISODate),
-      QDate::fromString(endDate, Qt::DateFormat::ISODate));
+  QList<QStringList> balances = database.getBanksBalance();
 
   if (balances.isEmpty()) {
     MessageBox::DatabaseError(database.getLastErrorText());
@@ -26,17 +24,19 @@ void BrowseDataView::updateBankTable() {
   }
 
   ui->bankTable->setRowCount(balances.length());
-  ui->bankTable->setHeaders({
-    BrowseTableWidget::Table::BankColumn,
-    BrowseTableWidget::Table::BalanceColumn
-    },
-    "");
+  ui->bankTable->setHeaders({BrowseTableWidget::Table::BankColumn,
+                             BrowseTableWidget::Table::DateColumn,
+                             BrowseTableWidget::Table::BalanceColumn},
+                            "");
 
   int rowcount = 0;
   for (; rowcount < balances.length(); rowcount++) {
+    QString bank = balances.at(rowcount).at(0);
     double amount = balances.at(rowcount).at(1).toDouble();
+    QString date = balances.at(rowcount).at(2);
+
     totalAmount += amount;
-    ui->bankTable->addBank(rowcount, balances.at(rowcount).at(0), amount);
+    ui->bankTable->addBank(rowcount, bank, amount, date);
   }
 
   ui->bankTable->addTotal(totalAmount);
@@ -107,14 +107,5 @@ void BrowseDataView::on_byyearButton_clicked() {
   startDate = QString("%1-01-01").arg(year);
   endDate = QString("%1-12-31").arg(year);
   addMonthAverage = true;
-  updateBankTable();
-  updateCategoryTable();
-}
-
-void BrowseDataView::on_bydateButton_clicked() {
-  startDate = ui->startDateEdit->date().toString(Qt::DateFormat::ISODate);
-  endDate = ui->endDateEdit->date().toString(Qt::DateFormat::ISODate);
-  addMonthAverage = false;
-  updateBankTable();
   updateCategoryTable();
 }

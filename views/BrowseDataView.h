@@ -20,8 +20,6 @@ public:
 private slots:
   void on_byyearButton_clicked();
 
-  void on_bydateButton_clicked();
-
 private:
   Ui::BrowseDataView *ui;
 
