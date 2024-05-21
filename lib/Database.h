@@ -39,7 +39,7 @@ private:
   QString queryBankNames = QString("SELECT DISTINCT bank FROM transactions");
 
   QString queryCategoryNames =
-      QString("SELECT DISTINCT category FROM filters ORDER BY category ASC");
+      QString("SELECT DISTINCT category FROM transactions ORDER BY category ASC");
 
   QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE "
                              "category='%1' ORDER BY filter ASC";
