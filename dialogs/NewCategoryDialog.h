@@ -12,7 +12,7 @@ class NewCategoryDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit NewCategoryDialog(QString category = "", QWidget *parent = nullptr);
+    explicit NewCategoryDialog(QString category = "", QString filter = "", QWidget *parent = nullptr);
     ~NewCategoryDialog();
 
     QString category;

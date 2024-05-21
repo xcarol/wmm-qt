@@ -56,7 +56,7 @@ void CategorizeView::on_addButton_clicked() {
   QString category = categoryName;
   QString filter = "";
 
-  NewCategoryDialog dialog = NewCategoryDialog(category);
+  NewCategoryDialog dialog = NewCategoryDialog(category, ui->searchResultsTable->currentItem()->text());
   if (dialog.exec() == true) {
     Database database = Database();
     category = dialog.category;
@@ -90,6 +90,8 @@ void CategorizeView::on_addButton_clicked() {
       MessageBox::DatabaseError(sqlError);
     }
   }
+
+  updateView();
 }
 
 void CategorizeView::on_updateButton_clicked() { updateSelectedRows(); }
@@ -214,9 +216,6 @@ void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
     MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
-
-  MessageBox::DatabaseSuccess(
-      QString(tr("A total of %1 rows updated")).arg(updatedRows));
 
   updateView();
 }
