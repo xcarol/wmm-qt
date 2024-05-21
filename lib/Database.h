@@ -38,8 +38,11 @@ private:
 
   QString queryBankNames = QString("SELECT DISTINCT bank FROM transactions");
 
-  QString queryCategoryNames =
-      QString("SELECT DISTINCT category FROM transactions ORDER BY category ASC");
+  QString queryCategoryNames = QString(
+      "SELECT DISTINCT category FROM transactions WHERE (TRIM(category) != '' "
+      "AND category IS NOT NULL) ORDER BY category ASC");
+
+  QString queryFilter = "SELECT category FROM filters WHERE filter = '%1'";
 
   QString queryFilterNames = "SELECT DISTINCT filter FROM filters WHERE "
                              "category='%1' ORDER BY filter ASC";
@@ -176,18 +179,19 @@ public:
   QStringList getBankNames();
   QStringList getCategoryNames();
   QStringList getColumnNames();
+  QStringList getFilter(QString filter);
   QStringList getFilterNames(QString category);
   QStringList getDescriptionsByCategory(QString category);
   QList<QStringList> getUncategorizedRows(QString filter = QString(),
                                           QProgressDialog *dialog = NULL);
-  QList<QStringList>
-  getBanksBalance(QStringList bankNames = QStringList(),
-                  QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
-                  QDate finalDate = QDate::currentDate());
-  QList<QStringList>
-  getCategoriesBalance(QStringList bankNames = QStringList(),
-                       QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
-                       QDate finalDate = QDate::currentDate());
+  QList<QStringList> getBanksBalance(
+      QStringList bankNames = QStringList(),
+      QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
+      QDate finalDate = QDate::currentDate());
+  QList<QStringList> getCategoriesBalance(
+      QStringList bankNames = QStringList(),
+      QDate initialDate = QDate::fromString("1970-01-01", Qt::ISODate),
+      QDate finalDate = QDate::currentDate());
   QList<QStringList> getDuplicateRows();
   QStringList getYears(bool ascending = true);
 
