@@ -27,12 +27,10 @@ private slots:
   private:
   Ui::CategorizeView *ui;
 
-  QString categoryName;
-  QString appliedFilter;
-
+  bool filterExists(QString filter);
   void searchUncategorizedRows();
   void setFilter(QString filter);
-  void addFiltersToDatabase(QString category, QStringList filters);
+  bool saveFilter(QString category, QString filter);
   void updateSelectedRows();
   void updateUncategorizedRows(QList<int> rowsIds);
   void updateButtonsState();
