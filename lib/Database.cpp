@@ -337,6 +337,26 @@ QStringList Database::getColumnNames() {
   return names;
 }
 
+QStringList Database::getFilter(QString filter) {
+  QStringList categories;
+
+  if (openDatabase()) {
+    QSqlQuery query = QSqlQuery(sqlDatabase);
+
+    if (query.exec(QString(queryFilter).arg(filter))) {
+      while (query.next()) {
+        categories.append(query.value("category").toString());
+      }
+    } else {
+      lastError = query.lastError().databaseText();
+    }
+
+    closeDatabase();
+  }
+
+  return categories;
+}
+
 QStringList Database::getFilterNames(QString category) {
   QStringList filterNames;
 

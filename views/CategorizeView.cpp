@@ -27,16 +27,15 @@ CategorizeView::CategorizeView(QWidget *parent)
 CategorizeView::~CategorizeView() { delete ui; }
 
 void CategorizeView::on_categoryComboBox_editTextChanged(const QString &arg1) {
-  categoryName = arg1;
   updateButtonsState();
 }
 
 void CategorizeView::on_filterEdit_currentIndexChanged(int index) {
-  appliedFilter = ui->filterEdit->itemText(index);
+  updateButtonsState();
 }
 
 void CategorizeView::on_filterEdit_editTextChanged(const QString &arg1) {
-  appliedFilter = arg1;
+  updateButtonsState();
 }
 
 void CategorizeView::on_filterEdit_returnPressed() {
@@ -53,22 +52,23 @@ void CategorizeView::on_searchResultsTable_itemSelectionChanged() {
 }
 
 void CategorizeView::on_addButton_clicked() {
-  QString category = categoryName;
-  QString filter = "";
+  QString category = ui->categoryComboBox->currentText();
+  QString filter = ui->searchResultsTable->currentItem()->text();
 
-  NewCategoryDialog dialog = NewCategoryDialog(category);
+  NewCategoryDialog dialog = NewCategoryDialog(category, filter);
+
   if (dialog.exec() == true) {
-    Database database = Database();
     category = dialog.category;
     filter = dialog.filter;
-    database.addFilter(category, filter);
-    QString error = database.getLastErrorText();
-    if (!error.isEmpty()) {
-      MessageBox::DatabaseError(database.getLastErrorText());
+
+    if (filterExists(filter)) {
+      MessageBox::Warning(
+          tr("Filter exists"),
+          QString(tr("A filter called %1 already exists")).arg(filter));
       return;
     }
 
-    updateSelectedRows();
+    saveFilter(category, filter);
 
     QMessageBox::StandardButton res = QMessageBox::question(
         QApplication::topLevelWidgets().first(), QString(tr("Update")),
@@ -77,9 +77,11 @@ void CategorizeView::on_addButton_clicked() {
             .arg(category)
             .arg(filter));
     if (res == QMessageBox::StandardButton::No) {
+      updateSelectedRows();
       return;
     }
 
+    Database database = Database();
     int updatedRows = database.updateRowsCategory(filter, category);
     QString sqlError = database.getLastErrorText();
 
@@ -89,12 +91,21 @@ void CategorizeView::on_addButton_clicked() {
     } else {
       MessageBox::DatabaseError(sqlError);
     }
+
+    searchUncategorizedRows();
   }
 }
 
 void CategorizeView::on_updateButton_clicked() { updateSelectedRows(); }
 
+bool CategorizeView::filterExists(QString filter) {
+  Database database = Database();
+  QStringList filters = database.getFilter(filter);
+  return filters.length() == 1;
+}
+
 void CategorizeView::searchUncategorizedRows() {
+  QString filter = ui->filterEdit->currentText();
   Database database = Database();
 
   ui->categoryComboBox->clear();
@@ -103,16 +114,16 @@ void CategorizeView::searchUncategorizedRows() {
 
   ui->searchResultsTable->clearTransactions();
 
-  setFilter(appliedFilter);
+  setFilter(filter);
 
   QProgressDialog progress = QProgressDialog(
-      QString(tr("Searching for rows with filter %1")).arg(appliedFilter),
+      QString(tr("Searching for rows with filter %1")).arg(filter),
       tr("Cancel"), 0, 0);
   progress.setWindowModality(Qt::WindowModal);
   progress.setWindowTitle(tr("Search..."));
 
   QList<QStringList> uncategorizedRows =
-      database.getUncategorizedRows(appliedFilter, &progress);
+      database.getUncategorizedRows(filter, &progress);
 
   if (uncategorizedRows.length() == 0) {
     progress.cancel();
@@ -168,23 +179,31 @@ void CategorizeView::searchUncategorizedRows() {
   }
 }
 
+bool CategorizeView::saveFilter(QString category, QString filter) {
+  Database database = Database();
+
+  database.addFilter(category, filter);
+  QString error = database.getLastErrorText();
+  if (!error.isEmpty()) {
+    MessageBox::DatabaseError(database.getLastErrorText());
+    return false;
+  }
+
+  return true;
+}
+
 void CategorizeView::setFilter(QString filter) {
   QSettings settings = QSettings("com.xicra", "wmm");
   QStringList filters = settings.value("filters").toStringList();
-  if (filters.contains(appliedFilter) == false) {
-    filters.append(appliedFilter);
+  if (filters.contains(filter) == false) {
+    filters.append(filter);
     settings.setValue("filters", filters);
-    ui->filterEdit->addItem(appliedFilter);
+    ui->filterEdit->addItem(filter);
   }
 }
 
-void CategorizeView::addFiltersToDatabase(QString category,
-                                          QStringList filters) {
-  Database database = Database();
-  database.addFilters(category, filters);
-}
-
 void CategorizeView::updateSelectedRows() {
+  QString category = ui->categoryComboBox->currentText();
   QList<int> selectedTransactionsId =
       ui->searchResultsTable->getSelectedTransactionIDs();
 
@@ -197,7 +216,7 @@ void CategorizeView::updateSelectedRows() {
       QString(tr("You're about to update %1 records "
                  "with the category: %2\nAre you sure?"))
           .arg(selectedTransactionsId.length())
-          .arg(categoryName));
+          .arg(category));
   if (res == QMessageBox::StandardButton::No) {
     return;
   }
@@ -207,23 +226,22 @@ void CategorizeView::updateSelectedRows() {
 
 void CategorizeView::updateUncategorizedRows(QList<int> rowIds) {
   Database database = Database();
+  QString category = ui->categoryComboBox->currentText();
 
-  ulong updatedRows = database.updateRowsCategory(rowIds, categoryName);
+  ulong updatedRows = database.updateRowsCategory(rowIds, category);
 
   if (updatedRows != rowIds.length()) {
     MessageBox::DatabaseError(database.getLastErrorText());
     return;
   }
 
-  MessageBox::DatabaseSuccess(
-      QString(tr("A total of %1 rows updated")).arg(updatedRows));
-
   updateView();
 }
 
 void CategorizeView::updateButtonsState() {
+  QString category = ui->categoryComboBox->currentText();
   bool enabled =
-      ui->searchResultsTable->rowCount() > 0 && categoryName.length() > 0;
+      ui->searchResultsTable->rowCount() > 0 && category.length() > 0;
   ui->updateButton->setEnabled(enabled);
   ui->addButton->setEnabled(enabled);
 }

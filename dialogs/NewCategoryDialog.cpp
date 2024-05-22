@@ -3,13 +3,14 @@
 #include <qdialogbuttonbox.h>
 #include <qpushbutton.h>
 
-NewCategoryDialog::NewCategoryDialog(QString defaultCategory, QWidget *parent)
+NewCategoryDialog::NewCategoryDialog(QString defaultCategory, QString defaultFilter, QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::NewCategoryDialog)
 {
     ui->setupUi(this);
     ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
     ui->categoryName->setText(defaultCategory);
+    ui->filterName->setText(defaultFilter);
 }
 
 NewCategoryDialog::~NewCategoryDialog()
