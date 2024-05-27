@@ -4,7 +4,7 @@ services:
 
   db:
     image: mysql
-    command: --default-authentication-plugin=mysql_native_password
+    command: --mysql-native-password=ON
     volumes:
       - "${PWD}/mysql:/var/lib/mysql"
     environment:
